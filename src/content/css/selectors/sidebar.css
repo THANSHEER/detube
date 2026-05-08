@@ -1,0 +1,186 @@
+/* Sidebar Navigation */
+
+/* Hide Home */
+html.dt-hide-home ytd-guide-entry-renderer:has(a[title*="Home" i]),
+html.dt-hide-home ytd-guide-entry-renderer:has(a[href="/"]),
+html.dt-hide-home ytd-mini-guide-entry-renderer:has(a[href="/"]),
+html.dt-hide-home ytd-guide-entry-renderer:has(yt-icon[icon="home-filled"]),
+html.dt-hide-home ytd-mini-guide-entry-renderer:has(yt-icon[icon="home-filled"]) {
+  display: none !important;
+}
+
+/* Hide Shorts */
+html.dt-hide-shorts ytd-guide-entry-renderer:has(a[title*="Shorts" i]),
+html.dt-hide-shorts ytd-guide-entry-renderer:has(a[href*="/shorts"]),
+html.dt-hide-shorts ytd-mini-guide-entry-renderer:has(a[href*="/shorts"]),
+html.dt-hide-shorts ytd-guide-entry-renderer:has(yt-icon[icon="shorts-filled"]),
+html.dt-hide-shorts ytd-mini-guide-entry-renderer:has(yt-icon[icon="shorts-filled"]) {
+  display: none !important;
+}
+
+/* Hide Subscriptions */
+/* Individual Entries */
+html.dt-hide-subscriptions ytd-guide-entry-renderer:has(a[title*="Subscription" i]),
+html.dt-hide-subscriptions ytd-guide-entry-renderer:has(a[href*="/feed/subscriptions"]),
+html.dt-hide-subscriptions ytd-mini-guide-entry-renderer:has(a[href*="/feed/subscriptions"]),
+html.dt-hide-subscriptions ytd-guide-entry-renderer:has(yt-icon[icon="subscriptions-filled"]),
+html.dt-hide-subscriptions ytd-mini-guide-entry-renderer:has(yt-icon[icon="subscriptions-filled"]),
+/* Hide the subscriptions section ONLY if it's not the main navigation section (which contains Home) */
+html.dt-hide-subscriptions ytd-guide-section-renderer:has(a[href*="/feed/subscriptions"]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])),
+html.dt-hide-subscriptions ytd-guide-section-renderer:has(a[title*="Subscription" i]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])) {
+  display: none !important;
+}
+
+/* Hide Sign-in Promo (logged out) */
+html.dt-hide-subscriptions ytd-guide-signin-promo-renderer,
+html.dt-hide-you-section ytd-guide-signin-promo-renderer,
+html.dt-hide-subscriptions #signin-promo,
+html.dt-hide-you-section #signin-promo {
+  display: none !important;
+}
+
+/* "You" Section */
+/* Master Toggle - Only hide entire section if it's not the main nav */
+html.dt-hide-you-section ytd-guide-section-renderer:has(a[title="You" i]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])),
+html.dt-hide-you-section ytd-guide-section-renderer:has(a[href*="/feed/you"]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])),
+html.dt-hide-you-section ytd-guide-section-renderer:has(yt-icon[icon="account-box"]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])),
+/* Individual entries - Use exact title="You" to avoid matching "YouTube" */
+html.dt-hide-you-section ytd-guide-entry-renderer:has(a[title="You" i]),
+html.dt-hide-you-section ytd-guide-entry-renderer:has(a[href*="/feed/library"]),
+html.dt-hide-you-section ytd-guide-entry-renderer:has(a[href*="/feed/you"]),
+html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(a[href*="/feed/library"]),
+html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(a[href*="/feed/you"]),
+html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(yt-icon[icon="account-box"]) {
+  display: none !important;
+}
+
+/* Individual Items under You */
+html.dt-hide-your-channel ytd-guide-entry-renderer:has(a[href^="/@"]),
+html.dt-hide-your-channel ytd-guide-entry-renderer:has(yt-icon[icon="channel-filled"]),
+html.dt-hide-your-channel ytd-mini-guide-entry-renderer:has(a[href^="/@"]) {
+  display: none !important;
+}
+
+html.dt-hide-history ytd-guide-entry-renderer:has(a[title*="History" i]),
+html.dt-hide-history ytd-guide-entry-renderer:has(a[href*="/feed/history"]),
+html.dt-hide-history ytd-guide-entry-renderer:has(yt-icon[icon="history"]),
+html.dt-hide-history ytd-mini-guide-entry-renderer:has(a[href*="/feed/history"]) {
+  display: none !important;
+}
+
+html.dt-hide-playlists ytd-guide-entry-renderer:has(a[title*="Playlist" i]),
+html.dt-hide-playlists ytd-guide-entry-renderer:has(a[href="/feed/playlists"]),
+html.dt-hide-playlists ytd-guide-entry-renderer:has(yt-icon[icon="playlist-add-check"]),
+html.dt-hide-playlists ytd-mini-guide-entry-renderer:has(a[href="/feed/playlists"]) {
+  display: none !important;
+}
+
+html.dt-hide-watch-later ytd-guide-entry-renderer:has(a[title*="Watch later" i]),
+html.dt-hide-watch-later ytd-guide-entry-renderer:has(a[href*="list=WL"]),
+html.dt-hide-watch-later ytd-guide-entry-renderer:has(yt-icon[icon="watch-later"]),
+html.dt-hide-watch-later ytd-mini-guide-entry-renderer:has(a[href*="list=WL"]) {
+  display: none !important;
+}
+
+html.dt-hide-liked-videos ytd-guide-entry-renderer:has(a[title*="Liked" i]),
+html.dt-hide-liked-videos ytd-guide-entry-renderer:has(a[href*="list=LL"]),
+html.dt-hide-liked-videos ytd-guide-entry-renderer:has(yt-icon[icon="thumb-up-filled"]),
+html.dt-hide-liked-videos ytd-mini-guide-entry-renderer:has(a[href*="list=LL"]) {
+  display: none !important;
+}
+
+html.dt-hide-your-videos ytd-guide-entry-renderer:has(a[title*="Your videos" i]),
+html.dt-hide-your-videos ytd-guide-entry-renderer:has(a[href*="/videos"]),
+html.dt-hide-your-videos ytd-guide-entry-renderer:has(yt-icon[icon="video-library-filled"]),
+html.dt-hide-your-videos ytd-mini-guide-entry-renderer:has(a[href*="/videos"]) {
+  display: none !important;
+}
+
+html.dt-hide-downloads ytd-guide-entry-renderer:has(a[title*="Download" i]),
+html.dt-hide-downloads ytd-guide-entry-renderer:has(a[href*="/feed/downloads"]),
+html.dt-hide-downloads ytd-guide-entry-renderer:has(yt-icon[icon="file-download"]),
+html.dt-hide-downloads ytd-mini-guide-entry-renderer:has(a[href*="/feed/downloads"]) {
+  display: none !important;
+}
+
+/* Explore Section */
+/* Master Toggle - target section containing Explore items specifically */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href="/gaming"]),
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/channel/UCkYQyvc_i9hXEo4xic9Hh2g"]), /* Shopping */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ"]), /* Music */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/feed/storefront"]),           /* Films */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw"]), /* News */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw"]), /* Sport */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/feed/courses_destination"]),    /* Courses */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href*="/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ"]), /* Fashion */
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href="/playables"]),
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[href="/podcasts"]),
+html.dt-hide-explore-section ytd-guide-section-renderer:has(a[title*="Explore" i]),
+html.dt-hide-explore-section ytd-guide-section-renderer:has(yt-icon[icon="compass"]) {
+  display: none !important;
+}
+
+/* Individual Categories - using Case-Insensitive Title matching for robustness */
+html.dt-hide-shopping ytd-guide-entry-renderer:has(a[title*="Shopping" i]),
+html.dt-hide-shopping ytd-guide-entry-renderer:has(a[href*="/channel/UCkYQyvc_i9hXEo4xic9Hh2g"]) { display: none !important; }
+
+html.dt-hide-music ytd-guide-entry-renderer:has(a[title*="Music" i]),
+html.dt-hide-music ytd-guide-entry-renderer:has(a[href*="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ"]) { display: none !important; }
+
+html.dt-hide-films ytd-guide-entry-renderer:has(a[title*="Movie" i]),
+html.dt-hide-films ytd-guide-entry-renderer:has(a[title*="Film" i]),
+html.dt-hide-films ytd-guide-entry-renderer:has(a[href*="/movies"]),
+html.dt-hide-films ytd-guide-entry-renderer:has(a[href*="/feed/storefront"]) { display: none !important; }
+
+html.dt-hide-live ytd-guide-entry-renderer:has(a[title*="Live" i]),
+html.dt-hide-live ytd-guide-entry-renderer:has(a[href*="/live"]) { display: none !important; }
+
+html.dt-hide-gaming ytd-guide-entry-renderer:has(a[title*="Gaming" i]),
+html.dt-hide-gaming ytd-guide-entry-renderer:has(a[href*="/gaming"]) { display: none !important; }
+
+html.dt-hide-news ytd-guide-entry-renderer:has(a[title*="News" i]),
+html.dt-hide-news ytd-guide-entry-renderer:has(a[href*="/news"]),
+html.dt-hide-news ytd-guide-entry-renderer:has(a[href*="/channel/UCYfdidRxbB8Qhf0Nx7ioOYw"]) { display: none !important; }
+
+html.dt-hide-sports ytd-guide-entry-renderer:has(a[title*="Sport" i]),
+html.dt-hide-sports ytd-guide-entry-renderer:has(a[href*="/sport"]),
+html.dt-hide-sports ytd-guide-entry-renderer:has(a[href*="/channel/UCEgdi0XIXXZ-qJOFPf4JSKw"]) { display: none !important; }
+
+html.dt-hide-courses ytd-guide-entry-renderer:has(a[title*="Course" i]),
+html.dt-hide-courses ytd-guide-entry-renderer:has(a[title*="Learning" i]),
+html.dt-hide-courses ytd-guide-entry-renderer:has(a[href*="/courses"]) { display: none !important; }
+
+html.dt-hide-fashion ytd-guide-entry-renderer:has(a[title*="Fashion" i]),
+html.dt-hide-fashion ytd-guide-entry-renderer:has(a[href*="/fashion"]),
+html.dt-hide-fashion ytd-guide-entry-renderer:has(a[href*="/channel/UCrpQ4p1Ql_hG8rKXIKM1MOQ"]) { display: none !important; }
+
+html.dt-hide-podcasts ytd-guide-entry-renderer:has(a[title*="Podcast" i]),
+html.dt-hide-podcasts ytd-guide-entry-renderer:has(a[href*="/podcasts"]) { display: none !important; }
+
+html.dt-hide-playables ytd-guide-entry-renderer:has(a[title*="Playable" i]),
+html.dt-hide-playables ytd-guide-entry-renderer:has(a[href*="/playables"]) { display: none !important; }
+
+/* More about YouTube Section */
+/* Master Toggle - target section using unique platform links and titles */
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[href*="music.youtube.com"]),
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[href*="kids.youtube.com"]),
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[href*="studio.youtube.com"]),
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[href*="/premium"]),
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[title*="YouTube Music" i]),
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[title*="YouTube Kids" i]),
+html.dt-hide-more-from-youtube ytd-guide-section-renderer:has(a[title*="YouTube Studio" i]) {
+  display: none !important;
+}
+
+/* Individual Items */
+html.dt-hide-premium ytd-guide-entry-renderer:has(a[title*="Premium" i]),
+html.dt-hide-premium ytd-guide-entry-renderer:has(a[href*="/premium"]) { display: none !important; }
+
+html.dt-hide-studio ytd-guide-entry-renderer:has(a[title*="Studio" i]),
+html.dt-hide-studio ytd-guide-entry-renderer:has(a[href*="/studio"]) { display: none !important; }
+
+html.dt-hide-music-premium ytd-guide-entry-renderer:has(a[title*="Music" i]):has(a[href*="music.youtube.com"]),
+html.dt-hide-music-premium ytd-guide-entry-renderer:has(a[href*="music.youtube.com"]) { display: none !important; }
+
+html.dt-hide-kids ytd-guide-entry-renderer:has(a[title*="Kids" i]),
+html.dt-hide-kids ytd-guide-entry-renderer:has(a[href*="kids.youtube.com"]) { display: none !important; }

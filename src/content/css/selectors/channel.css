@@ -1,0 +1,126 @@
+/* Channel Page Elements */
+
+/* Hide Channel Name */
+html.dt-hide-channel-name #channel-name,
+html.dt-hide-channel-name #text.ytd-channel-name,
+html.dt-hide-channel-name .ytd-channel-name,
+html.dt-hide-channel-name #header.ytd-c4-tabbed-header-renderer #text-container,
+html.dt-hide-channel-name ytd-channel-name,
+html.dt-hide-channel-name yt-page-header-view-model .ytPageHeaderViewModelTitle,
+html.dt-hide-channel-name yt-dynamic-text-view-model.ytPageHeaderViewModelTitle,
+html.dt-hide-channel-name .ytPageHeaderViewModelTitle {
+  display: none !important;
+}
+
+/* Hide Channel Handle / Username */
+/* Targets the first metadata row (Handle row) */
+html.dt-hide-channel-handle yt-content-metadata-view-model > .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(1),
+html.dt-hide-channel-handle yt-content-metadata-view-model > .ytContentMetadataViewModelMetadataRow:nth-of-type(1),
+html.dt-hide-channel-handle .ytContentMetadataViewModelHost > .ytContentMetadataViewModelMetadataRowMetadataRowInline:first-child {
+  display: none !important;
+}
+
+/* Hide Channel Tabs */
+html.dt-hide-channel-tabs #tabs-inner.ytd-c4-tabbed-header-renderer,
+html.dt-hide-channel-tabs [role="tablist"].ytd-c4-tabbed-header-renderer,
+html.dt-hide-channel-tabs yt-tab-group-shape,
+html.dt-hide-channel-tabs .tabGroupShapeTabs,
+html.dt-hide-channel-tabs #tabs-container,
+html.dt-hide-channel-tabs #tabsContainer.tp-yt-paper-tabs {
+  display: none !important;
+}
+
+/* Hide Subscriber Count & Its Dot */
+/* Based on provided HTML: Subscriber count is the first child of the second metadata row. 
+   The dot before it is a standalone span outside the row. */
+html.dt-hide-subscriber-count #subscriber-count,
+html.dt-hide-subscriber-count #subscriber-count.style-scope.ytd-c4-tabbed-header-renderer,
+/* Target the subscriber count text (1st item in 2nd row) */
+html.dt-hide-subscriber-count yt-content-metadata-view-model > .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(2) > .ytContentMetadataViewModelMetadataText:nth-child(1),
+html.dt-hide-subscriber-count .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(2) span[aria-label*="subscribers"],
+/* Target the "Dot 1" (standalone dot before subscriber count) */
+html.dt-hide-subscriber-count .ytContentMetadataViewModelDelimiterStandalone {
+  display: none !important;
+}
+
+/* Hide Video Count & Its Dot */
+/* Based on provided HTML: Video count is the last child of the second metadata row. 
+   The dot before it is a delimiter inside the same row. */
+html.dt-hide-video-count #video-count,
+html.dt-hide-video-count #video-count.style-scope.ytd-c4-tabbed-header-renderer,
+/* Target the video count text (last item in 2nd row) */
+html.dt-hide-video-count yt-content-metadata-view-model > .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(2) > .ytContentMetadataViewModelMetadataText:last-child,
+/* Target "Dot 2" (dot before video count inside the 2nd row) */
+html.dt-hide-video-count yt-content-metadata-view-model > .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(2) > .ytContentMetadataViewModelDelimiter {
+  display: none !important;
+}
+
+/* Hide Subscribe Button */
+html.dt-hide-subscribe .ytSubscribeButtonViewModelContainer,
+html.dt-hide-subscribe #subscribe-button,
+html.dt-hide-subscribe ytd-subscribe-button-renderer,
+html.dt-hide-subscribe yt-subscribe-button-view-model {
+  display: none !important;
+}
+
+/* Hide Join Button */
+html.dt-hide-join-button .ytFlexibleActionsViewModelAction,
+html.dt-hide-join-button #sponsor-button,
+html.dt-hide-join-button ytd-button-renderer:has(button[aria-label*="Join"]),
+html.dt-hide-join-button yt-button-view-model:has(button[aria-label*="Join"]) {
+  display: none !important;
+}
+
+/* Hide Channel Home Tab */
+html.dt-hide-channel-home ytd-tab-renderer:has([title="Home"]),
+html.dt-hide-channel-home ytd-tab-renderer[aria-label="Home"],
+html.dt-hide-channel-home yt-tab-shape[tab-title="Home"] {
+  display: none !important;
+}
+
+/* Hide Channel Videos Tab */
+html.dt-hide-channel-videos ytd-tab-renderer:has([title="Videos"]),
+html.dt-hide-channel-videos ytd-tab-renderer[aria-label="Videos"],
+html.dt-hide-channel-videos yt-tab-shape[tab-title="Videos"] {
+  display: none !important;
+}
+
+/* Hide Channel Shorts Tab */
+html.dt-hide-channel-shorts ytd-tab-renderer:has([title="Shorts"]),
+html.dt-hide-channel-shorts ytd-tab-renderer[aria-label="Shorts"],
+html.dt-hide-channel-shorts yt-tab-shape[tab-title="Shorts"] {
+  display: none !important;
+}
+
+/* Hide Channel Live Tab */
+html.dt-hide-channel-live ytd-tab-renderer:has([title="Live"]),
+html.dt-hide-channel-live ytd-tab-renderer[aria-label="Live"],
+html.dt-hide-channel-live yt-tab-shape[tab-title="Live"] {
+  display: none !important;
+}
+
+/* Hide Channel Playlists Tab */
+html.dt-hide-channel-playlists ytd-tab-renderer:has([title="Playlists"]),
+html.dt-hide-channel-playlists ytd-tab-renderer[aria-label="Playlists"],
+html.dt-hide-channel-playlists yt-tab-shape[tab-title="Playlists"] {
+  display: none !important;
+}
+
+/* Hide Channel Posts/Community Tab */
+html.dt-hide-channel-posts ytd-tab-renderer:has([title="Community"]),
+html.dt-hide-channel-posts ytd-tab-renderer[aria-label="Community"],
+html.dt-hide-channel-posts yt-tab-shape[tab-title="Community"],
+html.dt-hide-channel-posts yt-tab-shape[tab-title="Posts"] {
+  display: none !important;
+}
+
+/* Hide Channel Search Tab */
+html.dt-hide-channel-search ytd-expandable-tab-renderer,
+html.dt-hide-channel-search yt-tab-shape:has(button[aria-label="Search"]) {
+  display: none !important;
+}
+
+/* Hide Channel Members Shelf */
+html.dt-hide-channel-members ytd-recognition-shelf-renderer {
+  display: none !important;
+}

@@ -1,0 +1,70 @@
+/* Video Page Elements */
+
+
+
+/* Center Player */
+html.dt-center-player #primary.ytd-watch-flexy {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  float: none !important;
+}
+html.dt-center-player #secondary.ytd-watch-flexy {
+  display: none !important;
+}
+
+/* Hide Join Button */
+html.dt-hide-join-button #sponsor-button {
+  display: none !important;
+}
+
+/* Hide Subscribe Button */
+html.dt-hide-subscribe #subscribe-button {
+  display: none !important;
+}
+
+/* Hide Download Button */
+html.dt-hide-download-button-video ytd-download-button-renderer {
+  display: none !important;
+}
+
+/* Hide Share Button - Updated selector */
+html.dt-hide-share-button ytd-button-renderer:has(path[d*="M15 5.63L20.66 12 15 18.37"]),
+html.dt-hide-share-button ytd-button-renderer:has(path[d*="M10 3.158V7.51"]),
+html.dt-hide-share-button ytd-button-renderer:has(yt-icon[icon="share"]),
+html.dt-hide-share-button ytd-button-renderer[aria-label*="Share"],
+html.dt-hide-share-button ytd-watch-metadata #top-level-buttons-computed button[aria-label="Share"],
+html.dt-hide-share-button ytd-watch-metadata #top-level-buttons-computed ytd-button-renderer:has(button[aria-label="Share"]),
+html.dt-hide-share-button yt-button-view-model:has(button[aria-label="Share"]),
+html.dt-hide-share-button #top-level-buttons-computed button[aria-label*="share" i],
+html.dt-hide-share-button #top-level-buttons-computed yt-button-view-model {
+  display: none !important;
+}
+
+
+/* Hide Description */
+html.dt-hide-description #description,
+html.dt-hide-description #description-inline-expander {
+  display: none !important;
+}
+
+/* Hide Comments */
+html.dt-hide-comments #comments {
+  display: none !important;
+}
+
+/* Hide Related Videos - Updated selector */
+html.dt-hide-related-videos #secondary #related,
+html.dt-hide-related-videos ytd-watch-next-results {
+  display: none !important;
+}
+
+/* Hide End Screen Suggestions */
+html.dt-hide-end-screen-suggestions .videowall-endscreen,
+html.dt-hide-end-screen-suggestions .ytp-ce-element {
+  display: none !important;
+}
+
+/* Hide Likes */
+html.dt-hide-likes ytd-menu-renderer.ytd-watch-metadata #top-level-buttons-computed {
+  display: none !important;
+}

@@ -1,0 +1,69 @@
+name: Test & Build Extension
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate & Test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build CSS from selectors
+        run: npm run build:css
+
+      - name: Run TypeScript check
+        run: npx tsc --noEmit
+        continue-on-error: false
+
+      - name: Validate CSS selectors
+        run: node scripts/validate-css.js
+        continue-on-error: false
+
+      - name: Validate settings mapping
+        run: node scripts/validate-settings.js
+        continue-on-error: false
+
+      - name: Build Chrome extension
+        run: npm run build:chrome
+        continue-on-error: false
+
+      - name: Build Firefox extension
+        run: npm run build:firefox
+        continue-on-error: false
+
+      - name: Build Edge extension
+        run: npm run build:edge
+        continue-on-error: false
+
+      - name: Build Safari extension
+        run: npm run build:safari
+        continue-on-error: false
+
+      - name: Build Opera extension
+        run: npm run build:opera
+        continue-on-error: false
+
+      - name: Verify build outputs
+        run: node scripts/verify-build.js
+        continue-on-error: false
+
+      - name: Test CSS rules exist
+        run: node scripts/test-css-rules.js
+        continue-on-error: false
+

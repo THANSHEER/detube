@@ -1,0 +1,45 @@
+{
+  "name": "detube",
+  "version": "2.0.1",
+  "description": "Distraction-free YouTube experience.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:css": "node scripts/build-css.js",
+    "build": "npm run build:css && npm run build:chrome && npm run build:firefox && npm run build:edge && npm run build:safari && npm run build:opera && npm run zip:builds",
+    "build:chrome": "tsc && TARGET_BROWSER=chrome vite build",
+    "build:firefox": "tsc && TARGET_BROWSER=firefox vite build",
+    "build:edge": "tsc && TARGET_BROWSER=edge vite build",
+    "build:safari": "tsc && TARGET_BROWSER=safari vite build",
+    "build:opera": "tsc && TARGET_BROWSER=opera vite build",
+    "zip:builds": "node scripts/zip-builds.js",
+    "watch": "npm run watch:chrome",
+    "watch:chrome": "npm run build:css && npm run build:chrome -- --watch",
+    "watch:firefox": "npm run build:css && npm run build:firefox -- --watch",
+    "watch:safari": "npm run build:css && npm run build:safari -- --watch",
+    "watch:opera": "npm run build:css && npm run build:opera -- --watch",
+    "test": "npm run test:css && npm run test:settings && npm run test:rules",
+    "test:css": "node scripts/validate-css.js",
+    "test:settings": "node scripts/validate-settings.js",
+    "test:rules": "node scripts/test-css-rules.js",
+    "test:verify-build": "node scripts/verify-build.js",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.243",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}

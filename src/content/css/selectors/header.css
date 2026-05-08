@@ -1,0 +1,44 @@
+/* Header & Global Navigation */
+
+
+
+/* Hide Search Bar - Multiple selectors for different layouts */
+html.dt-hide-search #center,
+html.dt-hide-search .search-form-container,
+html.dt-hide-search [role="combobox"][aria-label*="Search"],
+html.dt-hide-search ytd-searchbox {
+  display: none !important;
+}
+
+/* Hide Voice Search Button */
+html.dt-hide-voice-search #voice-search-button,
+html.dt-hide-voice-search button[aria-label="Search with your voice"],
+html.dt-hide-voice-search [aria-label*="voice"] button {
+  display: none !important;
+}
+
+/* Hide Notifications Icon - target the button container */
+html.dt-hide-notifications ytd-notification-topbar-button-renderer,
+html.dt-hide-notifications button[aria-label*="notification"],
+html.dt-hide-notifications button[aria-label*="Notification"],
+html.dt-hide-notifications [aria-label*="Notifications"] {
+  display: none !important;
+}
+
+
+
+/* Hide Create Button */
+html.dt-hide-create-button button[aria-label="Create"],
+html.dt-hide-create-button button[aria-label*="Upload"],
+html.dt-hide-create-button ytd-topbar-menu-button-renderer:has(path[d*="M14 10H2v2h12v-2zm0-4H2v2h12V6zM2 16h8v-2H2v2zm19-8h-2V6h-2v2h-2v2h2v2h2v-2h2V8z"]),
+html.dt-hide-create-button ytd-topbar-menu-button-renderer:has(yt-icon[icon="video-call"]),
+html.dt-hide-create-button #buttons ytd-topbar-menu-button-renderer:first-child {
+  display: none !important;
+}
+
+/* Hide Suggest/Content Filters (chips/filter bar) */
+html.dt-hide-suggest-content ytd-feed-filter-chip-bar-renderer,
+html.dt-hide-suggest-content #header.ytd-rich-grid-renderer,
+html.dt-hide-suggest-content #chips-wrapper {
+  display: none !important;
+}

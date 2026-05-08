@@ -1,0 +1,116 @@
+name: Publish to Web Stores
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish_to_firefox:
+        description: 'Publish to Firefox Add-ons'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Validate and Publish
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build CSS from selectors
+        run: npm run build:css
+
+      - name: Run TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Validate CSS selectors
+        run: node scripts/validate-css.js
+
+      - name: Validate settings mapping
+        run: node scripts/validate-settings.js
+
+      - name: Build Chrome extension
+        run: npm run build:chrome
+
+      - name: Build Firefox extension
+        run: npm run build:firefox
+
+      - name: Build Edge extension
+        run: npm run build:edge
+
+      - name: Build Safari extension
+        run: npm run build:safari
+
+      - name: Build Opera extension
+        run: npm run build:opera
+
+      - name: Verify build outputs
+        run: node scripts/verify-build.js
+
+      - name: Create packages (ZIP)
+        run: npm run zip:builds
+
+      - name: Get version
+        id: info
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "ZIP_CHROME=detube-chrome-v$VERSION.zip" >> $GITHUB_OUTPUT
+          echo "ZIP_FIREFOX=detube-firefox-v$VERSION.zip" >> $GITHUB_OUTPUT
+          echo "ZIP_EDGE=detube-edge-v$VERSION.zip" >> $GITHUB_OUTPUT
+          echo "ZIP_SAFARI=detube-safari-v$VERSION.zip" >> $GITHUB_OUTPUT
+          echo "ZIP_OPERA=detube-opera-v$VERSION.zip" >> $GITHUB_OUTPUT
+
+
+      - name: Publish to Firefox Add-ons (AMO)
+        if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || inputs.publish_to_firefox)
+        run: |
+          npx web-ext sign \
+            --source-dir dist-firefox \
+            --api-key ${{ secrets.FIREFOX_API_KEY }} \
+            --api-secret ${{ secrets.FIREFOX_API_SECRET }} \
+            --use-submission-api
+        continue-on-error: true
+
+
+      - name: Create Release (if Tagged)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.info.outputs.ZIP_CHROME }}
+            ${{ steps.info.outputs.ZIP_FIREFOX }}
+            ${{ steps.info.outputs.ZIP_EDGE }}
+            ${{ steps.info.outputs.ZIP_SAFARI }}
+            ${{ steps.info.outputs.ZIP_OPERA }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: detube-release-packages
+          path: |
+            ${{ steps.info.outputs.ZIP_CHROME }}
+            ${{ steps.info.outputs.ZIP_FIREFOX }}
+            ${{ steps.info.outputs.ZIP_EDGE }}
+            ${{ steps.info.outputs.ZIP_SAFARI }}
+            ${{ steps.info.outputs.ZIP_OPERA }}
+          retention-days: 30

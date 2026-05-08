@@ -1,0 +1,198 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* ============================================================
+   DeTube — Browser-Native Design System
+   
+   CSS custom properties adapt to whichever browser renders this
+   popup, making it feel at home in Chrome, Firefox, Edge, Arc,
+   and Brave. Each browser exposes its own system colours; we
+   layer a curated set of DeTube tokens on top.
+   
+   Priority chain:
+     1. Browser system colours  (prefers-color-scheme aware)
+     2. DeTube semantic tokens  (--dt-* variables)
+     3. Tailwind utility classes (use token vars, not raw hex)
+   ============================================================ */
+
+@layer base {
+
+  /* ----------------------------------------------------------
+     Core design tokens — light mode base
+     ---------------------------------------------------------- */
+  :root {
+    /* DeTube brand accent — YouTube Red */
+    --dt-accent:          #ff0000;
+    --dt-accent-hover:    #cc0000;
+    --dt-accent-soft:     rgba(255, 0, 0, 0.08);
+    --dt-accent-border:   rgba(255, 0, 0, 0.2);
+
+    /* Surfaces */
+    --dt-surface:         #ffffff;
+    --dt-surface-raised:  #f8f9fa; /* Chrome style lighter surface */
+    --dt-surface-overlay: rgba(0, 0, 0, 0.03);
+
+    /* Borders */
+    --dt-border:          rgba(0, 0, 0, 0.08);
+    --dt-border-strong:   rgba(0, 0, 0, 0.15);
+
+    /* Text */
+    --dt-text-primary:    #0f0f0f; /* YouTube specific dark text */
+    --dt-text-secondary:  #606060; /* YouTube gray text */
+    --dt-text-muted:      #8f8f8f; /* Lighter but readable */
+
+    /* Toggle track */
+    --dt-toggle-off:      #d4d4d8;
+    --dt-toggle-thumb:    #ffffff;
+
+    /* Radius */
+    --dt-radius:          10px;
+    --dt-radius-sm:       6px;
+    --dt-radius-lg:       14px;
+
+    /* Native system font */
+    --dt-font: ui-sans-serif;
+
+    color-scheme: light dark;
+  }
+
+  /* ----------------------------------------------------------
+     Dark mode — auto-activated by OS / browser preference
+     Mirrors Chrome/YouTube dark mode palettes
+     ---------------------------------------------------------- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --dt-accent:          #ff0000;
+      --dt-accent-hover:    #ff4d4d;
+      --dt-accent-soft:     rgba(255, 0, 0, 0.15);
+      --dt-accent-border:   rgba(255, 0, 0, 0.3);
+
+      --dt-surface:         #0f0f0f;      /* YouTube Dark Mode Base */
+      --dt-surface-raised:  #272727;      /* YouTube Dark Mode Raised */
+      --dt-surface-overlay: rgba(255, 255, 255, 0.08);
+
+      --dt-border:          rgba(255, 255, 255, 0.10);
+      --dt-border-strong:   rgba(255, 255, 255, 0.20);
+
+      --dt-text-primary:    #f1f1f1; /* YouTube dark mode text */
+      --dt-text-secondary:  #aaaaaa; /* YouTube dark mode secondary */
+      --dt-text-muted:      #717171; /* Fixed contrast: much brighter than before */
+
+      --dt-toggle-off:      #3f3f46;
+      --dt-toggle-thumb:    #ffffff;
+    }
+  }
+
+  /* ----------------------------------------------------------
+     Base reset
+     ---------------------------------------------------------- */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    width: 380px;
+    height: 580px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: var(--dt-surface);
+  }
+
+  body {
+    font-family: var(--dt-font), ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--dt-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ----------------------------------------------------------
+     Popup shell — flex column
+     The inner .dt-body div is the scrollable zone.
+     ---------------------------------------------------------- */
+  .dt-popup {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--dt-surface);
+    overflow: hidden;
+  }
+
+  /* Fixed header + tabs */
+  .dt-header-area {
+    flex-shrink: 0;
+    padding: 16px 16px 0;
+    background: var(--dt-surface);
+  }
+
+  /* Scrollable settings body */
+  .dt-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 16px 16px;
+    scroll-behavior: smooth;
+  }
+
+  /* Fixed footer */
+  .dt-footer-area {
+    flex-shrink: 0;
+    padding: 8px 16px 12px;
+    background: var(--dt-surface);
+    border-top: 1px solid var(--dt-border);
+  }
+
+  /* ----------------------------------------------------------
+     Native scrollbar
+     ---------------------------------------------------------- */
+  .dt-body::-webkit-scrollbar       { width: 4px; }
+  .dt-body::-webkit-scrollbar-track { background: transparent; }
+  .dt-body::-webkit-scrollbar-thumb {
+    background: var(--dt-border-strong);
+    border-radius: 9999px;
+  }
+  .dt-body::-webkit-scrollbar-thumb:hover {
+    background: var(--dt-text-muted);
+  }
+
+  /* Firefox native scrollbar */
+  .dt-body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--dt-border-strong) transparent;
+  }
+
+  /* ----------------------------------------------------------
+     Smooth transitions for interactive elements only
+     (applied selectively, not globally, to avoid jank)
+     ---------------------------------------------------------- */
+  button, [role="switch"], .dt-card {
+    transition: background 0.15s ease, border-color 0.15s ease,
+                color 0.15s ease, box-shadow 0.15s ease,
+                transform 0.15s ease;
+  }
+}
+
+@layer utilities {
+  .animate-slide-up  { animation: slideUp  0.25s ease-out both; }
+  .animate-scale-in  { animation: scaleIn  0.15s ease-out both; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+}

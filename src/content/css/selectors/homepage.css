@@ -1,0 +1,19 @@
+/* Homepage & Recommendations */
+
+
+
+/* Hide Homepage Recommendations */
+html.dt-hide-home-recommendations ytd-rich-grid-renderer {
+  display: none !important;
+}
+html.dt-hide-home-recommendations #contents.ytd-rich-grid-renderer {
+  display: none !important;
+}
+
+
+/* Hide Shorts Section */
+html.dt-hide-shorts-section ytd-rich-shelf-renderer[is-shorts],
+html.dt-hide-shorts-section ytd-reel-shelf-renderer,
+html.dt-hide-shorts-section ytd-browse[page-subtype="home"] ytd-rich-shelf-renderer:first-of-type {
+  display: none !important;
+}
