@@ -1,0 +1,50 @@
+/**
+ * DeTube — Shorts Page Selectors
+ *
+ * Targets the YouTube Shorts player page (/shorts/...).
+ * All rules are applied via CSS classes toggled on <html> by the content script.
+ */
+
+/* ── Hide Autoplay Next ──────────────────────────────────────────── */
+/* Hides the next-shorts autoplay button overlay */
+html.dt-hide-shorts-autoplay ytd-reel-video-renderer .reel-player-overlay-renderer,
+html.dt-hide-shorts-autoplay ytd-reel-video-renderer ytd-reel-player-overlay-renderer,
+html.dt-hide-shorts-autoplay #navigation-endpoint.style-scope.ytd-reel-player-overlay-renderer {
+  display: none !important;
+}
+
+/* ── Hide Comments ───────────────────────────────────────────────── */
+/* Hides the comments button in the Shorts action panel */
+html.dt-hide-shorts-comments ytd-reel-video-renderer #comments-button,
+html.dt-hide-shorts-comments ytd-reel-video-renderer yt-button-shape[aria-label*="comment" i],
+html.dt-hide-shorts-comments ytd-shorts #comments-button,
+html.dt-hide-shorts-comments .shorts-player-action-panel-button-view-model[data-type="comments"] {
+  display: none !important;
+}
+
+/* ── Hide Related Shelf ──────────────────────────────────────────── */
+/* Hides the sidebar related-shorts panel on wider viewports */
+html.dt-hide-shorts-sidebar ytd-page-manager[page-subtype="shorts"] #related-columns,
+html.dt-hide-shorts-sidebar ytd-page-manager[page-subtype="shorts"] ytd-watch-next-secondary-results-renderer,
+html.dt-hide-shorts-sidebar #shorts-container ytd-reel-shelf-renderer {
+  display: none !important;
+}
+
+/* ── Hide Like Counts ────────────────────────────────────────────── */
+/* Hides the like/dislike button cluster in the Shorts action panel */
+html.dt-hide-shorts-likes ytd-reel-video-renderer #like-button,
+html.dt-hide-shorts-likes ytd-reel-video-renderer #dislike-button,
+html.dt-hide-shorts-likes ytd-reel-video-renderer yt-button-shape[aria-label*="like" i],
+html.dt-hide-shorts-likes ytd-reel-video-renderer yt-button-shape[aria-label*="dislike" i],
+html.dt-hide-shorts-likes .shorts-player-action-panel-button-view-model[data-type="like"],
+html.dt-hide-shorts-likes .shorts-player-action-panel-button-view-model[data-type="dislike"] {
+  display: none !important;
+}
+
+/* ── Hide Share Button ───────────────────────────────────────────── */
+/* Hides the share button in the Shorts action panel */
+html.dt-hide-shorts-share ytd-reel-video-renderer #share-button,
+html.dt-hide-shorts-share ytd-reel-video-renderer yt-button-shape[aria-label*="share" i],
+html.dt-hide-shorts-share .shorts-player-action-panel-button-view-model[data-type="share"] {
+  display: none !important;
+}

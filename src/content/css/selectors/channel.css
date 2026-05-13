@@ -8,7 +8,8 @@ html.dt-hide-channel-name #header.ytd-c4-tabbed-header-renderer #text-container,
 html.dt-hide-channel-name ytd-channel-name,
 html.dt-hide-channel-name yt-page-header-view-model .ytPageHeaderViewModelTitle,
 html.dt-hide-channel-name yt-dynamic-text-view-model.ytPageHeaderViewModelTitle,
-html.dt-hide-channel-name .ytPageHeaderViewModelTitle {
+html.dt-hide-channel-name .ytPageHeaderViewModelTitle,
+html.dt-hide-channel-name .ytm-channel-header-title {
   display: none !important;
 }
 
@@ -26,7 +27,8 @@ html.dt-hide-channel-tabs [role="tablist"].ytd-c4-tabbed-header-renderer,
 html.dt-hide-channel-tabs yt-tab-group-shape,
 html.dt-hide-channel-tabs .tabGroupShapeTabs,
 html.dt-hide-channel-tabs #tabs-container,
-html.dt-hide-channel-tabs #tabsContainer.tp-yt-paper-tabs {
+html.dt-hide-channel-tabs #tabsContainer.tp-yt-paper-tabs,
+html.dt-hide-channel-tabs ytm-tab-group-renderer {
   display: none !important;
 }
 
@@ -39,7 +41,8 @@ html.dt-hide-subscriber-count #subscriber-count.style-scope.ytd-c4-tabbed-header
 html.dt-hide-subscriber-count yt-content-metadata-view-model > .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(2) > .ytContentMetadataViewModelMetadataText:nth-child(1),
 html.dt-hide-subscriber-count .ytContentMetadataViewModelMetadataRowMetadataRowInline:nth-of-type(2) span[aria-label*="subscribers"],
 /* Target the "Dot 1" (standalone dot before subscriber count) */
-html.dt-hide-subscriber-count .ytContentMetadataViewModelDelimiterStandalone {
+html.dt-hide-subscriber-count .ytContentMetadataViewModelDelimiterStandalone,
+html.dt-hide-subscriber-count .ytm-channel-header-subscriber-count {
   display: none !important;
 }
 
@@ -74,21 +77,24 @@ html.dt-hide-join-button yt-button-view-model:has(button[aria-label*="Join"]) {
 /* Hide Channel Home Tab */
 html.dt-hide-channel-home ytd-tab-renderer:has([title="Home"]),
 html.dt-hide-channel-home ytd-tab-renderer[aria-label="Home"],
-html.dt-hide-channel-home yt-tab-shape[tab-title="Home"] {
+html.dt-hide-channel-home yt-tab-shape[tab-title="Home"],
+html.dt-hide-channel-home ytm-tab-renderer[tab-title="Home"] {
   display: none !important;
 }
 
 /* Hide Channel Videos Tab */
 html.dt-hide-channel-videos ytd-tab-renderer:has([title="Videos"]),
 html.dt-hide-channel-videos ytd-tab-renderer[aria-label="Videos"],
-html.dt-hide-channel-videos yt-tab-shape[tab-title="Videos"] {
+html.dt-hide-channel-videos yt-tab-shape[tab-title="Videos"],
+html.dt-hide-channel-videos ytm-tab-renderer[tab-title="Videos"] {
   display: none !important;
 }
 
 /* Hide Channel Shorts Tab */
 html.dt-hide-channel-shorts ytd-tab-renderer:has([title="Shorts"]),
 html.dt-hide-channel-shorts ytd-tab-renderer[aria-label="Shorts"],
-html.dt-hide-channel-shorts yt-tab-shape[tab-title="Shorts"] {
+html.dt-hide-channel-shorts yt-tab-shape[tab-title="Shorts"],
+html.dt-hide-channel-shorts ytm-tab-renderer[tab-title="Shorts"] {
   display: none !important;
 }
 

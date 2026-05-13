@@ -194,13 +194,13 @@ new DeTubeEngine();
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === 'checkLogin') {
     const avatar = document.querySelector(
-      '#avatar-btn, ytd-topbar-menu-button-renderer, .ytp-user-avatar'
+      '#avatar-btn, ytd-topbar-menu-button-renderer, .ytp-user-avatar, ytm-avatar-button, .ytm-profile-icon'
     );
     const signinPromo = document.querySelector(
-      'ytd-guide-signin-promo-renderer, #signin-promo'
+      'ytd-guide-signin-promo-renderer, #signin-promo, .ytm-signin-promo-renderer'
     );
     const signinButton = document.querySelector(
-      'a[aria-label*="Sign in" i], ytd-button-renderer:has(a[href*="login"])'
+      'a[aria-label*="Sign in" i], ytd-button-renderer:has(a[href*="login"]), .ytm-header-bar-signin-button'
     );
 
     const isLoggedIn = !!avatar && !signinPromo && !signinButton;

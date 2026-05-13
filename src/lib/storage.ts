@@ -1,28 +1,45 @@
-/**
- * DeTube Storage Layer
- *
- * Settings type and defaults are derived from the centralized config registry.
- * This module provides the storage API used by both the popup and background script.
- * The content script uses a lightweight inline version to avoid code-splitting issues.
- */
-
 import { SETTING_REGISTRY, buildDefaults } from './config';
 
 // ---------------------------------------------------------------------------
-// Settings type — generated from registry keys
+// Theme — stored separately from boolean settings
 // ---------------------------------------------------------------------------
 
-/**
- * Settings interface.
- * The `enabled` field is the master toggle.
- * All other keys correspond to entries in SETTING_REGISTRY.
- */
+export type ThemeMode = 'system' | 'light' | 'dark';
+
+export const DeTubeTheme = {
+  get(): Promise<ThemeMode> {
+    return new Promise((resolve) => {
+      chrome.storage.local.get({ theme: 'system' }, (items) => {
+        resolve((items['theme'] as ThemeMode) || 'system');
+      });
+    });
+  },
+
+  save(theme: ThemeMode): Promise<void> {
+    return new Promise((resolve) => {
+      chrome.storage.local.set({ theme }, () => resolve());
+    });
+  },
+
+  onChange(callback: (theme: ThemeMode) => void) {
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName === 'local' && changes['theme']) {
+        callback(changes['theme'].newValue as ThemeMode);
+      }
+    });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Settings type (boolean toggles only)
+// ---------------------------------------------------------------------------
+
 export type Settings = { enabled: boolean } & {
   [K in (typeof SETTING_REGISTRY)[number]['key']]: boolean;
 };
 
 // ---------------------------------------------------------------------------
-// Defaults — derived from registry
+// Defaults
 // ---------------------------------------------------------------------------
 
 export const DEFAULTS = buildDefaults() as Settings;
@@ -34,7 +51,7 @@ export const DEFAULTS = buildDefaults() as Settings;
 export const DeTubeStorage = {
   getSettings(): Promise<Settings> {
     return new Promise((resolve) => {
-      chrome.storage.local.get(DEFAULTS, (items) => {
+      chrome.storage.local.get(DEFAULTS as unknown as Record<string, unknown>, (items) => {
         if (chrome.runtime.lastError) {
           console.warn('DeTube: Error reading settings', chrome.runtime.lastError.message);
           resolve({ ...DEFAULTS });
@@ -47,7 +64,7 @@ export const DeTubeStorage = {
 
   saveSettings(settings: Partial<Settings>): Promise<void> {
     return new Promise((resolve) => {
-      chrome.storage.local.set(settings, () => {
+      chrome.storage.local.set(settings as Record<string, unknown>, () => {
         if (chrome.runtime.lastError) {
           console.warn('DeTube: Error saving settings', chrome.runtime.lastError.message);
         }
@@ -61,7 +78,7 @@ export const DeTubeStorage = {
       if (areaName === 'local') {
         const newSettings: Partial<Settings> = {};
         for (const [key, value] of Object.entries(changes)) {
-          (newSettings as Record<string, boolean>)[key] = value.newValue;
+          (newSettings as Record<string, unknown>)[key] = value.newValue;
         }
         callback(newSettings);
       }

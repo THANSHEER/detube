@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { DeTubeStorage, Settings, DEFAULTS } from '../lib/storage';
+import { DeTubeStorage, DeTubeTheme, Settings, DEFAULTS, type ThemeMode } from '../lib/storage';
 import {
   SETTING_REGISTRY,
   SECTION_TITLES,
@@ -34,7 +34,7 @@ import {
   FileText,
   Play,
   Menu,
-  PlusSquare,
+  SquarePlus,
   ShoppingBag,
   Music,
   Film,
@@ -47,20 +47,22 @@ import {
   Podcast,
   Joystick,
   Youtube,
-  Tv2,
+  TvMinimal,
   Video,
+  SlidersHorizontal,
+  PanelLeft,
+  Scissors,
   type LucideIcon,
 } from 'lucide-react';
 
-// Components
 import { Header } from '../components/Header';
-import { TabNavigation } from '../components/TabNavigation';
+import { NavRail, type NavTab } from '../components/NavRail';
 import { SettingCard } from '../components/SettingCard';
 import { SectionDivider } from '../components/SectionDivider';
-import { Footer } from '../components/Footer';
+import { SettingsPanel } from '../components/SettingsPanel';
 
 // ---------------------------------------------------------------------------
-// Icon resolver — maps icon name strings from config to Lucide components
+// Icon resolver
 // ---------------------------------------------------------------------------
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -89,7 +91,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileText,
   Play,
   Menu,
-  PlusSquare,
+  PlusSquare: SquarePlus,
   ShoppingBag,
   Music,
   Film,
@@ -102,7 +104,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Podcast,
   Joystick,
   Youtube,
-  Tv2,
+  Tv2: TvMinimal,
   Video,
 };
 
@@ -111,15 +113,16 @@ function resolveIcon(name: string): LucideIcon {
 }
 
 // ---------------------------------------------------------------------------
-// Tab definitions
+// Tab definitions — 6 pages
 // ---------------------------------------------------------------------------
 
-const TABS: { id: SettingCategory; label: string; Icon: LucideIcon }[] = [
-  { id: 'header', label: 'Header', Icon: SettingsIcon },
-  { id: 'sidebar', label: 'Sidebar', Icon: Menu },
-  { id: 'homepage', label: 'Home', Icon: Home },
-  { id: 'videopage', label: 'Video', Icon: PlayCircle },
-  { id: 'channelpage', label: 'Channel', Icon: User },
+const TABS: NavTab[] = [
+  { id: 'header',      label: 'Header',  Icon: SlidersHorizontal },
+  { id: 'sidebar',     label: 'Sidebar', Icon: PanelLeft         },
+  { id: 'homepage',    label: 'Home',    Icon: Home               },
+  { id: 'videopage',   label: 'Video',   Icon: PlayCircle         },
+  { id: 'channelpage', label: 'Channel', Icon: User               },
+  { id: 'shortspage',  label: 'Shorts',  Icon: Scissors           },
 ];
 
 // ---------------------------------------------------------------------------
@@ -128,25 +131,39 @@ const TABS: { id: SettingCategory; label: string; Icon: LucideIcon }[] = [
 
 const App: React.FC = () => {
   const [settings, setSettings] = useState<Settings>(DEFAULTS);
-  const [activeTab, setActiveTab] = useState<SettingCategory>('header');
+  const [activeTab, setActiveTab] = useState<SettingCategory | 'settings'>('header');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [theme, setTheme] = useState<ThemeMode>('system');
+  const [browser, setBrowser] = useState<string>('chrome');
 
-  // -----------------------------------------------------------------------
-  // Init: load settings + detect login state & active page
-  // -----------------------------------------------------------------------
+  // ── Apply theme to <html> whenever it changes ──────────────
+  useEffect(() => {
+    if (theme === 'system') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
 
+  // ── Init ───────────────────────────────────────────────────
   useEffect(() => {
     DeTubeStorage.getSettings().then(setSettings);
+    DeTubeTheme.get().then(setTheme);
+
+    // Detect the build-time browser from data-browser attribute
+    const detectedBrowser = document.documentElement.getAttribute('data-browser') || 'chrome';
+    setBrowser(detectedBrowser);
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
       if (!currentTab?.id) return;
 
       const url = currentTab.url || '';
-
-      // Auto-switch popup tab based on current YouTube page
       if (url.includes('youtube.com')) {
-        if (url.includes('/watch?v=')) {
+        // Auto-switch popup tab based on current YouTube page
+        if (url.includes('/shorts/')) {
+          setActiveTab('shortspage');
+        } else if (url.includes('/watch?v=')) {
           setActiveTab('videopage');
         } else if (
           url.includes('/@') ||
@@ -158,19 +175,12 @@ const App: React.FC = () => {
         } else {
           try {
             const path = new URL(url).pathname;
-            if (path === '/' || path === '') {
-              setActiveTab('homepage');
-            }
-          } catch {
-            // Ignore URL parsing errors
-          }
+            if (path === '/' || path === '') setActiveTab('homepage');
+          } catch { /* ignore */ }
         }
 
-        // Only send checkLogin to YouTube tabs (where content script exists)
         chrome.tabs.sendMessage(currentTab.id, { action: 'checkLogin' }, (response) => {
-          // Silently ignore connection errors — expected on non-injected tabs
           if (chrome.runtime.lastError) return;
-
           if (response && typeof response.isLoggedIn === 'boolean') {
             setIsLoggedIn(response.isLoggedIn);
           }
@@ -179,9 +189,11 @@ const App: React.FC = () => {
     });
   }, []);
 
-  // -----------------------------------------------------------------------
-  // Toggle handler
-  // -----------------------------------------------------------------------
+  // ── Handlers ───────────────────────────────────────────────
+  const handleThemeChange = async (newTheme: ThemeMode) => {
+    setTheme(newTheme);
+    await DeTubeTheme.save(newTheme);
+  };
 
   const handleToggle = async (key: string) => {
     const currentValue = (settings as Record<string, boolean>)[key];
@@ -191,104 +203,107 @@ const App: React.FC = () => {
     await DeTubeStorage.saveSettings({ [key]: newValue } as Partial<Settings>);
   };
 
-  // -----------------------------------------------------------------------
-  // Memoized: settings for current tab
-  // -----------------------------------------------------------------------
-
+  // ── Memoized settings for current tab ──────────────────────
   const currentSettings = useMemo(() => {
+    if (activeTab === 'settings') return [];
     return SETTING_REGISTRY.filter((s) => s.category === activeTab);
   }, [activeTab]);
 
   const currentSections = useMemo(() => {
-    return getSectionsForCategory(activeTab);
+    if (activeTab === 'settings') return [];
+    return getSectionsForCategory(activeTab as SettingCategory);
   }, [activeTab]);
 
-  // -----------------------------------------------------------------------
-  // Render helpers
-  // -----------------------------------------------------------------------
-
-  /**
-   * Check if a setting's parent is currently enabled (meaning section is hidden,
-   * so children should not be shown in the popup).
-   */
+  // ── Render helpers ─────────────────────────────────────────
   const isParentEnabled = (def: SettingDefinition): boolean => {
     if (!def.parentKey) return false;
     return !!(settings as Record<string, boolean>)[def.parentKey];
   };
 
-  /**
-   * Check if a setting should be visible based on login state.
-   */
   const isVisibleForLogin = (def: SettingDefinition): boolean => {
     if (!def.requiresLogin) return true;
     return isLoggedIn;
   };
 
-  /**
-   * Render a section with its settings.
-   */
   const renderSection = (section: SettingSection) => {
     const sectionSettings = currentSettings.filter((s) => s.section === section);
     if (sectionSettings.length === 0) return null;
 
-    // Separate top-level (no parent) from children
     const topLevel = sectionSettings.filter((s) => !s.parentKey);
     const children = sectionSettings.filter((s) => !!s.parentKey);
+    const visibleChildren = children.filter(isVisibleForLogin);
 
     return (
-      <React.Fragment key={section}>
+      <div key={section} className="mb-4 last:mb-1">
         <SectionDivider title={SECTION_TITLES[section]} />
 
-        {topLevel.map((def) => (
-          <SettingCard
-            key={def.key}
-            label={def.label}
-            description={def.description}
-            Icon={resolveIcon(def.icon)}
-            checked={!!(settings as Record<string, boolean>)[def.key]}
-            onToggle={() => handleToggle(def.key)}
-          />
-        ))}
+        {/* Grouped section container */}
+        <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius-lg)] shadow-sm overflow-hidden divide-y divide-[var(--dt-border)] transition-all">
+          {topLevel.map((def) => (
+            <SettingCard
+              key={def.key}
+              label={def.label}
+              Icon={resolveIcon(def.icon)}
+              checked={!!(settings as Record<string, boolean>)[def.key]}
+              onToggle={() => handleToggle(def.key)}
+            />
+          ))}
 
-        {children.length > 0 && !isParentEnabled(children[0]) && (
-          <div className="pl-3 space-y-1 border-l-2 border-[var(--dt-accent-border)] ml-1 animate-slide-up">
-            {children
-              .filter(isVisibleForLogin)
-              .map((def) => (
+          {/* Children options inside the same unified card container */}
+          {visibleChildren.length > 0 && !isParentEnabled(visibleChildren[0]) && (
+            <div className="divide-y divide-[var(--dt-border)] bg-[var(--dt-surface-overlay)]/40 animate-fade-in">
+              {visibleChildren.map((def) => (
                 <SettingCard
                   key={def.key}
                   label={def.label}
-                  description={def.description}
                   Icon={resolveIcon(def.icon)}
                   checked={!!(settings as Record<string, boolean>)[def.key]}
                   onToggle={() => handleToggle(def.key)}
+                  isChild
                 />
               ))}
-          </div>
-        )}
-      </React.Fragment>
+            </div>
+          )}
+        </div>
+      </div>
     );
   };
 
-  // -----------------------------------------------------------------------
-  // Render
-  // -----------------------------------------------------------------------
-
+  // ── Render ─────────────────────────────────────────────────
   return (
     <div className="dt-popup">
-      {/* Fixed: header + tabs */}
+
+      {/* Fixed slim header strip */}
       <div className="dt-header-area">
-        <Header enabled={settings.enabled} onToggle={() => handleToggle('enabled')} />
-        <TabNavigation tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
+        <Header
+          enabled={settings.enabled}
+          onToggle={() => handleToggle('enabled')}
+        />
       </div>
 
-      {/* Scrollable: settings list */}
-      <main key={activeTab} className="dt-body animate-slide-up space-y-1">
-        {currentSections.map(renderSection)}
-      </main>
+      {/* Middle: nav rail (left) + content (right) */}
+      <div className="dt-main-area">
+        <NavRail
+          tabs={TABS}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
-      {/* Fixed: footer */}
-      <Footer />
+        {/* Content area: either settings panel or settings list */}
+        {activeTab === 'settings' ? (
+          <SettingsPanel
+            theme={theme}
+            onThemeChange={handleThemeChange}
+            browser={browser}
+          />
+        ) : (
+          <main key={activeTab} className="dt-body animate-slide-up space-y-2">
+            {currentSections.map(renderSection)}
+          </main>
+        )}
+      </div>
+
+      {/* Fixed footer */}
     </div>
   );
 };

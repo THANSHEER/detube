@@ -11,6 +11,9 @@ const __dirname = dirname(__filename)
 const targetBrowser = (typeof process !== 'undefined' && process.env.TARGET_BROWSER) || 'chrome'
 
 export default defineConfig({
+  define: {
+    __BROWSER__: JSON.stringify(targetBrowser),
+  },
   plugins: [
     react(),
     {

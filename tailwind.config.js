@@ -6,11 +6,15 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        '4.5': '1.125rem',
+        '5.5': '1.375rem',
+        '13': '3.25rem',
+        '18': '4.5rem',
+      },
       colors: {
-        // Brand accent — DeTube indigo, used for active states
         accent: 'var(--dt-accent)',
         'accent-soft': 'var(--dt-accent-soft)',
-        // Browser-native surface tokens
         surface: 'var(--dt-surface)',
         'surface-raised': 'var(--dt-surface-raised)',
         'surface-overlay': 'var(--dt-surface-overlay)',
@@ -18,34 +22,41 @@ export default {
         'text-primary': 'var(--dt-text-primary)',
         'text-secondary': 'var(--dt-text-secondary)',
         'text-muted': 'var(--dt-text-muted)',
-        // Legacy aliases
-        brand: {
-          main: 'var(--dt-accent)',
-          dark: 'var(--dt-surface)',
-        },
       },
       fontFamily: {
-        // System-native font stack — matches each browser's OS font
-        ui: ['var(--dt-font)', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        ui: ['Outfit', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       animation: {
-        'slide-up': 'slideUp 0.25s ease-out',
-        'scale-in': 'scaleIn 0.15s ease-out',
+        'slide-up': 'slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'scale-in': 'scaleIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'fade-in': 'fadeIn 0.2s ease-out both',
       },
       keyframes: {
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(6px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         scaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '0%': { opacity: '0', transform: 'scale(0.94)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
       },
       borderRadius: {
-        'native': 'var(--dt-radius)',
+        native: 'var(--dt-radius)',
         'native-sm': 'var(--dt-radius-sm)',
         'native-lg': 'var(--dt-radius-lg)',
+      },
+      boxShadow: {
+        glow: '0 0 0 3px var(--dt-accent-soft)',
+        'glow-sm': '0 0 0 2px var(--dt-accent-soft)',
+      },
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        smooth: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

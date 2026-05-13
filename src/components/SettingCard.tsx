@@ -3,63 +3,82 @@ import { LucideIcon } from 'lucide-react';
 
 interface SettingCardProps {
   label: string;
-  description: string;
   Icon: LucideIcon;
   checked: boolean;
   onToggle: () => void;
+  isChild?: boolean;
 }
 
 export const SettingCard: React.FC<SettingCardProps> = ({
   label,
-  description,
   Icon,
   checked,
   onToggle,
+  isChild = false,
 }) => {
   return (
     <div
       role="switch"
       aria-checked={checked}
+      aria-label={label}
+      tabIndex={0}
       onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); onToggle(); }
+      }}
       className={`
-        dt-card flex items-center gap-3 px-3 py-2.5 rounded-[var(--dt-radius)]
-        border cursor-pointer select-none
-        ${checked
-          ? 'bg-[var(--dt-accent-soft)] border-[var(--dt-accent-border)]'
-          : 'bg-[var(--dt-surface-overlay)] border-[var(--dt-border)] hover:border-[var(--dt-border-strong)] hover:bg-[var(--dt-surface-raised)]'
-        }
+        flex items-center gap-3 px-3 py-2.5 w-full
+        cursor-pointer select-none group transition-colors duration-150 relative
+        focus-visible:outline-none focus-visible:bg-[var(--dt-surface-overlay)]
+        ${checked ? 'bg-[var(--dt-accent-soft)]/30' : 'hover:bg-[var(--dt-surface-overlay)]'}
+        ${isChild ? 'pl-9' : ''}
       `}
     >
-      {/* Icon */}
-      <div className={`
-        w-7 h-7 shrink-0 rounded-[var(--dt-radius-sm)] flex items-center justify-center
-        ${checked
-          ? 'bg-[var(--dt-accent)] text-white'
-          : 'bg-[var(--dt-surface-raised)] text-[var(--dt-text-secondary)]'
-        }
-      `}>
+      {/* Optional indentation indicator for children */}
+      {isChild && (
+        <div
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-[var(--dt-text-muted)] opacity-50"
+        />
+      )}
+
+      {/* Icon badge */}
+      <div
+        className={`w-7 h-7 shrink-0 rounded-[var(--dt-radius-sm)] flex items-center justify-center transition-all duration-150 ${
+          checked
+            ? 'text-white'
+            : 'bg-[var(--dt-surface)] text-[var(--dt-text-muted)] border border-[var(--dt-border)] group-hover:text-[var(--dt-accent)] group-hover:border-[var(--dt-accent-border)]'
+        }`}
+        style={checked ? {
+          background: 'var(--dt-gradient)',
+          boxShadow: 'var(--dt-shadow-accent)',
+        } : undefined}
+      >
         <Icon size={14} strokeWidth={checked ? 2.5 : 2} />
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <p className={`text-[12px] font-semibold leading-tight truncate ${checked ? 'text-[var(--dt-text-primary)]' : 'text-[var(--dt-text-primary)]'}`}>
+        <p className={`text-[12.5px] font-medium leading-tight truncate transition-colors duration-150 ${
+          checked ? 'text-[var(--dt-text-primary)] font-semibold' : 'text-[var(--dt-text-secondary)] group-hover:text-[var(--dt-text-primary)]'
+        }`}>
           {label}
-        </p>
-        <p className="text-[10px] text-[var(--dt-text-muted)] leading-tight truncate mt-0.5">
-          {description}
         </p>
       </div>
 
-      {/* Toggle */}
-      <div className="shrink-0 relative inline-flex items-center pointer-events-none ml-1">
-        <div className={`w-9 h-5 rounded-full border transition-all duration-200 relative
-          ${checked
-            ? 'bg-[var(--dt-accent)] border-[var(--dt-accent)]'
-            : 'bg-[var(--dt-toggle-off)] border-[var(--dt-border)]'
+      {/* Toggle switch */}
+      <div className="shrink-0 ml-1">
+        <div
+          className={`relative w-[36px] h-[20px] rounded-full border transition-all duration-200 ${
+            checked ? 'border-transparent' : 'bg-[var(--dt-toggle-off)] border-[var(--dt-border)]'
           }`}
+          style={checked ? { background: 'var(--dt-gradient)' } : undefined}
         >
-          <div className={`absolute top-[2px] left-[2px] w-[15px] h-[15px] rounded-full bg-[var(--dt-toggle-thumb)] shadow-sm transition-transform duration-200 ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
+          <div
+            className={`absolute top-[3px] left-[3px] w-[14px] h-[14px] rounded-full bg-[var(--dt-toggle-thumb)] transition-all duration-200 will-change-transform ${
+              checked ? 'translate-x-[16px]' : 'translate-x-0'
+            }`}
+            style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.12)' }}
+          />
         </div>
       </div>
     </div>

@@ -5,7 +5,9 @@ html.dt-hide-home ytd-guide-entry-renderer:has(a[title*="Home" i]),
 html.dt-hide-home ytd-guide-entry-renderer:has(a[href="/"]),
 html.dt-hide-home ytd-mini-guide-entry-renderer:has(a[href="/"]),
 html.dt-hide-home ytd-guide-entry-renderer:has(yt-icon[icon="home-filled"]),
-html.dt-hide-home ytd-mini-guide-entry-renderer:has(yt-icon[icon="home-filled"]) {
+html.dt-hide-home ytd-mini-guide-entry-renderer:has(yt-icon[icon="home-filled"]),
+html.dt-hide-home ytm-pivot-bar-item-renderer:has(a[href="/"]),
+html.dt-hide-home ytm-pivot-bar-item-renderer:has(path[d*="M4 21V10.08l8-6.91 8 6.91V21h-6v-6h-4v6H4z"]) {
   display: none !important;
 }
 
@@ -14,7 +16,9 @@ html.dt-hide-shorts ytd-guide-entry-renderer:has(a[title*="Shorts" i]),
 html.dt-hide-shorts ytd-guide-entry-renderer:has(a[href*="/shorts"]),
 html.dt-hide-shorts ytd-mini-guide-entry-renderer:has(a[href*="/shorts"]),
 html.dt-hide-shorts ytd-guide-entry-renderer:has(yt-icon[icon="shorts-filled"]),
-html.dt-hide-shorts ytd-mini-guide-entry-renderer:has(yt-icon[icon="shorts-filled"]) {
+html.dt-hide-shorts ytd-mini-guide-entry-renderer:has(yt-icon[icon="shorts-filled"]),
+html.dt-hide-shorts ytm-pivot-bar-item-renderer:has(a[href*="/shorts"]),
+html.dt-hide-shorts ytm-pivot-bar-item-renderer:has(path[d*="M17.77 10.32l-1.2-.5L18 8.22c1.98-1.63 1.17-4.77-1.35-5.7-1.11-.41-2.35-.11-3.15.72l-5.82 6.06c-.72.72-1.12 1.7-1.12 2.73v.01l1.2.5L5 14.13c-1.98 1.62-1.17 4.76 1.35 5.7 1.11.41 2.35.11 3.15-.72l5.82-6.06c.72-.72 1.12-1.7 1.12-2.73v-.01z"]) {
   display: none !important;
 }
 
@@ -25,6 +29,8 @@ html.dt-hide-subscriptions ytd-guide-entry-renderer:has(a[href*="/feed/subscript
 html.dt-hide-subscriptions ytd-mini-guide-entry-renderer:has(a[href*="/feed/subscriptions"]),
 html.dt-hide-subscriptions ytd-guide-entry-renderer:has(yt-icon[icon="subscriptions-filled"]),
 html.dt-hide-subscriptions ytd-mini-guide-entry-renderer:has(yt-icon[icon="subscriptions-filled"]),
+html.dt-hide-subscriptions ytm-pivot-bar-item-renderer:has(a[href*="/feed/subscriptions"]),
+html.dt-hide-subscriptions ytm-pivot-bar-item-renderer:has(path[d*="M10 14.65v-5.3L15 12l-5 2.65zM20 7H4v13h16V7zm1 1h1v13H3V8h1V7H2v14h20V7h-1v1z"]),
 /* Hide the subscriptions section ONLY if it's not the main navigation section (which contains Home) */
 html.dt-hide-subscriptions ytd-guide-section-renderer:has(a[href*="/feed/subscriptions"]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])),
 html.dt-hide-subscriptions ytd-guide-section-renderer:has(a[title*="Subscription" i]):not(:has(a[href="/"])):not(:has(yt-icon[icon="home-filled"])) {
@@ -50,7 +56,10 @@ html.dt-hide-you-section ytd-guide-entry-renderer:has(a[href*="/feed/library"]),
 html.dt-hide-you-section ytd-guide-entry-renderer:has(a[href*="/feed/you"]),
 html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(a[href*="/feed/library"]),
 html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(a[href*="/feed/you"]),
-html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(yt-icon[icon="account-box"]) {
+html.dt-hide-you-section ytd-mini-guide-entry-renderer:has(yt-icon[icon="account-box"]),
+html.dt-hide-you-section ytm-pivot-bar-item-renderer:has(a[href*="/feed/library"]),
+html.dt-hide-you-section ytm-pivot-bar-item-renderer:has(a[href*="/feed/you"]),
+html.dt-hide-you-section ytm-pivot-bar-item-renderer:has(path[d*="M11 7l6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 17h13V4H7v13z"]) {
   display: none !important;
 }
 

@@ -6,11 +6,15 @@ interface SectionDividerProps {
 
 export const SectionDivider: React.FC<SectionDividerProps> = ({ title }) => {
   return (
-    <div className="flex items-center gap-2 mt-3 mb-1.5 first:mt-0">
-      <span className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-[var(--dt-text-muted)] whitespace-nowrap">
+    <div className="flex items-center gap-1.5 px-1 mb-2">
+      {/* Accent dot */}
+      <div
+        className="w-1 h-1 rounded-full shrink-0"
+        style={{ background: 'var(--dt-accent)' }}
+      />
+      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--dt-text-secondary)] whitespace-nowrap">
         {title}
       </span>
-      <div className="flex-1 h-px bg-[var(--dt-border)]" />
     </div>
   );
 };
