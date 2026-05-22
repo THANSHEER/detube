@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-minimal-play-icon lucide-tv-minimal-play"><path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"/><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="100" height="100" rx="22" fill="url(#bg)"/>
+
+  <!-- White D outer silhouette -->
+  <path fill="white" d="M 14,14 L 56,14 C 90,14 90,86 56,86 L 14,86 Z"/>
+
+  <!-- Inner gradient cutout — hollows out the D bowl -->
+  <path fill="url(#bg)" d="M 28,28 L 54,28 C 76,28 76,72 54,72 L 28,72 Z"/>
+
+  <!-- Play triangle (white) centred in the D bowl -->
+  <polygon fill="white" points="38,37 70,50 38,63"/>
+</svg>

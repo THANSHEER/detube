@@ -3,7 +3,7 @@
   "name": "DeTube",
   "version": "2.0.1",
   "description": "Distraction-free YouTube experience.",
-  "permissions": ["storage", "scripting", "tabs"],
+  "permissions": ["storage", "scripting", "tabs", "alarms"],
   "host_permissions": ["*://*.youtube.com/*"],
   "action": {
     "default_popup": "index.html"

@@ -188,6 +188,18 @@ class DeTubeEngine {
 new DeTubeEngine();
 
 // ---------------------------------------------------------------------------
+// Daily usage tracking — reports every 30s when page is visible
+// Reports to background for daily-limit mode enforcement
+// ---------------------------------------------------------------------------
+
+window.setInterval(() => {
+  if (document.hidden) return;
+  chrome.runtime.sendMessage({ action: 'addUsageTime', seconds: 30 }, () => {
+    if (chrome.runtime.lastError) { /* background may be inactive — ignore */ }
+  });
+}, 30000);
+
+// ---------------------------------------------------------------------------
 // Message handler — popup queries login state from the active page
 // ---------------------------------------------------------------------------
 

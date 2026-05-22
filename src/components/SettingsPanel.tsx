@@ -1,11 +1,13 @@
 import React from 'react';
 import { Sun, Moon, Monitor, Github, ExternalLink } from 'lucide-react';
 import { type ThemeMode } from '../lib/storage';
+import { FocusPanel } from './FocusPanel';
 
 interface SettingsPanelProps {
   theme: ThemeMode;
   onThemeChange: (t: ThemeMode) => void;
   browser: string;
+  onSetEnabled: (val: boolean) => Promise<void>;
 }
 
 const THEME_OPTIONS: { mode: ThemeMode; Icon: typeof Sun; label: string }[] = [
@@ -26,11 +28,18 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   theme,
   onThemeChange,
   browser,
+  onSetEnabled,
 }) => {
   const browserName = BROWSER_DISPLAY_NAMES[browser] || browser;
 
   return (
     <div className="dt-settings-panel animate-slide-up">
+
+      {/* ── Focus Mode ── */}
+      <FocusPanel onSetEnabled={onSetEnabled} />
+
+      {/* ── Divider ── */}
+      <div className="dt-settings-divider" />
 
       {/* ── Theme ── */}
       <section>
@@ -49,10 +58,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </button>
           ))}
         </div>
-        <p
-          className="text-[9px] mt-2 px-1"
-          style={{ color: 'var(--dt-text-muted)' }}
-        >
+        <p className="text-[9px] mt-2 px-1 text-[var(--dt-text-muted)]">
           System follows your OS light/dark preference automatically.
         </p>
       </section>

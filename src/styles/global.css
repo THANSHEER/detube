@@ -5,297 +5,134 @@
 /* ============================================================
    DeTube Design System v3
    Priority chain:
-     1. Base tokens (default – Chrome)
-     2. [data-browser] overrides per browser
-     3. @media prefers-color-scheme: dark
-     4. [data-theme="light"|"dark"] forced overrides
+     1. Base tokens (dark default — consistent across all browsers)
+     2. @media prefers-color-scheme: light (system theme)
+     3. [data-theme="light"|"dark"] forced overrides
    ============================================================ */
 
 @layer base {
 
-  /* ── 1. BASE TOKENS (Chrome / default) ───────────────────── */
+  /* ── 1. BASE TOKENS — dark by default (white text, consistent across all browsers) ─ */
   :root {
+    --dt-accent:          #818cf8;
+    --dt-accent-hover:    #6366f1;
+    --dt-accent-soft:     rgba(129,140,248,0.12);
+    --dt-accent-border:   rgba(129,140,248,0.25);
+    --dt-accent-glow:     rgba(129,140,248,0.20);
+    --dt-gradient:        linear-gradient(135deg,#818cf8 0%,#a78bfa 100%);
+
+    --dt-surface:         #0c0c10;
+    --dt-surface-raised:  #16161e;
+    --dt-surface-overlay: rgba(255,255,255,0.05);
+
+    --dt-border:          rgba(255,255,255,0.09);
+    --dt-border-strong:   rgba(255,255,255,0.16);
+
+    --dt-text-primary:    #ffffff;
+    --dt-text-secondary:  #e4e4e7;
+    --dt-text-muted:      #a1a1aa;
+
+    --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.40);
+    --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.50);
+    --dt-shadow-accent:   0 4px 16px rgba(129,140,248,0.28);
+
+    --dt-toggle-off:      #2a2a34;
+    --dt-toggle-thumb:    #ffffff;
+
+    /* Shared radius scale — same for every browser */
+    --dt-radius:          14px;
+    --dt-radius-sm:       10px;
+    --dt-radius-lg:       22px;
+
+    /* Nav rail */
+    --dt-nav-width:       64px;
+
+    --dt-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color-scheme: dark;
+  }
+
+  /* ── 2. SYSTEM LIGHT (when OS is light and no forced theme) ── */
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      --dt-surface:         #ffffff;
+      --dt-surface-raised:  #f4f4f8;
+      --dt-surface-overlay: rgba(0,0,0,0.04);
+      --dt-border:          rgba(0,0,0,0.08);
+      --dt-border-strong:   rgba(0,0,0,0.14);
+      --dt-text-primary:    #09090b;
+      --dt-text-secondary:  #27272a;
+      --dt-text-muted:      #52525b;
+      --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.06);
+      --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.07);
+      --dt-toggle-off:      #e4e4e7;
+      --dt-accent:          #6366f1;
+      --dt-accent-hover:    #4f46e5;
+      --dt-accent-soft:     rgba(99,102,241,0.10);
+      --dt-accent-border:   rgba(99,102,241,0.22);
+      --dt-accent-glow:     rgba(99,102,241,0.18);
+      --dt-gradient:        linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);
+      --dt-shadow-accent:   0 4px 16px rgba(99,102,241,0.30);
+      color-scheme: light;
+    }
+  }
+
+  /* ── 3. FORCED THEME OVERRIDES ───────────────────────────── */
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    --dt-surface:         #ffffff;
+    --dt-surface-raised:  #f4f4f8;
+    --dt-surface-overlay: rgba(0,0,0,0.04);
+    --dt-border:          rgba(0,0,0,0.08);
+    --dt-border-strong:   rgba(0,0,0,0.14);
+    --dt-text-primary:    #09090b;
+    --dt-text-secondary:  #27272a;
+    --dt-text-muted:      #52525b;
+    --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.06);
+    --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.07);
+    --dt-toggle-off:      #e4e4e7;
     --dt-accent:          #6366f1;
     --dt-accent-hover:    #4f46e5;
     --dt-accent-soft:     rgba(99,102,241,0.10);
     --dt-accent-border:   rgba(99,102,241,0.22);
     --dt-accent-glow:     rgba(99,102,241,0.18);
     --dt-gradient:        linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);
-
-    --dt-surface:         #ffffff;
-    --dt-surface-raised:  #f4f4f8;
-    --dt-surface-overlay: rgba(0,0,0,0.04);
-
-    --dt-border:          rgba(0,0,0,0.08);
-    --dt-border-strong:   rgba(0,0,0,0.14);
-
-    --dt-text-primary:    #09090b;
-    --dt-text-secondary:  #27272a;
-    --dt-text-muted:      #52525b;
-
-    --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
-    --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.04);
     --dt-shadow-accent:   0 4px 16px rgba(99,102,241,0.30);
-
-    --dt-toggle-off:      #e4e4e7;
-    --dt-toggle-thumb:    #ffffff;
-
-    --dt-radius:          10px;
-    --dt-radius-sm:       7px;
-    --dt-radius-lg:       16px;
-
-    /* Nav rail */
-    --dt-nav-width:       64px;
-
-    --dt-font: 'Outfit','Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
-    color-scheme: light dark;
-  }
-
-  /* ── 2. BROWSER OVERRIDES ────────────────────────────────── */
-
-  /* Firefox — Proton */
-  :root[data-browser="firefox"] {
-    --dt-accent:        #0060df;
-    --dt-accent-hover:  #003eaa;
-    --dt-accent-soft:   rgba(0,96,223,0.10);
-    --dt-accent-border: rgba(0,96,223,0.22);
-    --dt-accent-glow:   rgba(0,96,223,0.18);
-    --dt-gradient:      linear-gradient(135deg,#0060df 0%,#0250bb 100%);
-    --dt-shadow-accent: 0 4px 16px rgba(0,96,223,0.30);
-    --dt-radius:    8px;
-    --dt-radius-sm: 4px;
-    --dt-radius-lg: 12px;
-    --dt-font: 'Outfit',system-ui,-apple-system,sans-serif;
-  }
-
-  /* Safari — Apple HIG */
-  :root[data-browser="safari"] {
-    --dt-accent:        #007aff;
-    --dt-accent-hover:  #0062cc;
-    --dt-accent-soft:   rgba(0,122,255,0.10);
-    --dt-accent-border: rgba(0,122,255,0.22);
-    --dt-accent-glow:   rgba(0,122,255,0.18);
-    --dt-gradient:      linear-gradient(135deg,#007aff 0%,#0a84ff 100%);
-    --dt-shadow-accent: 0 4px 16px rgba(0,122,255,0.30);
-    --dt-surface:         rgba(242,242,247,1);
-    --dt-surface-raised:  rgba(255,255,255,1);
-    --dt-border:          rgba(0,0,0,0.10);
-    --dt-border-strong:   rgba(0,0,0,0.18);
-    --dt-radius:    14px;
-    --dt-radius-sm: 10px;
-    --dt-radius-lg: 22px;
-    --dt-font: -apple-system,'SF Pro Text','SF Pro Display','Helvetica Neue',sans-serif;
-  }
-
-  /* Opera */
-  :root[data-browser="opera"] {
-    --dt-accent:        #ff1b2d;
-    --dt-accent-hover:  #d91525;
-    --dt-accent-soft:   rgba(255,27,45,0.10);
-    --dt-accent-border: rgba(255,27,45,0.22);
-    --dt-accent-glow:   rgba(255,27,45,0.18);
-    --dt-gradient:      linear-gradient(135deg,#ff1b2d 0%,#c00f20 100%);
-    --dt-shadow-accent: 0 4px 16px rgba(255,27,45,0.30);
-    --dt-radius:    6px;
-    --dt-radius-sm: 3px;
-    --dt-radius-lg: 10px;
-  }
-
-  /* Edge — Fluent */
-  :root[data-browser="edge"] {
-    --dt-accent:        #0078d4;
-    --dt-accent-hover:  #005a9e;
-    --dt-accent-soft:   rgba(0,120,212,0.10);
-    --dt-accent-border: rgba(0,120,212,0.22);
-    --dt-accent-glow:   rgba(0,120,212,0.18);
-    --dt-gradient:      linear-gradient(135deg,#0078d4 0%,#005a9e 100%);
-    --dt-shadow-accent: 0 4px 16px rgba(0,120,212,0.30);
-    --dt-radius:    4px;
-    --dt-radius-sm: 2px;
-    --dt-radius-lg: 8px;
-  }
-
-  /* ── 3. SYSTEM DARK MODE ─────────────────────────────────── */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --dt-surface:         #09090b;
-      --dt-surface-raised:  #111117;
-      --dt-surface-overlay: rgba(255,255,255,0.04);
-      --dt-border:          rgba(255,255,255,0.08);
-      --dt-border-strong:   rgba(255,255,255,0.15);
-      --dt-text-primary:    #ffffff;
-      --dt-text-secondary:  #e4e4e7;
-      --dt-text-muted:      #a1a1aa;
-      --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.35);
-      --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.45);
-      --dt-toggle-off:      #27272a;
-      --dt-accent:          #818cf8;
-      --dt-accent-hover:    #6366f1;
-      --dt-accent-soft:     rgba(129,140,248,0.12);
-      --dt-accent-border:   rgba(129,140,248,0.25);
-      --dt-accent-glow:     rgba(129,140,248,0.20);
-      --dt-gradient:        linear-gradient(135deg,#818cf8 0%,#a78bfa 100%);
-      --dt-shadow-accent:   0 4px 16px rgba(129,140,248,0.25);
-    }
-    :root[data-browser="firefox"] {
-      --dt-accent:        #45a1ff;
-      --dt-accent-hover:  #0060df;
-      --dt-accent-soft:   rgba(69,161,255,0.12);
-      --dt-accent-border: rgba(69,161,255,0.25);
-      --dt-accent-glow:   rgba(69,161,255,0.20);
-      --dt-gradient:      linear-gradient(135deg,#45a1ff 0%,#0060df 100%);
-      --dt-shadow-accent: 0 4px 16px rgba(69,161,255,0.25);
-    }
-    :root[data-browser="safari"] {
-      --dt-surface:         #1c1c1e;
-      --dt-surface-raised:  #2c2c2e;
-      --dt-border:          rgba(255,255,255,0.10);
-      --dt-border-strong:   rgba(255,255,255,0.18);
-      --dt-accent:          #0a84ff;
-      --dt-accent-soft:     rgba(10,132,255,0.12);
-      --dt-accent-border:   rgba(10,132,255,0.25);
-      --dt-gradient:        linear-gradient(135deg,#0a84ff 0%,#007aff 100%);
-      --dt-shadow-accent:   0 4px 16px rgba(10,132,255,0.25);
-    }
-    :root[data-browser="opera"] {
-      --dt-surface:         #0e0a0b;
-      --dt-surface-raised:  #1a1215;
-      --dt-accent:          #ff3b4e;
-      --dt-accent-soft:     rgba(255,59,78,0.12);
-      --dt-accent-border:   rgba(255,59,78,0.25);
-      --dt-gradient:        linear-gradient(135deg,#ff3b4e 0%,#cc1524 100%);
-      --dt-shadow-accent:   0 4px 16px rgba(255,59,78,0.25);
-    }
-    :root[data-browser="edge"] {
-      --dt-surface:         #0a0f1a;
-      --dt-surface-raised:  #101828;
-      --dt-accent:          #479ef5;
-      --dt-accent-soft:     rgba(71,158,245,0.12);
-      --dt-accent-border:   rgba(71,158,245,0.25);
-      --dt-gradient:        linear-gradient(135deg,#479ef5 0%,#0078d4 100%);
-      --dt-shadow-accent:   0 4px 16px rgba(71,158,245,0.25);
-    }
-  }
-
-  /* ── 4. FORCED THEME OVERRIDES ───────────────────────────── */
-  :root[data-theme="light"] {
-    --dt-surface:         #ffffff !important;
-    --dt-surface-raised:  #f4f4f8 !important;
-    --dt-surface-overlay: rgba(0,0,0,0.04) !important;
-    --dt-border:          rgba(0,0,0,0.08) !important;
-    --dt-border-strong:   rgba(0,0,0,0.14) !important;
-    --dt-text-primary:    #09090b !important;
-    --dt-text-secondary:  #27272a !important;
-    --dt-text-muted:      #52525b !important;
-    --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.06) !important;
-    --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.07) !important;
-    --dt-toggle-off:      #e4e4e7 !important;
-  }
-  :root[data-browser="safari"][data-theme="light"] {
-    --dt-surface:        rgba(242,242,247,1) !important;
-    --dt-surface-raised: rgba(255,255,255,1) !important;
-  }
-
-  :root[data-theme="dark"] {
-    --dt-surface:         #09090b !important;
-    --dt-surface-raised:  #111117 !important;
-    --dt-surface-overlay: rgba(255,255,255,0.04) !important;
-    --dt-border:          rgba(255,255,255,0.08) !important;
-    --dt-border-strong:   rgba(255,255,255,0.15) !important;
-    --dt-text-primary:    #ffffff !important;
-    --dt-text-secondary:  #e4e4e7 !important;
-    --dt-text-muted:      #a1a1aa !important;
-    --dt-shadow-sm:       0 1px 3px rgba(0,0,0,0.35) !important;
-    --dt-shadow-md:       0 4px 16px rgba(0,0,0,0.45) !important;
-    --dt-toggle-off:      #27272a !important;
-    --dt-accent:          #818cf8 !important;
-    --dt-accent-hover:    #6366f1 !important;
-    --dt-accent-soft:     rgba(129,140,248,0.12) !important;
-    --dt-accent-border:   rgba(129,140,248,0.25) !important;
-    --dt-accent-glow:     rgba(129,140,248,0.20) !important;
-    --dt-gradient:        linear-gradient(135deg,#818cf8 0%,#a78bfa 100%) !important;
-    --dt-shadow-accent:   0 4px 16px rgba(129,140,248,0.25) !important;
-  }
-  :root[data-browser="firefox"][data-theme="dark"] {
-    --dt-accent:        #45a1ff !important;
-    --dt-accent-hover:  #0060df !important;
-    --dt-accent-soft:   rgba(69,161,255,0.12) !important;
-    --dt-accent-border: rgba(69,161,255,0.25) !important;
-    --dt-gradient:      linear-gradient(135deg,#45a1ff 0%,#0060df 100%) !important;
-  }
-  :root[data-browser="safari"][data-theme="dark"] {
-    --dt-surface:         #1c1c1e !important;
-    --dt-surface-raised:  #2c2c2e !important;
-    --dt-border:          rgba(255,255,255,0.10) !important;
-    --dt-border-strong:   rgba(255,255,255,0.18) !important;
-    --dt-accent:          #0a84ff !important;
-    --dt-accent-soft:     rgba(10,132,255,0.12) !important;
-    --dt-accent-border:   rgba(10,132,255,0.25) !important;
-    --dt-gradient:        linear-gradient(135deg,#0a84ff 0%,#007aff 100%) !important;
-  }
-  :root[data-browser="opera"][data-theme="dark"] {
-    --dt-surface:         #0e0a0b !important;
-    --dt-surface-raised:  #1a1215 !important;
-    --dt-accent:          #ff3b4e !important;
-    --dt-accent-soft:     rgba(255,59,78,0.12) !important;
-    --dt-accent-border:   rgba(255,59,78,0.25) !important;
-    --dt-gradient:        linear-gradient(135deg,#ff3b4e 0%,#cc1524 100%) !important;
-  }
-  :root[data-browser="edge"][data-theme="dark"] {
-    --dt-surface:         #0a0f1a !important;
-    --dt-surface-raised:  #101828 !important;
-    --dt-accent:          #479ef5 !important;
-    --dt-accent-soft:     rgba(71,158,245,0.12) !important;
-    --dt-accent-border:   rgba(71,158,245,0.25) !important;
-    --dt-gradient:        linear-gradient(135deg,#479ef5 0%,#0078d4 100%) !important;
-  }
-  :root[data-browser="opera"][data-theme="light"] {
-    --dt-accent:        #ff1b2d !important;
-    --dt-accent-soft:   rgba(255,27,45,0.10) !important;
-    --dt-accent-border: rgba(255,27,45,0.22) !important;
-    --dt-gradient:      linear-gradient(135deg,#ff1b2d 0%,#c00f20 100%) !important;
-  }
-  :root[data-browser="edge"][data-theme="light"] {
-    --dt-accent:        #0078d4 !important;
-    --dt-accent-soft:   rgba(0,120,212,0.10) !important;
-    --dt-accent-border: rgba(0,120,212,0.22) !important;
-    --dt-gradient:      linear-gradient(135deg,#0078d4 0%,#005a9e 100%) !important;
+    color-scheme: light;
   }
 
   /* ── 5. RESET ────────────────────────────────────────────── */
   *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ── 6. POPUP SHELL SIZE ─────────────────────────────────── */
+  /*
+   * Canonical popup dimensions — 370 × 490 px.
+   *
+   * To guarantee absolute cross-browser geometry stability:
+   * - Locks html, body, and #root to fixed px geometry with !important.
+   * - Prevents Chromium (Chrome/Opera) initial sizing collapse (small square).
+   * - Absolutely forbids Safari from physically growing/shrinking on tab switch.
+   * - Resolves Firefox 2px height collapse seamlessly.
+   */
+  html, body, #root {
+    width: 370px !important;
+    height: 490px !important;
+    min-width: 370px !important;
+    min-height: 490px !important;
+    max-width: 370px !important;
+    max-height: 490px !important;
+    overflow: hidden !important;
+  }
+
   html {
-    width: 385px;
-    min-width: 385px;
-    max-width: 100vw;
-    height: 520px;
-    min-height: 520px;
-    max-height: 100vh;
-    overflow: hidden;
     overscroll-behavior: none;
   }
 
-  /* Firefox popup size fix — ensures proper width and prevents the 2px height collapse bug */
-  :root[data-browser="firefox"],
-  html[data-browser="firefox"],
-  html[data-browser="firefox"] body,
-  html[data-browser="firefox"] #root {
-    width: 385px !important;
-    min-width: 385px !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    display: flex;
-    flex-direction: column;
-  }
-
   body {
-    width: 100%;
-    height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
     overscroll-behavior: none;
     background: var(--dt-surface);
     font-family: var(--dt-font);
@@ -306,14 +143,11 @@
   }
 
   #root {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
   }
 
-  /* ── 6. POPUP SHELL ──────────────────────────────────────── */
+  /* ── 7. POPUP SHELL LAYOUT ───────────────────────────────── */
   .dt-popup {
     flex: 1;
     display: flex;
@@ -326,19 +160,13 @@
   /* Slim header strip across the top */
   .dt-header-area {
     flex-shrink: 0;
-    padding: 10px 14px 10px;
+    padding: 10px 14px;
     background: var(--dt-surface);
     border-bottom: 1px solid var(--dt-border);
     z-index: 10;
   }
 
-  :root[data-browser="safari"] .dt-header-area {
-    background: rgba(var(--dt-surface-raised), 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  /* Middle zone: nav rail + scrollable body side by side */
+  /* Middle zone: nav rail (left) + scrollable body (right) */
   .dt-main-area {
     flex: 1;
     display: flex;
@@ -347,7 +175,7 @@
     min-height: 0;
   }
 
-  /* ── 7. NAV RAIL ─────────────────────────────────────────── */
+  /* ── 8. NAV RAIL ─────────────────────────────────────────── */
   .dt-nav-rail {
     width: var(--dt-nav-width);
     flex-shrink: 0;
@@ -387,38 +215,29 @@
     outline: 2px solid var(--dt-accent);
     outline-offset: -2px;
   }
+
+  /* Active state shared between nav tabs and the pinned settings button */
   .dt-nav-rail-btn.active {
-    color: var(--dt-text-primary);
-    background: var(--dt-surface);
-    box-shadow: var(--dt-shadow-sm);
-    border: 1px solid var(--dt-border);
-    font-weight: 700;
-  }
-  .dt-nav-rail-btn.active svg {
-    color: var(--dt-accent);
-  }
-  /* Active left inset indicator pill */
-  .dt-nav-rail-btn.active::before {
-    content: '';
-    position: absolute;
-    left: 3px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 14px;
+    color: #ffffff;
     background: var(--dt-gradient);
-    border-radius: 3px;
+    box-shadow: var(--dt-shadow-accent);
+    border: 1px solid transparent;
+    font-weight: 700;
+    transform: translateY(-1px);
   }
+  .dt-nav-rail-btn.active svg { color: #ffffff; }
+
   .dt-nav-rail-label {
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.01em;
     line-height: 1.1;
   }
-  /* Settings button pinned to bottom */
-  .dt-nav-rail-spacer {
-    flex: 1;
-  }
+
+  /* Spacer pushes settings button to bottom */
+  .dt-nav-rail-spacer { flex: 1; }
+
+  /* Settings button pinned to bottom with a top separator */
   .dt-nav-rail-btn.settings-btn {
     margin-top: 4px;
     margin-bottom: 0;
@@ -433,18 +252,8 @@
     height: 1px;
     background: var(--dt-border);
   }
-  .dt-nav-rail-btn.settings-btn.active {
-    color: var(--dt-text-primary);
-    background: var(--dt-surface);
-    box-shadow: var(--dt-shadow-sm);
-    border: 1px solid var(--dt-border);
-    font-weight: 700;
-  }
-  .dt-nav-rail-btn.settings-btn.active svg {
-    color: var(--dt-accent);
-  }
 
-  /* ── 8. SCROLLABLE BODY ──────────────────────────────────── */
+  /* ── 9. SCROLLABLE BODY ──────────────────────────────────── */
   .dt-body {
     flex: 1;
     overflow-y: auto;
@@ -453,26 +262,22 @@
     scroll-behavior: smooth;
     min-width: 0;
   }
-  .dt-body::-webkit-scrollbar { display: none; }
-  .dt-body { -ms-overflow-style: none; scrollbar-width: none; }
+  .dt-body::-webkit-scrollbar          { display: none; }
+  .dt-body                              { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* Footer strip — removed for immersive layout */
-  /* .dt-footer-area retained for backwards compat but unused */
-  .dt-footer-area { display: none; }
-
-  /* ── 9. SETTINGS PANEL ───────────────────────────────────── */
+  /* ── 10. SETTINGS PANEL ──────────────────────────────────── */
   .dt-settings-panel {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 14px 14px 16px;
+    padding: 12px 12px 16px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
     min-width: 0;
   }
   .dt-settings-panel::-webkit-scrollbar { display: none; }
-  .dt-settings-panel { -ms-overflow-style: none; scrollbar-width: none; }
+  .dt-settings-panel                     { -ms-overflow-style: none; scrollbar-width: none; }
 
   .dt-settings-section-title {
     font-size: 9px;
@@ -514,10 +319,7 @@
     color: var(--dt-text-secondary);
     background: var(--dt-surface-overlay);
   }
-  .dt-theme-btn.active {
-    color: #fff;
-    background: var(--dt-gradient);
-  }
+  .dt-theme-btn.active  { color: #fff; background: var(--dt-gradient); }
   .dt-theme-btn:focus-visible {
     outline: 2px solid var(--dt-accent);
     outline-offset: -2px;
@@ -572,18 +374,302 @@
     font-weight: 500;
   }
 
-  /* ── 10. CARD ────────────────────────────────────────────── */
-  .dt-card {
-    transition:
-      background 0.15s ease,
-      border-color 0.15s ease,
-      box-shadow 0.18s ease,
-      transform 0.18s cubic-bezier(0.16,1,0.3,1);
-    /* touch target minimum */
-    min-height: 44px;
+  /* ── 11. FOCUS SECTIONS (embedded in settings panel) ────── */
+  .dt-settings-divider {
+    height: 1px;
+    background: var(--dt-border);
+    margin: 2px 0;
+    border-radius: 1px;
   }
 
-  /* ── 11. TRANSITIONS ─────────────────────────────────────── */
+  /* Mode grid */
+  .dt-mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .dt-mode-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 6px;
+    border-radius: var(--dt-radius-sm);
+    border: 1px solid var(--dt-border);
+    background: var(--dt-surface-raised);
+    color: var(--dt-text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+  }
+  .dt-mode-card:hover {
+    border-color: var(--dt-accent-border);
+    background: var(--dt-accent-soft);
+    color: var(--dt-accent);
+  }
+  .dt-mode-card.active {
+    background: var(--dt-gradient);
+    border-color: transparent;
+    box-shadow: var(--dt-shadow-accent);
+    color: #ffffff;
+  }
+  .dt-mode-card:focus-visible { outline: 2px solid var(--dt-accent); outline-offset: -2px; }
+  .dt-mode-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+  .dt-mode-desc {
+    font-size: 8.5px;
+    font-weight: 500;
+    opacity: 0.75;
+    line-height: 1;
+  }
+
+  /* Duration / limit pills */
+  .dt-pill-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .dt-pill {
+    padding: 5px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid var(--dt-border);
+    background: var(--dt-surface-raised);
+    color: var(--dt-text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+    white-space: nowrap;
+  }
+  .dt-pill:hover { border-color: var(--dt-accent-border); color: var(--dt-accent); }
+  .dt-pill.active {
+    background: var(--dt-gradient);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+  }
+  .dt-pill:focus-visible { outline: 2px solid var(--dt-accent); outline-offset: 2px; }
+  .dt-pill-custom {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    border-radius: 100px;
+    border: 1px solid var(--dt-border);
+    background: var(--dt-surface-raised);
+  }
+  .dt-pill-input {
+    width: 28px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--dt-text-primary);
+    text-align: center;
+    font-family: var(--dt-font);
+    -moz-appearance: textfield;
+  }
+  .dt-pill-input::-webkit-inner-spin-button,
+  .dt-pill-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .dt-pill-input::placeholder { color: var(--dt-text-muted); }
+  .dt-pill-suffix { font-size: 10px; color: var(--dt-text-muted); font-weight: 500; }
+
+  /* Timer countdown */
+  .dt-timer-running {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .dt-countdown {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--dt-accent);
+    font-variant-numeric: tabular-nums;
+    padding: 4px 0;
+    line-height: 1;
+  }
+
+  /* Shared action buttons */
+  .dt-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: var(--dt-radius-sm);
+    font-size: 11.5px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+    letter-spacing: 0.01em;
+    font-family: var(--dt-font);
+  }
+  .dt-btn:focus-visible { outline: 2px solid var(--dt-accent); outline-offset: 2px; }
+  .dt-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .dt-btn-primary {
+    background: var(--dt-gradient);
+    color: #ffffff;
+    box-shadow: var(--dt-shadow-accent);
+  }
+  .dt-btn-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .dt-btn-primary:active:not(:disabled) { opacity: 1; transform: scale(0.98); }
+
+  .dt-btn-danger {
+    background: rgba(239,68,68,0.08);
+    color: #ef4444;
+    border-color: rgba(239,68,68,0.18);
+  }
+  .dt-btn-danger:hover { background: rgba(239,68,68,0.14); }
+
+  .dt-btn-active {
+    background: var(--dt-accent-soft);
+    color: var(--dt-accent);
+    border-color: var(--dt-accent-border);
+  }
+  .dt-btn-active:hover { background: var(--dt-surface-overlay); }
+
+  .dt-btn-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+  .dt-btn-dot.on { opacity: 1; box-shadow: 0 0 0 3px var(--dt-accent-soft); }
+
+  /* Day-of-week selector */
+  .dt-day-row { display: flex; gap: 4px; }
+  .dt-day-btn {
+    flex: 1;
+    height: 30px;
+    max-width: 30px;
+    border-radius: 50%;
+    font-size: 9.5px;
+    font-weight: 700;
+    border: 1px solid var(--dt-border);
+    background: var(--dt-surface-raised);
+    color: var(--dt-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    outline: none;
+  }
+  .dt-day-btn:hover { border-color: var(--dt-accent-border); color: var(--dt-accent); }
+  .dt-day-btn.active {
+    background: var(--dt-gradient);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 2px 6px var(--dt-accent-glow);
+  }
+  .dt-day-btn:focus-visible { outline: 2px solid var(--dt-accent); outline-offset: 1px; }
+
+  /* Time inputs */
+  .dt-time-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .dt-time-input {
+    flex: 1;
+    padding: 7px 6px;
+    border-radius: var(--dt-radius-sm);
+    border: 1px solid var(--dt-border);
+    background: var(--dt-surface-raised);
+    color: var(--dt-text-primary);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--dt-font);
+    outline: none;
+    transition: border-color 0.15s;
+    text-align: center;
+    cursor: pointer;
+  }
+  .dt-time-input:focus { border-color: var(--dt-accent); }
+  .dt-time-sep {
+    color: var(--dt-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Daily limit progress */
+  .dt-progress-track {
+    height: 6px;
+    border-radius: 100px;
+    background: var(--dt-surface-raised);
+    border: 1px solid var(--dt-border);
+    overflow: hidden;
+    margin-bottom: 5px;
+  }
+  .dt-progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--dt-gradient);
+    transition: width 0.4s ease;
+    min-width: 0;
+  }
+  .dt-progress-label {
+    font-size: 10px;
+    color: var(--dt-text-muted);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  /* Stats grid */
+  .dt-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .dt-stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 9px 6px;
+    border-radius: var(--dt-radius-sm);
+    border: 1px solid var(--dt-border);
+    background: var(--dt-surface-raised);
+    text-align: center;
+  }
+  .dt-stat-icon { color: var(--dt-accent); margin-bottom: 1px; }
+  .dt-stat-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--dt-text-primary);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .dt-stat-label {
+    font-size: 8.5px;
+    font-weight: 600;
+    color: var(--dt-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    line-height: 1.1;
+  }
+
+  /* ── 12. TRANSITIONS ─────────────────────────────────────── */
   button,[role="switch"] {
     transition:
       background 0.15s ease,
@@ -594,36 +680,47 @@
       opacity 0.15s ease;
   }
 
-  /* ── 12. MOBILE RESPONSIVE ───────────────────────────────── */
-  /* For Firefox for Android, Edge for Android, Safari iOS — full-width bottom panel */
-  @media (max-width: 420px) {
-    html {
-      width: 100vw;
-      height: 100vh;
+  /* ── 13. MOBILE / NARROW VIEWPORT ───────────────────── */
+  /* Firefox for Android, Edge for Android, Safari iOS — full-width bottom panel.
+     Scoped with (pointer: coarse) so desktop popups (width: 370px) never match this
+     and avoid collapsing into a small square in Chrome/Opera. */
+  @media (max-width: 400px) and (pointer: coarse) {
+    html, body, #root {
+      width: 100% !important;
+      height: 100% !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
     }
     :root { --dt-nav-width: 56px; }
   }
-  @media (max-height: 500px) {
-    html { height: 100vh; }
+  @media (max-height: 490px) and (pointer: coarse) {
+    html, body, #root {
+      height: 100% !important;
+      max-height: none !important;
+    }
   }
 }
 
-/* ── 13. ANIMATIONS ──────────────────────────────────────────── */
+/* ── 13. ANIMATIONS ─────────────────────────────────────────── */
+/* Note: keyframe definitions live in tailwind.config.js (animation: {} / keyframes: {})
+   so Tailwind generates the @keyframes in the output bundle.
+   The animate-* utilities are used directly in JSX via className. */
 @layer utilities {
-  .animate-slide-up { animation: dtSlideUp 0.22s cubic-bezier(0.16,1,0.3,1) both; }
-  .animate-scale-in { animation: dtScaleIn 0.15s cubic-bezier(0.16,1,0.3,1) both; }
-  .animate-fade-in  { animation: dtFadeIn  0.18s ease-out both; }
+  .animate-slide-up   { animation: slideUp   0.22s cubic-bezier(0.16,1,0.3,1) both; }
+  .animate-scale-in   { animation: scaleIn   0.15s cubic-bezier(0.16,1,0.3,1) both; }
+  .animate-fade-in    { animation: fadeIn    0.2s  ease-out both; }
+  .animate-float      { animation: dtFloat   3s    ease-in-out infinite alternate; }
+  .animate-pulse-soft { animation: dtPulseSoft 2s  cubic-bezier(0.4,0,0.6,1) infinite; }
 
-  @keyframes dtSlideUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0);   }
+  /* dtFloat and dtPulseSoft are not in tailwind.config.js so we keep them here */
+  @keyframes dtFloat {
+    from { transform: translateY(0px); }
+    to   { transform: translateY(-3px); }
   }
-  @keyframes dtScaleIn {
-    from { opacity: 0; transform: scale(0.94); }
-    to   { opacity: 1; transform: scale(1);    }
-  }
-  @keyframes dtFadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  @keyframes dtPulseSoft {
+    0%, 100% { opacity: 1;    transform: scale(1);    }
+    50%       { opacity: 0.85; transform: scale(0.98); }
   }
 }

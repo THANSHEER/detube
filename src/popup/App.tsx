@@ -33,7 +33,6 @@ import {
   Share2,
   FileText,
   Play,
-  Menu,
   SquarePlus,
   ShoppingBag,
   Music,
@@ -52,6 +51,7 @@ import {
   SlidersHorizontal,
   PanelLeft,
   Scissors,
+  Power,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -90,7 +90,6 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Share2,
   FileText,
   Play,
-  Menu,
   PlusSquare: SquarePlus,
   ShoppingBag,
   Music,
@@ -132,7 +131,7 @@ const TABS: NavTab[] = [
 const App: React.FC = () => {
   const [settings, setSettings] = useState<Settings>(DEFAULTS);
   const [activeTab, setActiveTab] = useState<SettingCategory | 'settings'>('header');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [theme, setTheme] = useState<ThemeMode>('system');
   const [browser, setBrowser] = useState<string>('chrome');
 
@@ -190,6 +189,12 @@ const App: React.FC = () => {
   }, []);
 
   // ── Handlers ───────────────────────────────────────────────
+  const handleSetEnabled = async (val: boolean) => {
+    const updated = { ...settings, enabled: val } as Settings;
+    setSettings(updated);
+    await DeTubeStorage.saveSettings({ enabled: val } as Partial<Settings>);
+  };
+
   const handleThemeChange = async (newTheme: ThemeMode) => {
     setTheme(newTheme);
     await DeTubeTheme.save(newTheme);
@@ -283,23 +288,40 @@ const App: React.FC = () => {
 
       {/* Middle: nav rail (left) + content (right) */}
       <div className="dt-main-area">
-        <NavRail
-          tabs={TABS}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-
-        {/* Content area: either settings panel or settings list */}
-        {activeTab === 'settings' ? (
-          <SettingsPanel
-            theme={theme}
-            onThemeChange={handleThemeChange}
-            browser={browser}
-          />
+        {!settings.enabled ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in select-none">
+            <div className="w-14 h-14 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)] mb-3.5 shadow-sm">
+              <Power size={26} strokeWidth={1.8} className="animate-pulse" />
+            </div>
+            <h2 className="text-[14px] font-bold text-[var(--dt-text-primary)] tracking-tight mb-1">
+              Extension is Disabled
+            </h2>
+            <p className="text-[11px] font-medium text-[var(--dt-text-muted)] max-w-[180px] leading-relaxed">
+              Press power button to enable
+            </p>
+          </div>
         ) : (
-          <main key={activeTab} className="dt-body animate-slide-up space-y-2">
-            {currentSections.map(renderSection)}
-          </main>
+          <>
+            <NavRail
+              tabs={TABS}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+
+            {/* Content area: settings panel or settings list */}
+            {activeTab === 'settings' ? (
+              <SettingsPanel
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                browser={browser}
+                onSetEnabled={handleSetEnabled}
+              />
+            ) : (
+              <main key={activeTab} className="dt-body animate-slide-up space-y-2">
+                {currentSections.map(renderSection)}
+              </main>
+            )}
+          </>
         )}
       </div>
 
