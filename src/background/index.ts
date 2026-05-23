@@ -25,7 +25,7 @@ async function refreshBadge(): Promise<void> {
   ]);
 
   if (!settings.enabled) {
-    setBadge('OFF', '#71717a');
+    setBadge('', '#71717a');
     return;
   }
 
@@ -49,7 +49,7 @@ async function refreshBadge(): Promise<void> {
     }
   }
 
-  setBadge('ON', '#6366f1');
+  setBadge('', '#6366f1');
 }
 
 // ---------------------------------------------------------------------------
@@ -114,7 +114,7 @@ async function onTick(): Promise<void> {
         DeTubeFocus.saveConfig({ timerEndTime: null }),
         DeTubeStorage.saveSettings({ enabled: false }),
       ]);
-      setBadge('OFF', '#71717a');
+      setBadge('', '#71717a');
       return;
     }
   }
@@ -158,7 +158,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       if (config.blockingMode === 'daily-limit' && settings.enabled) {
         if (newUsed >= config.dailyLimitMinutes * 60) {
           await DeTubeStorage.saveSettings({ enabled: false });
-          setBadge('OFF', '#71717a');
+          setBadge('', '#71717a');
         } else {
           await refreshBadge();
         }

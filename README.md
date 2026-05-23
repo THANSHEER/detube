@@ -1,6 +1,6 @@
 # 📺 DeTube
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://github.com/THANSHEER/detube)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/THANSHEER/detube)
 [![Built with React](https://img.shields.io/badge/built%20with-React-61DAFB.svg?logo=react)](https://reactjs.org/)
 [![Styled with CSS](https://img.shields.io/badge/styled%20with-Vanilla%20CSS-1572B6.svg?logo=css3)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![Built with Vite](https://img.shields.io/badge/built%20with-Vite-646CFF.svg?logo=vite)](https://vitejs.dev/)

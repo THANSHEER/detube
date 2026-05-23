@@ -41,26 +41,29 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       {/* ── Divider ── */}
       <div className="dt-settings-divider" />
 
-      {/* ── Theme ── */}
-      <section>
-        <p className="dt-settings-section-title">Appearance</p>
-        <div className="dt-theme-group">
+      {/* ── Appearance — single inline row ── */}
+      <section className="flex items-center justify-between gap-3">
+        <p className="dt-settings-section-title" style={{ marginBottom: 0 }}>Appearance</p>
+        <div className="flex items-center border border-[var(--dt-border)] rounded-[8px] overflow-hidden bg-[var(--dt-surface-raised)] shrink-0">
           {THEME_OPTIONS.map(({ mode, Icon, label }) => (
             <button
               key={mode}
               onClick={() => onThemeChange(mode)}
-              title={`${label} mode`}
+              title={label}
               aria-pressed={theme === mode}
-              className={`dt-theme-btn ${theme === mode ? 'active' : ''}`}
+              className={[
+                'w-[30px] h-[26px] flex items-center justify-center border-none cursor-pointer outline-none',
+                'transition-all duration-150',
+                'focus-visible:outline-2 focus-visible:outline-[var(--dt-accent)] focus-visible:outline-offset-[-2px]',
+                theme === mode
+                  ? 'text-white [background:var(--dt-gradient)]'
+                  : 'bg-transparent text-[var(--dt-text-muted)] hover:text-[var(--dt-text-secondary)] hover:bg-[var(--dt-surface-overlay)]',
+              ].join(' ')}
             >
-              <Icon size={14} strokeWidth={theme === mode ? 2.5 : 1.8} />
-              {label}
+              <Icon size={12} strokeWidth={theme === mode ? 2.4 : 1.7} />
             </button>
           ))}
         </div>
-        <p className="text-[9px] mt-2 px-1 text-[var(--dt-text-muted)]">
-          System follows your OS light/dark preference automatically.
-        </p>
       </section>
 
       {/* ── Browser ── */}
@@ -79,12 +82,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         <div className="flex flex-col gap-1.5">
           <div className="dt-about-row">
             <span className="dt-about-label">DeTube</span>
-            <span className="dt-about-value">v2.0.1</span>
+            <span className="dt-about-value">v3.0.0</span>
           </div>
           <div className="dt-about-row">
             <span className="dt-about-label">By GeekStash.dev</span>
             <button
-              className="dt-about-value flex items-center gap-1 hover:text-[var(--dt-accent)] transition-colors cursor-pointer border-none bg-transparent p-0"
+              className="dt-about-value flex items-center gap-1 hover:text-[var(--dt-accent)] transition-colors duration-150 cursor-pointer border-none bg-transparent p-0"
               onClick={() => chrome.tabs.create({ url: 'https://geekstash.dev' })}
             >
               Visit <ExternalLink size={9} />
@@ -93,7 +96,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="dt-about-row">
             <span className="dt-about-label">Source Code</span>
             <button
-              className="dt-about-value flex items-center gap-1 hover:text-[var(--dt-accent)] transition-colors cursor-pointer border-none bg-transparent p-0"
+              className="dt-about-value flex items-center gap-1 hover:text-[var(--dt-accent)] transition-colors duration-150 cursor-pointer border-none bg-transparent p-0"
               onClick={() => chrome.tabs.create({ url: 'https://github.com/THANSHEER/detube' })}
             >
               GitHub <Github size={9} />

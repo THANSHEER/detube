@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   Shield, Timer, CalendarClock, Gauge,
-  Flame, BarChart3, TrendingUp, Activity,
   Play, Square,
 } from 'lucide-react';
 import {
@@ -13,17 +12,24 @@ import {
 const DAYS_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 const DURATION_PRESETS = [
-  { label: '30m', value: 30 },
-  { label: '1h',  value: 60 },
+  { label: '30m', value: 30  },
+  { label: '1h',  value: 60  },
   { label: '2h',  value: 120 },
 ];
 
-const MODE_CARDS: { id: BlockingMode; Icon: typeof Shield; label: string; desc: string }[] = [
-  { id: 'always',      Icon: Shield,        label: 'Always',      desc: 'Permanent'   },
-  { id: 'timer',       Icon: Timer,         label: 'Timer',       desc: 'Time-based'  },
-  { id: 'schedule',    Icon: CalendarClock, label: 'Schedule',    desc: 'Auto on/off' },
-  { id: 'daily-limit', Icon: Gauge,         label: 'Daily Limit', desc: 'Usage cap'   },
+const MODE_ITEMS: { id: BlockingMode; Icon: typeof Shield; label: string; desc: string }[] = [
+  { id: 'always',      Icon: Shield,        label: 'Always On',    desc: 'Block YouTube at all times'       },
+  { id: 'timer',       Icon: Timer,         label: 'Focus Timer',  desc: 'Block for a set duration'         },
+  { id: 'schedule',    Icon: CalendarClock, label: 'Schedule',     desc: 'Auto on/off by time of day'       },
+  { id: 'daily-limit', Icon: Gauge,         label: 'Daily Limit',  desc: 'Cap your total daily usage'       },
 ];
+
+const STAT_COLORS = {
+  today:    '#ff6b6b',
+  streak:   '#fb923c',
+  sessions: '#34d399',
+  allTime:  '#60a5fa',
+};
 
 export interface FocusPanelProps {
   onSetEnabled: (val: boolean) => Promise<void>;
@@ -40,19 +46,19 @@ function isScheduleActive(config: FocusConfig): boolean {
   return nowMins >= sh * 60 + sm && nowMins < eh * 60 + em;
 }
 
-function formatFocusTime(mins: number): string {
+function formatTime(mins: number): string {
   if (mins === 0) return '0m';
   if (mins < 60) return `${mins}m`;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
 export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
   const [config, setConfig] = useState<FocusConfig>(FOCUS_DEFAULTS);
-  const [stats, setStats] = useState<FocusStats>(STATS_DEFAULTS);
-  const [countdown, setCountdown] = useState('');
-  const [customDur, setCustomDur] = useState('');
+  const [stats,  setStats]  = useState<FocusStats>(STATS_DEFAULTS);
+  const [countdown,   setCountdown]   = useState('');
+  const [customDur,   setCustomDur]   = useState('');
   const [customLimit, setCustomLimit] = useState('');
 
   useEffect(() => {
@@ -64,25 +70,25 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
 
   useEffect(() => {
     if (!config.timerEndTime) { setCountdown(''); return; }
-    const update = () => {
-      const remaining = (config.timerEndTime ?? 0) - Date.now();
-      if (remaining <= 0) { setCountdown('00:00'); return; }
-      const totalSecs = Math.ceil(remaining / 1000);
-      const h = Math.floor(totalSecs / 3600);
-      const m = Math.floor((totalSecs % 3600) / 60);
-      const s = totalSecs % 60;
+    const tick = () => {
+      const rem = (config.timerEndTime ?? 0) - Date.now();
+      if (rem <= 0) { setCountdown('00:00'); return; }
+      const s = Math.ceil(rem / 1000);
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const ss = s % 60;
       setCountdown(
         h > 0
-          ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-          : `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+          ? `${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`
+          : `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`
       );
     };
-    update();
-    const id = setInterval(update, 1000);
+    tick();
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [config.timerEndTime]);
 
-  const patchConfig = useCallback((patch: Partial<FocusConfig>) => DeTubeFocus.saveConfig(patch), []);
+  const patchConfig = useCallback((p: Partial<FocusConfig>) => DeTubeFocus.saveConfig(p), []);
 
   const handleModeChange = async (mode: BlockingMode) => {
     const patch: Partial<FocusConfig> = { blockingMode: mode };
@@ -126,12 +132,15 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
     setCustomLimit('');
   };
 
-  const today = new Date().toISOString().split('T')[0];
-  const usedSec = config.dailyResetDate === today ? config.dailyUsedSeconds : 0;
-  const usedMin = Math.floor(usedSec / 60);
+  const today    = new Date().toISOString().split('T')[0];
+  const usedSec  = config.dailyResetDate === today ? config.dailyUsedSeconds : 0;
+  const usedMin  = Math.floor(usedSec / 60);
+  const leftMin  = Math.max(0, config.dailyLimitMinutes - usedMin);
   const usagePct = Math.min(100, (usedSec / (config.dailyLimitMinutes * 60)) * 100);
-  const isTimerRunning = !!config.timerEndTime && Date.now() < config.timerEndTime;
-  const activeDur = customDur ? (parseInt(customDur, 10) || config.timerDurationMinutes) : config.timerDurationMinutes;
+  const isRunning = !!config.timerEndTime && Date.now() < config.timerEndTime;
+  const activeDur = customDur
+    ? (parseInt(customDur, 10) || config.timerDurationMinutes)
+    : config.timerDurationMinutes;
 
   const timerLabel = activeDur < 60
     ? `${activeDur}m`
@@ -139,31 +148,37 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
       ? `${activeDur / 60}h`
       : `${Math.floor(activeDur / 60)}h${activeDur % 60}m`;
 
-  // Sections rendered as a fragment — container is provided by parent (SettingsPanel)
   return (
     <>
-      {/* ── Blocking Mode ── */}
+      {/* ── Blocking Mode — radio list ──────────────────────────── */}
       <section>
         <p className="dt-settings-section-title">Blocking Mode</p>
-        <div className="dt-mode-grid">
-          {MODE_CARDS.map(({ id, Icon, label, desc }) => {
+        <div className="dt-mode-list">
+          {MODE_ITEMS.map(({ id, Icon, label, desc }) => {
             const active = config.blockingMode === id;
             return (
               <button
                 key={id}
                 onClick={() => handleModeChange(id)}
-                className={`dt-mode-card${active ? ' active' : ''}`}
+                className={`dt-mode-item${active ? ' active' : ''}`}
               >
-                <Icon size={15} strokeWidth={active ? 2.5 : 1.8} />
-                <span className="dt-mode-label">{label}</span>
-                <span className="dt-mode-desc">{desc}</span>
+                <div className="dt-mode-item-icon">
+                  <Icon size={13} strokeWidth={active ? 2.4 : 1.8} />
+                </div>
+                <div className="dt-mode-item-text">
+                  <p className="dt-mode-item-label">{label}</p>
+                  <p className="dt-mode-item-desc">{desc}</p>
+                </div>
+                <div className="dt-mode-radio">
+                  <div className="dt-mode-radio-fill" />
+                </div>
               </button>
             );
           })}
         </div>
       </section>
 
-      {/* ── Timer Config ── */}
+      {/* ── Timer Config ─────────────────────────────────────────── */}
       {config.blockingMode === 'timer' && (
         <section className="animate-fade-in">
           <p className="dt-settings-section-title">Duration</p>
@@ -192,7 +207,7 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
             </div>
           </div>
 
-          {isTimerRunning ? (
+          {isRunning ? (
             <div className="dt-timer-running">
               <div className="dt-countdown">{countdown}</div>
               <button onClick={handleStopTimer} className="dt-btn dt-btn-danger">
@@ -200,17 +215,14 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => handleStartTimer(activeDur)}
-              className="dt-btn dt-btn-primary"
-            >
+            <button onClick={() => handleStartTimer(activeDur)} className="dt-btn dt-btn-primary">
               <Play size={11} strokeWidth={2.5} /> Start {timerLabel} Timer
             </button>
           )}
         </section>
       )}
 
-      {/* ── Schedule Config ── */}
+      {/* ── Schedule Config ──────────────────────────────────────── */}
       {config.blockingMode === 'schedule' && (
         <section className="animate-fade-in">
           <p className="dt-settings-section-title">Active Days</p>
@@ -247,10 +259,10 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
         </section>
       )}
 
-      {/* ── Daily Limit Config ── */}
+      {/* ── Daily Limit Config ───────────────────────────────────── */}
       {config.blockingMode === 'daily-limit' && (
         <section className="animate-fade-in">
-          <p className="dt-settings-section-title">Daily Limit</p>
+          <p className="dt-settings-section-title">Set Daily Limit</p>
           <div className="dt-pill-row">
             {DURATION_PRESETS.map(({ label, value }) => (
               <button
@@ -273,44 +285,72 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
           </div>
 
           {customLimit && parseInt(customLimit, 10) > 0 && (
-            <button onClick={handleSaveLimit} className="dt-btn dt-btn-primary" style={{ marginTop: '8px' }}>
+            <button onClick={handleSaveLimit} className="dt-btn dt-btn-primary" style={{ marginTop: '6px' }}>
               Save {customLimit}m Limit
             </button>
           )}
 
+          {/* Usage card */}
           <p className="dt-settings-section-title" style={{ marginTop: '10px' }}>Today's Usage</p>
-          <div className="dt-progress-track">
-            <div className="dt-progress-fill" style={{ width: `${usagePct}%` }} />
+          <div className="dt-usage-card">
+            {/* Used / Remaining stats */}
+            <div className="dt-usage-row">
+              <div className="dt-usage-stat">
+                <p className="dt-usage-stat-val" style={{ color: '#fb923c' }}>
+                  {formatTime(usedMin)}
+                </p>
+                <p className="dt-usage-stat-lbl">Used</p>
+              </div>
+
+              <p className="dt-usage-of">of {config.dailyLimitMinutes}m</p>
+
+              <div className="dt-usage-stat right">
+                <p className="dt-usage-stat-val" style={{ color: '#34d399' }}>
+                  {formatTime(leftMin)}
+                </p>
+                <p className="dt-usage-stat-lbl">Left</p>
+              </div>
+            </div>
+
+            {/* Progress bar + percentage */}
+            <div className="dt-usage-bar">
+              <div className="dt-usage-bar-fill" style={{ width: `${usagePct}%` }} />
+            </div>
+            <div className="dt-usage-footer">
+              <p className="dt-usage-limit-text">Daily limit · {config.dailyLimitMinutes}m</p>
+              <p className="dt-usage-pct">{Math.round(usagePct)}%</p>
+            </div>
           </div>
-          <p className="dt-progress-label">
-            {usedMin}m used · {Math.max(0, config.dailyLimitMinutes - usedMin)}m left of {config.dailyLimitMinutes}m
-          </p>
         </section>
       )}
 
-      {/* ── Stats ── */}
+      {/* ── Focus Stats — 4-column colored row ──────────────────── */}
       <section>
         <p className="dt-settings-section-title">Focus Stats</p>
-        <div className="dt-stats-grid">
-          <div className="dt-stat-card">
-            <TrendingUp size={13} strokeWidth={2} className="dt-stat-icon" />
-            <p className="dt-stat-value">{formatFocusTime(stats.focusMinutesToday)}</p>
-            <p className="dt-stat-label">Today</p>
+        <div className="dt-stats-row">
+          <div className="dt-stat-cell">
+            <p className="dt-stat-cell-value" style={{ color: STAT_COLORS.today }}>
+              {formatTime(stats.focusMinutesToday)}
+            </p>
+            <p className="dt-stat-cell-label">Today</p>
           </div>
-          <div className="dt-stat-card">
-            <Flame size={13} strokeWidth={2} className="dt-stat-icon" />
-            <p className="dt-stat-value">{stats.streak}</p>
-            <p className="dt-stat-label">{stats.streak === 1 ? 'day' : 'days'} streak</p>
+          <div className="dt-stat-cell">
+            <p className="dt-stat-cell-value" style={{ color: STAT_COLORS.streak }}>
+              {stats.streak}
+            </p>
+            <p className="dt-stat-cell-label">Streak</p>
           </div>
-          <div className="dt-stat-card">
-            <Activity size={13} strokeWidth={2} className="dt-stat-icon" />
-            <p className="dt-stat-value">{stats.sessionCount}</p>
-            <p className="dt-stat-label">Sessions</p>
+          <div className="dt-stat-cell">
+            <p className="dt-stat-cell-value" style={{ color: STAT_COLORS.sessions }}>
+              {stats.sessionCount}
+            </p>
+            <p className="dt-stat-cell-label">Sessions</p>
           </div>
-          <div className="dt-stat-card">
-            <BarChart3 size={13} strokeWidth={2} className="dt-stat-icon" />
-            <p className="dt-stat-value">{formatFocusTime(stats.focusMinutesTotal)}</p>
-            <p className="dt-stat-label">All time</p>
+          <div className="dt-stat-cell">
+            <p className="dt-stat-cell-value" style={{ color: STAT_COLORS.allTime }}>
+              {formatTime(stats.focusMinutesTotal)}
+            </p>
+            <p className="dt-stat-cell-label">All Time</p>
           </div>
         </div>
       </section>

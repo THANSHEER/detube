@@ -1,12 +1,13 @@
 {
   "name": "detube",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Distraction-free YouTube experience.",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build:css": "node scripts/build-css.js",
-    "build": "npm run build:css && npm run build:chrome && npm run build:firefox && npm run build:edge && npm run build:safari && npm run build:opera && npm run zip:builds",
+    "generate-icons": "node scripts/generate-icons.js",
+    "build": "npm run build:css && npm run generate-icons && npm run build:chrome && npm run build:firefox && npm run build:edge && npm run build:safari && npm run build:opera && npm run zip:builds",
     "build:chrome": "tsc && TARGET_BROWSER=chrome vite build",
     "build:firefox": "tsc && TARGET_BROWSER=firefox vite build",
     "build:edge": "tsc && TARGET_BROWSER=edge vite build",
@@ -26,11 +27,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lucide-react": "^0.460.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "lucide-react": "^0.460.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/chrome": "^0.0.300",
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.12",

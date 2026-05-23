@@ -239,11 +239,11 @@ const App: React.FC = () => {
     const visibleChildren = children.filter(isVisibleForLogin);
 
     return (
-      <div key={section} className="mb-4 last:mb-1">
+      <div key={section} className="mb-3 last:mb-0">
         <SectionDivider title={SECTION_TITLES[section]} />
 
         {/* Grouped section container */}
-        <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius-lg)] shadow-sm overflow-hidden divide-y divide-[var(--dt-border)] transition-all">
+        <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius)] overflow-hidden divide-y divide-[var(--dt-border)]">
           {topLevel.map((def) => (
             <SettingCard
               key={def.key}
@@ -256,7 +256,7 @@ const App: React.FC = () => {
 
           {/* Children options inside the same unified card container */}
           {visibleChildren.length > 0 && !isParentEnabled(visibleChildren[0]) && (
-            <div className="divide-y divide-[var(--dt-border)] bg-[var(--dt-surface-overlay)]/40 animate-fade-in">
+            <div className="divide-y divide-[var(--dt-border)] bg-[var(--dt-surface-overlay)] animate-fade-in">
               {visibleChildren.map((def) => (
                 <SettingCard
                   key={def.key}
@@ -289,16 +289,18 @@ const App: React.FC = () => {
       {/* Middle: nav rail (left) + content (right) */}
       <div className="dt-main-area">
         {!settings.enabled ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in select-none">
-            <div className="w-14 h-14 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)] mb-3.5 shadow-sm">
-              <Power size={26} strokeWidth={1.8} className="animate-pulse" />
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in select-none gap-3">
+            <div className="w-12 h-12 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)]">
+              <Power size={22} strokeWidth={1.7} className="animate-pulse-soft" />
             </div>
-            <h2 className="text-[14px] font-bold text-[var(--dt-text-primary)] tracking-tight mb-1">
-              Extension is Disabled
-            </h2>
-            <p className="text-[11px] font-medium text-[var(--dt-text-muted)] max-w-[180px] leading-relaxed">
-              Press power button to enable
-            </p>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-[13px] font-semibold text-[var(--dt-text-primary)] tracking-tight">
+                Extension is Disabled
+              </h2>
+              <p className="text-[11px] font-medium text-[var(--dt-text-muted)] max-w-[160px] leading-relaxed">
+                Press the power button to enable
+              </p>
+            </div>
           </div>
         ) : (
           <>
@@ -317,7 +319,7 @@ const App: React.FC = () => {
                 onSetEnabled={handleSetEnabled}
               />
             ) : (
-              <main key={activeTab} className="dt-body animate-slide-up space-y-2">
+              <main key={activeTab} className="dt-body animate-slide-up space-y-3">
                 {currentSections.map(renderSection)}
               </main>
             )}

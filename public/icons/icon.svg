@@ -1,20 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="128" height="128">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
+      <stop offset="0%" stop-color="#FF2828"/>
+      <stop offset="100%" stop-color="#B80000"/>
     </linearGradient>
   </defs>
 
-  <!-- Rounded square background -->
-  <rect width="100" height="100" rx="22" fill="url(#bg)"/>
+  <rect width="100" height="100" rx="20" fill="url(#bg)"/>
 
-  <!-- White D outer silhouette -->
-  <path fill="white" d="M 14,14 L 56,14 C 90,14 90,86 56,86 L 14,86 Z"/>
+  <!-- Control slider 1 (top) -->
+  <rect x="18" y="26" width="64" height="4" rx="2" fill="rgba(255,255,255,0.22)"/>
+  <rect x="18" y="26" width="45" height="4" rx="2" fill="white"/>
+  <circle cx="63" cy="28" r="7.5" fill="white"/>
 
-  <!-- Inner gradient cutout — hollows out the D bowl -->
-  <path fill="url(#bg)" d="M 28,28 L 54,28 C 76,28 76,72 54,72 L 28,72 Z"/>
+  <!-- Control slider 2 (middle) -->
+  <rect x="18" y="48" width="64" height="4" rx="2" fill="rgba(255,255,255,0.22)"/>
+  <rect x="18" y="48" width="18" height="4" rx="2" fill="white"/>
+  <circle cx="36" cy="50" r="7.5" fill="white"/>
 
-  <!-- Play triangle (white) centred in the D bowl -->
-  <polygon fill="white" points="38,37 70,50 38,63"/>
+  <!-- Control slider 3 (bottom) -->
+  <rect x="18" y="70" width="64" height="4" rx="2" fill="rgba(255,255,255,0.22)"/>
+  <rect x="18" y="70" width="34" height="4" rx="2" fill="white"/>
+  <circle cx="52" cy="72" r="7.5" fill="white"/>
 </svg>
