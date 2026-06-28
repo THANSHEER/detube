@@ -3,15 +3,15 @@ import { LucideIcon, Settings } from 'lucide-react';
 import { SettingCategory } from '../lib/config';
 
 export type NavTab = {
-  id: SettingCategory;
+  id: SettingCategory | 'focus';
   label: string;
   Icon: LucideIcon;
 };
 
 interface NavRailProps {
   tabs: NavTab[];
-  activeTab: SettingCategory | 'settings';
-  onTabChange: (id: SettingCategory | 'settings') => void;
+  activeTab: SettingCategory | 'focus' | 'settings';
+  onTabChange: (id: SettingCategory | 'focus' | 'settings') => void;
 }
 
 export const NavRail: React.FC<NavRailProps> = ({ tabs, activeTab, onTabChange }) => {

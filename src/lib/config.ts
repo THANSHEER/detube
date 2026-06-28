@@ -28,6 +28,7 @@ export type SettingSection =
   | 'sidebar-you'
   | 'sidebar-explore'
   | 'sidebar-more'
+  | 'sidebar-footer'
   // Homepage
   | 'homepage-feed'
   // Video page
@@ -76,6 +77,7 @@ export const SECTION_TITLES: Record<SettingSection, string> = {
   'sidebar-you': 'You Section',
   'sidebar-explore': 'Explore',
   'sidebar-more': 'More about YouTube',
+  'sidebar-footer': 'Footer & Other',
   'homepage-feed': 'Main Feed',
   'video-layout': 'Layout & Player',
   'video-interactions': 'Interactions',
@@ -433,6 +435,24 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     label: 'Hide YouTube Kids',
     icon: 'Tv2',
     parentKey: 'hideMoreFromYoutube',
+  },
+  {
+    key: 'hideReportHistory',
+    cssClass: 'dt-hide-report-history',
+    category: 'sidebar',
+    section: 'sidebar-footer',
+    defaultValue: false,
+    label: 'Hide Report History',
+    icon: 'Flag',
+  },
+  {
+    key: 'hideSidebarFooter',
+    cssClass: 'dt-hide-sidebar-footer',
+    category: 'sidebar',
+    section: 'sidebar-footer',
+    defaultValue: false,
+    label: 'Hide Sidebar Footer',
+    icon: 'AlignVerticalSpaceAround',
   },
 
   // =========================================================================

@@ -52,6 +52,7 @@ import {
   PanelLeft,
   Scissors,
   Power,
+  Target,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -60,6 +61,7 @@ import { NavRail, type NavTab } from '../components/NavRail';
 import { SettingCard } from '../components/SettingCard';
 import { SectionDivider } from '../components/SectionDivider';
 import { SettingsPanel } from '../components/SettingsPanel';
+import { FocusPanel } from '../components/FocusPanel';
 
 // ---------------------------------------------------------------------------
 // Icon resolver
@@ -122,6 +124,7 @@ const TABS: NavTab[] = [
   { id: 'videopage',   label: 'Video',   Icon: PlayCircle         },
   { id: 'channelpage', label: 'Channel', Icon: User               },
   { id: 'shortspage',  label: 'Shorts',  Icon: Scissors           },
+  { id: 'focus',       label: 'Focus',   Icon: Target             },
 ];
 
 // ---------------------------------------------------------------------------
@@ -130,7 +133,7 @@ const TABS: NavTab[] = [
 
 const App: React.FC = () => {
   const [settings, setSettings] = useState<Settings>(DEFAULTS);
-  const [activeTab, setActiveTab] = useState<SettingCategory | 'settings'>('header');
+  const [activeTab, setActiveTab] = useState<SettingCategory | 'focus' | 'settings'>('header');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [theme, setTheme] = useState<ThemeMode>('system');
   const [browser, setBrowser] = useState<string>('chrome');
@@ -276,7 +279,7 @@ const App: React.FC = () => {
 
   // ── Render ─────────────────────────────────────────────────
   return (
-    <div className="dt-popup">
+    <div className="dt-popup animate-popup-open">
 
       {/* Fixed slim header strip */}
       <div className="dt-header-area">
@@ -289,16 +292,24 @@ const App: React.FC = () => {
       {/* Middle: nav rail (left) + content (right) */}
       <div className="dt-main-area">
         {!settings.enabled ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in select-none gap-3">
-            <div className="w-12 h-12 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)]">
-              <Power size={22} strokeWidth={1.7} className="animate-pulse-soft" />
+          <div 
+            className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in select-none gap-3 cursor-pointer group active:scale-95 transition-transform duration-300 [transition-timing-function:var(--dt-spring)]"
+            onClick={() => handleToggle('enabled')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleToggle('enabled'); }
+            }}
+          >
+            <div className="w-12 h-12 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)] group-hover:text-[var(--dt-accent)] group-hover:border-[var(--dt-accent-border)] transition-colors duration-300 [transition-timing-function:var(--dt-spring)] shadow-sm">
+              <Power size={22} strokeWidth={1.7} className="animate-pulse-soft group-hover:animate-none" />
             </div>
             <div className="flex flex-col gap-1">
-              <h2 className="text-[13px] font-semibold text-[var(--dt-text-primary)] tracking-tight">
+              <h2 className="text-[13px] font-semibold text-[var(--dt-text-primary)] tracking-tight transition-colors duration-300">
                 Extension is Disabled
               </h2>
-              <p className="text-[11px] font-medium text-[var(--dt-text-muted)] max-w-[160px] leading-relaxed">
-                Press the power button to enable
+              <p className="text-[11px] font-medium text-[var(--dt-text-muted)] max-w-[160px] leading-relaxed group-hover:text-[var(--dt-text-secondary)] transition-colors duration-300">
+                Press anywhere to enable
               </p>
             </div>
           </div>
@@ -310,14 +321,17 @@ const App: React.FC = () => {
               onTabChange={setActiveTab}
             />
 
-            {/* Content area: settings panel or settings list */}
+            {/* Content area: settings panel, focus panel, or settings list */}
             {activeTab === 'settings' ? (
               <SettingsPanel
                 theme={theme}
                 onThemeChange={handleThemeChange}
                 browser={browser}
-                onSetEnabled={handleSetEnabled}
               />
+            ) : activeTab === 'focus' ? (
+              <div className="dt-focus-panel animate-slide-up">
+                <FocusPanel onSetEnabled={handleSetEnabled} />
+              </div>
             ) : (
               <main key={activeTab} className="dt-body animate-slide-up space-y-3">
                 {currentSections.map(renderSection)}

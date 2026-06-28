@@ -160,19 +160,7 @@ class DeTubeEngine {
       attributeFilter: ['class'],
     });
 
-    // 2. Watch for DOM changes (YouTube dynamically loads content)
-    const bodyTarget = document.body || document.documentElement;
-    const bodyObserver = new MutationObserver(() => {
-      if (!this.settings.enabled) return;
-      this.scheduleApply();
-    });
-
-    bodyObserver.observe(bodyTarget, {
-      childList: true,
-      subtree: true,
-    });
-
-    // 3. Listen for YouTube SPA navigation events
+    // 2. Listen for YouTube SPA navigation events
     window.addEventListener('yt-navigate-finish', () => {
       if (this.settings.enabled) {
         this.scheduleApply();

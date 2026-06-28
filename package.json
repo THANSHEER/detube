@@ -3,6 +3,9 @@
   "version": "3.0.0",
   "description": "Distraction-free YouTube experience.",
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build:css": "node scripts/build-css.js",

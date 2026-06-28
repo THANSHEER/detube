@@ -193,3 +193,8 @@ html.dt-hide-music-premium ytd-guide-entry-renderer:has(a[href*="music.youtube.c
 
 html.dt-hide-kids ytd-guide-entry-renderer:has(a[title*="Kids" i]),
 html.dt-hide-kids ytd-guide-entry-renderer:has(a[href*="kids.youtube.com"]) { display: none !important; }
+
+html.dt-hide-report-history ytd-guide-section-renderer:has(a[href*="/reporthistory"]),
+html.dt-hide-report-history ytd-mini-guide-entry-renderer:has(a[href*="/reporthistory"]) { display: none !important; }
+
+html.dt-hide-sidebar-footer #footer { display: none !important; }

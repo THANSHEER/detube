@@ -1,4 +1,4 @@
-import { SETTING_REGISTRY, buildDefaults } from './config';
+import { SETTING_REGISTRY, ALL_SETTING_KEYS, buildDefaults } from './config';
 
 // ---------------------------------------------------------------------------
 // Focus / Blocking Mode
@@ -172,13 +172,20 @@ export const DeTubeStorage = {
   },
 
   onChanged(callback: (changes: Partial<Settings>) => void) {
+    const validKeys = new Set(['enabled', ...ALL_SETTING_KEYS]);
     chrome.storage.onChanged.addListener((changes, areaName) => {
       if (areaName === 'local') {
         const newSettings: Partial<Settings> = {};
+        let hasSettingChange = false;
         for (const [key, value] of Object.entries(changes)) {
-          (newSettings as Record<string, unknown>)[key] = value.newValue;
+          if (validKeys.has(key)) {
+            (newSettings as Record<string, unknown>)[key] = value.newValue;
+            hasSettingChange = true;
+          }
         }
-        callback(newSettings);
+        if (hasSettingChange) {
+          callback(newSettings);
+        }
       }
     });
   },

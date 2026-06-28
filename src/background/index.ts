@@ -7,8 +7,12 @@ const ALARM_TICK = 'detube-tick';
 // ---------------------------------------------------------------------------
 
 function setBadge(text: string, color: string): void {
-  chrome.action.setBadgeText({ text });
-  chrome.action.setBadgeBackgroundColor({ color });
+  try {
+    chrome.action.setBadgeText({ text });
+    chrome.action.setBadgeBackgroundColor({ color });
+  } catch {
+    // Safari 15.4–16.3 may not support badge APIs — silently ignore
+  }
 }
 
 function formatBadgeMins(totalMins: number): string {
@@ -62,7 +66,9 @@ function getTodayDate(): string {
 
 function isConsecutiveDay(prev: string, today: string): boolean {
   if (!prev) return false;
-  return new Date(today).getTime() - new Date(prev).getTime() === 86400000;
+  const p = new Date(prev);
+  p.setDate(p.getDate() + 1);
+  return p.toISOString().split('T')[0] === today;
 }
 
 function isScheduleNowActive(config: FocusConfig): boolean {
@@ -73,7 +79,15 @@ function isScheduleNowActive(config: FocusConfig): boolean {
   const [sh, sm] = config.scheduleStartTime.split(':').map(Number);
   const [eh, em] = config.scheduleEndTime.split(':').map(Number);
   const nowMins = now.getHours() * 60 + now.getMinutes();
-  return nowMins >= sh * 60 + sm && nowMins < eh * 60 + em;
+  
+  const startMins = sh * 60 + sm;
+  const endMins = eh * 60 + em;
+  
+  if (startMins <= endMins) {
+    return nowMins >= startMins && nowMins < endMins;
+  } else {
+    return nowMins >= startMins || nowMins < endMins;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -105,6 +119,9 @@ async function onTick(): Promise<void> {
         : stats.streak,
       lastActiveDate: today,
     });
+  } else if (stats.lastActiveDate !== today && stats.focusMinutesToday > 0) {
+    // Reset today's minutes for the UI, but preserve lastActiveDate for streak logic
+    await DeTubeFocus.saveStats({ focusMinutesToday: 0 });
   }
 
   // Timer mode: auto-expire
@@ -120,7 +137,7 @@ async function onTick(): Promise<void> {
   }
 
   // Schedule mode: auto-enable/disable
-  if (config.blockingMode === 'schedule') {
+  if (config.blockingMode === 'schedule' && config.scheduleEnabled) {
     const shouldBeActive = isScheduleNowActive(config);
     if (shouldBeActive !== settings.enabled) {
       await DeTubeStorage.saveSettings({ enabled: shouldBeActive });
@@ -194,6 +211,11 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 // ---------------------------------------------------------------------------
 
 async function init(): Promise<void> {
+  // Guard: chrome.alarms may not be available in all Safari versions
+  if (typeof chrome.alarms === 'undefined') {
+    console.warn('DeTube: chrome.alarms not available — timer/schedule features disabled');
+    return;
+  }
   const existing = await chrome.alarms.get(ALARM_TICK);
   if (!existing) {
     chrome.alarms.create(ALARM_TICK, { periodInMinutes: 1 });
