@@ -207,5 +207,4 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 
     sendResponse({ isLoggedIn, url: window.location.href });
   }
-  return true;
 });
