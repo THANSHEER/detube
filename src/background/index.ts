@@ -1,82 +1,250 @@
-/**
- * DeTube Background Service Worker
- *
- * Responsibilities:
- * 1. Set badge text/color based on enabled state
- * 2. On install/update, inject content script + CSS into already-open YouTube tabs
- *    so users don't need to manually refresh the page.
- */
+import { DeTubeStorage, DeTubeFocus, type FocusConfig } from '../lib/storage';
 
-import { DeTubeStorage } from '../lib/storage';
+const ALARM_TICK = 'detube-tick';
 
 // ---------------------------------------------------------------------------
-// Badge management
+// Badge helpers
 // ---------------------------------------------------------------------------
 
-const BADGE_ON = { text: 'ON', color: '#ff0000' };
-const BADGE_OFF = { text: 'OFF', color: '#F44336' };
-
-function updateBadge(enabled: boolean): void {
-  const { text, color } = enabled ? BADGE_ON : BADGE_OFF;
-  chrome.action.setBadgeText({ text });
-  chrome.action.setBadgeBackgroundColor({ color });
+function setBadge(text: string, color: string): void {
+  try {
+    chrome.action.setBadgeText({ text });
+    chrome.action.setBadgeBackgroundColor({ color });
+  } catch {
+    // Safari 15.4–16.3 may not support badge APIs — silently ignore
+  }
 }
 
-// Set initial badge on startup
-DeTubeStorage.getSettings()
-  .then((s) => updateBadge(s.enabled))
-  .catch((err) => console.error('DeTube: Background init error', err));
+function formatBadgeMins(totalMins: number): string {
+  if (totalMins < 60) return `${totalMins}m`;
+  const h = Math.floor(totalMins / 60);
+  const m = totalMins % 60;
+  return m > 0 ? `${h}h${m}m` : `${h}h`;
+}
 
-// Update badge when settings change
-chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && changes.enabled) {
-    updateBadge(changes.enabled.newValue);
+async function refreshBadge(): Promise<void> {
+  const [settings, config] = await Promise.all([
+    DeTubeStorage.getSettings(),
+    DeTubeFocus.getConfig(),
+  ]);
+
+  if (!settings.enabled) {
+    setBadge('', '#71717a');
+    return;
+  }
+
+  if (config.blockingMode === 'timer' && config.timerEndTime) {
+    const remaining = config.timerEndTime - Date.now();
+    if (remaining > 0) {
+      const mins = Math.ceil(remaining / 60000);
+      setBadge(formatBadgeMins(mins).slice(0, 4), '#6366f1');
+      return;
+    }
+  }
+
+  if (config.blockingMode === 'daily-limit') {
+    const today = getTodayDate();
+    const usedSec = config.dailyResetDate === today ? config.dailyUsedSeconds : 0;
+    const remainingSec = config.dailyLimitMinutes * 60 - usedSec;
+    if (remainingSec > 0) {
+      const mins = Math.ceil(remainingSec / 60);
+      setBadge(formatBadgeMins(mins).slice(0, 4), '#6366f1');
+      return;
+    }
+  }
+
+  setBadge('', '#6366f1');
+}
+
+// ---------------------------------------------------------------------------
+// Date / schedule helpers
+// ---------------------------------------------------------------------------
+
+function getTodayDate(): string {
+  return new Date().toISOString().split('T')[0];
+}
+
+function isConsecutiveDay(prev: string, today: string): boolean {
+  if (!prev) return false;
+  const p = new Date(prev);
+  p.setDate(p.getDate() + 1);
+  return p.toISOString().split('T')[0] === today;
+}
+
+function isScheduleNowActive(config: FocusConfig): boolean {
+  if (!config.scheduleEnabled) return false;
+  const now = new Date();
+  const day = now.getDay();
+  if (!config.scheduleDays.includes(day)) return false;
+  const [sh, sm] = config.scheduleStartTime.split(':').map(Number);
+  const [eh, em] = config.scheduleEndTime.split(':').map(Number);
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  
+  const startMins = sh * 60 + sm;
+  const endMins = eh * 60 + em;
+  
+  if (startMins <= endMins) {
+    return nowMins >= startMins && nowMins < endMins;
+  } else {
+    return nowMins >= startMins || nowMins < endMins;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tick — fires every minute
+// ---------------------------------------------------------------------------
+
+async function onTick(): Promise<void> {
+  const [settings, config, stats] = await Promise.all([
+    DeTubeStorage.getSettings(),
+    DeTubeFocus.getConfig(),
+    DeTubeFocus.getStats(),
+  ]);
+
+  const today = getTodayDate();
+
+  // Daily usage reset
+  if (config.dailyResetDate !== today) {
+    await DeTubeFocus.saveConfig({ dailyUsedSeconds: 0, dailyResetDate: today });
+  }
+
+  // Record focus minute if extension is active
+  if (settings.enabled) {
+    const isNewDay = stats.lastActiveDate !== today;
+    await DeTubeFocus.saveStats({
+      focusMinutesToday: isNewDay ? 1 : stats.focusMinutesToday + 1,
+      focusMinutesTotal: stats.focusMinutesTotal + 1,
+      streak: isNewDay
+        ? (isConsecutiveDay(stats.lastActiveDate, today) ? stats.streak + 1 : 1)
+        : stats.streak,
+      lastActiveDate: today,
+    });
+  } else if (stats.lastActiveDate !== today && stats.focusMinutesToday > 0) {
+    // Reset today's minutes for the UI, but preserve lastActiveDate for streak logic
+    await DeTubeFocus.saveStats({ focusMinutesToday: 0 });
+  }
+
+  // Timer mode: auto-expire
+  if (config.blockingMode === 'timer' && config.timerEndTime && settings.enabled) {
+    if (Date.now() >= config.timerEndTime) {
+      await Promise.all([
+        DeTubeFocus.saveConfig({ timerEndTime: null }),
+        DeTubeStorage.saveSettings({ enabled: false }),
+      ]);
+      setBadge('', '#71717a');
+      return;
+    }
+  }
+
+  // Schedule mode: auto-enable/disable
+  if (config.blockingMode === 'schedule' && config.scheduleEnabled) {
+    const shouldBeActive = isScheduleNowActive(config);
+    if (shouldBeActive !== settings.enabled) {
+      await DeTubeStorage.saveSettings({ enabled: shouldBeActive });
+    }
+  }
+
+  // Daily limit mode: auto-disable when exceeded
+  if (config.blockingMode === 'daily-limit' && settings.enabled) {
+    const usedSec = config.dailyResetDate === today ? config.dailyUsedSeconds : 0;
+    if (usedSec >= config.dailyLimitMinutes * 60) {
+      await DeTubeStorage.saveSettings({ enabled: false });
+    }
+  }
+
+  await refreshBadge();
+}
+
+// ---------------------------------------------------------------------------
+// Message handler (from content script and popup)
+// ---------------------------------------------------------------------------
+
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg.action === 'addUsageTime') {
+    const seconds: number = msg.seconds ?? 30;
+    (async () => {
+      const [config, settings] = await Promise.all([
+        DeTubeFocus.getConfig(),
+        DeTubeStorage.getSettings(),
+      ]);
+      const today = getTodayDate();
+      const currentUsed = config.dailyResetDate === today ? config.dailyUsedSeconds : 0;
+      const newUsed = currentUsed + seconds;
+      await DeTubeFocus.saveConfig({ dailyUsedSeconds: newUsed, dailyResetDate: today });
+
+      if (config.blockingMode === 'daily-limit' && settings.enabled) {
+        if (newUsed >= config.dailyLimitMinutes * 60) {
+          await DeTubeStorage.saveSettings({ enabled: false });
+          setBadge('', '#71717a');
+        } else {
+          await refreshBadge();
+        }
+      }
+      sendResponse({ ok: true });
+    })();
+    return true;
   }
 });
 
 // ---------------------------------------------------------------------------
-// Auto-inject on install/update — so extension works without page refresh
+// Alarm listener
 // ---------------------------------------------------------------------------
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === ALARM_TICK) {
+    onTick().catch((err) => console.error('DeTube: Tick error', err));
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Storage change → badge refresh
+// ---------------------------------------------------------------------------
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === 'local' && (changes['enabled'] || changes['focusConfig'])) {
+    refreshBadge().catch(console.error);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+
+async function init(): Promise<void> {
+  // Guard: chrome.alarms may not be available in all Safari versions
+  if (typeof chrome.alarms === 'undefined') {
+    console.warn('DeTube: chrome.alarms not available — timer/schedule features disabled');
+    return;
+  }
+  const existing = await chrome.alarms.get(ALARM_TICK);
+  if (!existing) {
+    chrome.alarms.create(ALARM_TICK, { periodInMinutes: 1 });
+  }
+  await onTick();
+}
+
+init().catch((err) => console.error('DeTube: Background init error', err));
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
-    // Open thank you page on first install
     chrome.tabs.create({ url: 'https://geekstash.dev/detube/thanks' });
-
-    // Set uninstall URL (feedback/survey page)
     chrome.runtime.setUninstallURL('https://geekstash.dev/detube/uninstall');
   }
 
   if (details.reason === 'install' || details.reason === 'update') {
-    console.log(`DeTube: Extension ${details.reason}ed — injecting into open YouTube tabs`);
-
     try {
       const tabs = await chrome.tabs.query({ url: '*://*.youtube.com/*' });
-
       for (const tab of tabs) {
         if (!tab.id) continue;
-
         try {
-          // Inject CSS first (instant visual effect)
-          await chrome.scripting.insertCSS({
-            target: { tabId: tab.id },
-            files: ['content/detube.css'],
-          });
-
-          // Then inject the content script
-          await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            files: ['content.js'],
-          });
-
-          console.log(`DeTube: Injected into tab ${tab.id} (${tab.url})`);
-        } catch (tabErr) {
-          // Tab might be restricted (e.g. chrome:// pages) — skip silently
-          console.warn(`DeTube: Could not inject into tab ${tab.id}:`, tabErr);
-        }
+          await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content/detube.css'] });
+          await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
+        } catch { /* restricted tab — skip */ }
       }
     } catch (err) {
       console.error('DeTube: Auto-injection failed:', err);
     }
   }
+
+  chrome.alarms.create(ALARM_TICK, { periodInMinutes: 1 });
 });

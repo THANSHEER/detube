@@ -18,7 +18,7 @@
 // Types
 // ---------------------------------------------------------------------------
 
-export type SettingCategory = 'header' | 'sidebar' | 'homepage' | 'videopage' | 'channelpage';
+export type SettingCategory = 'header' | 'sidebar' | 'homepage' | 'videopage' | 'channelpage' | 'shortspage';
 
 export type SettingSection =
   // Header
@@ -28,6 +28,7 @@ export type SettingSection =
   | 'sidebar-you'
   | 'sidebar-explore'
   | 'sidebar-more'
+  | 'sidebar-footer'
   // Homepage
   | 'homepage-feed'
   // Video page
@@ -36,7 +37,9 @@ export type SettingSection =
   | 'video-content'
   // Channel page
   | 'channel-branding'
-  | 'channel-tabs';
+  | 'channel-tabs'
+  // Shorts page
+  | 'shorts-player';
 
 export interface SettingDefinition {
   /** Storage key — must be unique, used as `keyof Settings` */
@@ -51,8 +54,6 @@ export interface SettingDefinition {
   defaultValue: boolean;
   /** Display label in popup */
   label: string;
-  /** Short description in popup */
-  description: string;
   /** Lucide icon name (matched in popup) */
   icon: string;
   /**
@@ -76,12 +77,14 @@ export const SECTION_TITLES: Record<SettingSection, string> = {
   'sidebar-you': 'You Section',
   'sidebar-explore': 'Explore',
   'sidebar-more': 'More about YouTube',
+  'sidebar-footer': 'Footer & Other',
   'homepage-feed': 'Main Feed',
   'video-layout': 'Layout & Player',
   'video-interactions': 'Interactions',
   'video-content': 'Content',
   'channel-branding': 'Stats & Branding',
   'channel-tabs': 'Navigation Tabs',
+  'shorts-player': 'Shorts Player',
 };
 
 // ---------------------------------------------------------------------------
@@ -99,7 +102,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'header-controls',
     defaultValue: false,
     label: 'Hide Search Bar',
-    description: 'Removes the top search box',
     icon: 'Search',
   },
   {
@@ -109,7 +111,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'header-controls',
     defaultValue: false,
     label: 'Hide Voice Search',
-    description: 'Removes the microphone icon',
     icon: 'Mic',
   },
   {
@@ -119,7 +120,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'header-controls',
     defaultValue: false,
     label: 'Hide Notifications',
-    description: 'Removes the bell icon',
     icon: 'Bell',
   },
   {
@@ -129,7 +129,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'header-controls',
     defaultValue: false,
     label: 'Hide Create Button',
-    description: 'Removes the plus create icon',
     icon: 'PlusSquare',
   },
   {
@@ -139,7 +138,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'header-controls',
     defaultValue: false,
     label: 'Hide Suggest Title',
-    description: 'Removes top content filters',
     icon: 'Layers',
   },
 
@@ -153,7 +151,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-navigation',
     defaultValue: false,
     label: 'Hide Home',
-    description: 'Removes home guide entry',
     icon: 'Home',
   },
   {
@@ -163,7 +160,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-navigation',
     defaultValue: false,
     label: 'Hide Shorts',
-    description: 'Removes shorts guide entry',
     icon: 'Zap',
   },
   {
@@ -173,7 +169,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-navigation',
     defaultValue: false,
     label: 'Hide Subscriptions',
-    description: 'Removes subscriptions list',
     icon: 'Library',
   },
 
@@ -187,7 +182,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide You Section',
-    description: 'Master toggle for your content',
     icon: 'User',
   },
   {
@@ -197,7 +191,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide History',
-    description: 'Removes watch history link',
     icon: 'Clock',
     parentKey: 'hideYouSection',
   },
@@ -208,7 +201,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide Your Channel',
-    description: 'Removes channel profile link',
     icon: 'User',
     parentKey: 'hideYouSection',
     requiresLogin: true,
@@ -220,7 +212,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide Playlists',
-    description: 'Removes all playlist links',
     icon: 'ListVideo',
     parentKey: 'hideYouSection',
     requiresLogin: true,
@@ -232,7 +223,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide Watch Later',
-    description: 'Removes specific folder',
     icon: 'Clock',
     parentKey: 'hideYouSection',
     requiresLogin: true,
@@ -244,7 +234,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide Liked Videos',
-    description: 'Removes your liked feed',
     icon: 'Heart',
     parentKey: 'hideYouSection',
     requiresLogin: true,
@@ -256,7 +245,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide Your Videos',
-    description: 'Removes link to your videos',
     icon: 'Video',
     parentKey: 'hideYouSection',
     requiresLogin: true,
@@ -268,7 +256,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-you',
     defaultValue: false,
     label: 'Hide Downloads',
-    description: 'Removes offline content link',
     icon: 'Download',
     parentKey: 'hideYouSection',
     requiresLogin: true,
@@ -284,7 +271,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Explore Section',
-    description: 'Master toggle for all categories',
     icon: 'Compass',
   },
   {
@@ -294,7 +280,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Shopping',
-    description: 'Removes shopping category',
     icon: 'ShoppingBag',
     parentKey: 'hideExploreCategories',
   },
@@ -305,7 +290,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Music',
-    description: 'Removes music category',
     icon: 'Music',
     parentKey: 'hideExploreCategories',
   },
@@ -316,7 +300,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Films',
-    description: 'Removes movies and films',
     icon: 'Film',
     parentKey: 'hideExploreCategories',
   },
@@ -327,7 +310,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Live',
-    description: 'Removes live category',
     icon: 'Radio',
     parentKey: 'hideExploreCategories',
   },
@@ -338,7 +320,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Gaming',
-    description: 'Removes gaming category',
     icon: 'Gamepad2',
     parentKey: 'hideExploreCategories',
   },
@@ -349,7 +330,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide News',
-    description: 'Removes news category',
     icon: 'Newspaper',
     parentKey: 'hideExploreCategories',
   },
@@ -360,7 +340,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Sports',
-    description: 'Removes sports category',
     icon: 'Trophy',
     parentKey: 'hideExploreCategories',
   },
@@ -371,7 +350,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Courses',
-    description: 'Removes courses category',
     icon: 'GraduationCap',
     parentKey: 'hideExploreCategories',
   },
@@ -382,7 +360,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Fashion & Beauty',
-    description: 'Removes fashion category',
     icon: 'Shirt',
     parentKey: 'hideExploreCategories',
   },
@@ -393,7 +370,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Podcasts',
-    description: 'Removes podcasts category',
     icon: 'Podcast',
     parentKey: 'hideExploreCategories',
   },
@@ -404,7 +380,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-explore',
     defaultValue: false,
     label: 'Hide Playables',
-    description: 'Removes playables category',
     icon: 'Joystick',
     parentKey: 'hideExploreCategories',
   },
@@ -419,7 +394,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-more',
     defaultValue: false,
     label: 'Hide More About YouTube',
-    description: 'Master toggle for this section',
     icon: 'Youtube',
   },
   {
@@ -429,7 +403,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-more',
     defaultValue: false,
     label: 'Hide YouTube Premium',
-    description: 'Removes premium link',
     icon: 'Youtube',
     parentKey: 'hideMoreFromYoutube',
   },
@@ -440,7 +413,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-more',
     defaultValue: false,
     label: 'Hide YouTube Studio',
-    description: 'Removes studio link',
     icon: 'Monitor',
     parentKey: 'hideMoreFromYoutube',
   },
@@ -451,7 +423,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-more',
     defaultValue: false,
     label: 'Hide YouTube Music',
-    description: 'Removes music link',
     icon: 'Music',
     parentKey: 'hideMoreFromYoutube',
   },
@@ -462,9 +433,26 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'sidebar-more',
     defaultValue: false,
     label: 'Hide YouTube Kids',
-    description: 'Removes kids link',
     icon: 'Tv2',
     parentKey: 'hideMoreFromYoutube',
+  },
+  {
+    key: 'hideReportHistory',
+    cssClass: 'dt-hide-report-history',
+    category: 'sidebar',
+    section: 'sidebar-footer',
+    defaultValue: false,
+    label: 'Hide Report History',
+    icon: 'Flag',
+  },
+  {
+    key: 'hideSidebarFooter',
+    cssClass: 'dt-hide-sidebar-footer',
+    category: 'sidebar',
+    section: 'sidebar-footer',
+    defaultValue: false,
+    label: 'Hide Sidebar Footer',
+    icon: 'AlignVerticalSpaceAround',
   },
 
   // =========================================================================
@@ -477,7 +465,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'homepage-feed',
     defaultValue: false,
     label: 'Hide Feed Recommendations',
-    description: 'Removes main algorithm grid',
     icon: 'Home',
   },
   {
@@ -487,7 +474,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'homepage-feed',
     defaultValue: false,
     label: 'Hide Shorts Shelf',
-    description: 'Removes shorts from grid',
     icon: 'Zap',
   },
 
@@ -501,7 +487,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-layout',
     defaultValue: false,
     label: 'Hide Sidebar (Center View)',
-    description: 'Cinematic focused view',
     icon: 'Monitor',
   },
   {
@@ -511,7 +496,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-layout',
     defaultValue: false,
     label: 'Hide Related Videos',
-    description: 'Removes sidebar suggestions',
     icon: 'Layout',
   },
   {
@@ -521,7 +505,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-layout',
     defaultValue: false,
     label: 'Hide Colors (Grayscale)',
-    description: 'Remove color from player',
     icon: 'Palette',
   },
   {
@@ -531,7 +514,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-layout',
     defaultValue: false,
     label: 'Hide End Screen Cards',
-    description: 'Removes post-video suggestions',
     icon: 'PlayCircle',
   },
 
@@ -545,7 +527,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-interactions',
     defaultValue: false,
     label: 'Hide Subscribe Button',
-    description: 'Removes subscribe button',
     icon: 'Heart',
   },
   {
@@ -555,7 +536,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-interactions',
     defaultValue: false,
     label: 'Hide Join Button',
-    description: 'Removes membership join button',
     icon: 'Users',
   },
   {
@@ -565,7 +545,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-interactions',
     defaultValue: false,
     label: 'Hide Download Button',
-    description: 'Removes video download button',
     icon: 'Download',
   },
   {
@@ -575,7 +554,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-interactions',
     defaultValue: false,
     label: 'Hide Share Button',
-    description: 'Removes video share button',
     icon: 'Share2',
   },
   {
@@ -585,7 +563,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-interactions',
     defaultValue: false,
     label: 'Hide Social Metrics',
-    description: 'Removes likes and view counts',
     icon: 'Heart',
   },
 
@@ -599,7 +576,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-content',
     defaultValue: false,
     label: 'Hide Description',
-    description: 'Removes video description box',
     icon: 'FileText',
   },
   {
@@ -609,7 +585,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'video-content',
     defaultValue: false,
     label: 'Hide Comments',
-    description: 'Removes video comment section',
     icon: 'MessageSquare',
   },
 
@@ -623,7 +598,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-branding',
     defaultValue: false,
     label: 'Hide Channel Name',
-    description: 'Removes the channel title',
     icon: 'User',
   },
   {
@@ -633,7 +607,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-branding',
     defaultValue: false,
     label: 'Hide Channel Handle',
-    description: 'Removes the @username',
     icon: 'AtSign',
   },
   {
@@ -643,7 +616,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-branding',
     defaultValue: false,
     label: 'Hide Subscriber Count',
-    description: 'Removes the number of subs',
     icon: 'Users',
   },
   {
@@ -653,7 +625,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-branding',
     defaultValue: false,
     label: 'Hide Video Count',
-    description: 'Removes the total video count',
     icon: 'Play',
   },
   {
@@ -663,7 +634,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-branding',
     defaultValue: false,
     label: 'Hide Channel Members',
-    description: 'Removes the members shelf',
     icon: 'Users',
   },
 
@@ -677,7 +647,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide All Tabs',
-    description: 'Removes the entire tab bar',
     icon: 'Settings',
   },
   {
@@ -687,7 +656,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Home Tab',
-    description: 'Removes the channel home tab',
     icon: 'Home',
     parentKey: 'hideChannelTabs',
   },
@@ -698,7 +666,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Videos Tab',
-    description: 'Removes the channel videos tab',
     icon: 'PlayCircle',
     parentKey: 'hideChannelTabs',
   },
@@ -709,7 +676,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Shorts Tab',
-    description: 'Removes the channel shorts tab',
     icon: 'Zap',
     parentKey: 'hideChannelTabs',
   },
@@ -720,7 +686,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Live Tab',
-    description: 'Removes the channel live tab',
     icon: 'Monitor',
     parentKey: 'hideChannelTabs',
   },
@@ -731,7 +696,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Playlists Tab',
-    description: 'Removes the channel playlists tab',
     icon: 'ListVideo',
     parentKey: 'hideChannelTabs',
   },
@@ -742,7 +706,6 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Posts Tab',
-    description: 'Removes the channel community tab',
     icon: 'MessageSquare',
     parentKey: 'hideChannelTabs',
   },
@@ -753,9 +716,114 @@ export const SETTING_REGISTRY: SettingDefinition[] = [
     section: 'channel-tabs',
     defaultValue: false,
     label: 'Hide Channel Search',
-    description: 'Removes search in tabs',
     icon: 'Search',
     parentKey: 'hideChannelTabs',
+  },
+
+  // =========================================================================
+  // SHORTS PAGE
+  // =========================================================================
+  {
+    key: 'hideShortsAutoplay',
+    cssClass: 'dt-hide-shorts-autoplay',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Autoplay Next',
+    icon: 'Zap',
+  },
+  {
+    key: 'hideShortsAutoScroll',
+    cssClass: 'dt-hide-shorts-auto-scroll',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Auto Scroll Button',
+    icon: 'Play',
+  },
+  {
+    key: 'hideShortsLikeButton',
+    cssClass: 'dt-hide-shorts-like-button',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Like Button',
+    icon: 'Heart',
+  },
+  {
+    key: 'hideShortsLikeCount',
+    cssClass: 'dt-hide-shorts-like-count',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Like Count',
+    icon: 'Heart',
+    parentKey: 'hideShortsLikeButton',
+  },
+  {
+    key: 'hideShortsDislikeButton',
+    cssClass: 'dt-hide-shorts-dislike-button',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Dislike Button',
+    icon: 'Heart',
+  },
+  {
+    key: 'hideShortsCommentButton',
+    cssClass: 'dt-hide-shorts-comment-button',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Comment Button',
+    icon: 'MessageSquare',
+  },
+  {
+    key: 'hideShortsCommentCount',
+    cssClass: 'dt-hide-shorts-comment-count',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Comment Count',
+    icon: 'MessageSquare',
+    parentKey: 'hideShortsCommentButton',
+  },
+  {
+    key: 'hideShortsShare',
+    cssClass: 'dt-hide-shorts-share',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Share Button',
+    icon: 'Share2',
+  },
+  {
+    key: 'hideShortsRemixButton',
+    cssClass: 'dt-hide-shorts-remix-button',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Remix Button',
+    icon: 'Scissors',
+  },
+  {
+    key: 'hideShortsRemixCount',
+    cssClass: 'dt-hide-shorts-remix-count',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Remix Count',
+    icon: 'Scissors',
+    parentKey: 'hideShortsRemixButton',
+  },
+  {
+    key: 'hideShortsSidebar',
+    cssClass: 'dt-hide-shorts-sidebar',
+    category: 'shortspage',
+    section: 'shorts-player',
+    defaultValue: false,
+    label: 'Hide Related Shelf',
+    icon: 'Layout',
   },
 ];
 

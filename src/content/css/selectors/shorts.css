@@ -1,0 +1,87 @@
+/**
+ * DeTube — Shorts Page Selectors
+ *
+ * Targets the YouTube Shorts player page (/shorts/...).
+ * All rules are applied via CSS classes toggled on <html> by the content script.
+ */
+
+/* ── Hide Autoplay Next ──────────────────────────────────────────── */
+/* Hides the next-shorts autoplay button overlay */
+html.dt-hide-shorts-autoplay ytd-reel-video-renderer .reel-player-overlay-renderer,
+html.dt-hide-shorts-autoplay ytd-reel-video-renderer ytd-reel-player-overlay-renderer,
+html.dt-hide-shorts-autoplay #navigation-endpoint.style-scope.ytd-reel-player-overlay-renderer {
+  display: none !important;
+}
+
+/* ── Hide Auto Scroll Button ─────────────────────────────────────── */
+html.dt-hide-shorts-auto-scroll ytd-reel-video-renderer button-view-model:has(button[aria-label*="scroll" i]),
+html.dt-hide-shorts-auto-scroll ytd-reel-video-renderer yt-button-shape[aria-label*="scroll" i],
+html.dt-hide-shorts-auto-scroll ytd-reel-video-renderer #auto-scroll-button,
+html.dt-hide-shorts-auto-scroll .shorts-auto-scroll-button {
+  display: none !important;
+}
+
+/* ── Hide Like Button & Count ────────────────────────────────────── */
+html.dt-hide-shorts-like-button ytd-reel-video-renderer like-button-view-model,
+html.dt-hide-shorts-like-button ytd-reel-video-renderer #like-button,
+html.dt-hide-shorts-like-button .shorts-player-action-panel-button-view-model[data-type="like"] {
+  display: none !important;
+}
+
+html.dt-hide-shorts-like-count ytd-reel-video-renderer like-button-view-model .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-like-count ytd-reel-video-renderer #like-button span.yt-core-attributed-string,
+html.dt-hide-shorts-like-count .shorts-player-action-panel-button-view-model[data-type="like"] .ytSpecButtonShapeWithLabelLabel {
+  display: none !important;
+}
+
+/* ── Hide Dislike Button ─────────────────────────────────────────── */
+html.dt-hide-shorts-dislike-button ytd-reel-video-renderer dislike-button-view-model,
+html.dt-hide-shorts-dislike-button ytd-reel-video-renderer #dislike-button,
+html.dt-hide-shorts-dislike-button .shorts-player-action-panel-button-view-model[data-type="dislike"] {
+  display: none !important;
+}
+
+/* ── Hide Comments Button & Count ────────────────────────────────── */
+html.dt-hide-shorts-comment-button ytd-reel-video-renderer #comments-button,
+html.dt-hide-shorts-comment-button ytd-reel-video-renderer button-view-model:has(button[aria-label*="comment" i]),
+html.dt-hide-shorts-comment-button ytd-reel-video-renderer yt-button-shape[aria-label*="comment" i],
+html.dt-hide-shorts-comment-button ytd-shorts #comments-button,
+html.dt-hide-shorts-comment-button .shorts-player-action-panel-button-view-model[data-type="comments"] {
+  display: none !important;
+}
+
+html.dt-hide-shorts-comment-count ytd-reel-video-renderer #comments-button .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-comment-count ytd-reel-video-renderer button-view-model:has(button[aria-label*="comment" i]) .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-comment-count .shorts-player-action-panel-button-view-model[data-type="comments"] .ytSpecButtonShapeWithLabelLabel {
+  display: none !important;
+}
+
+/* ── Hide Share Button ───────────────────────────────────────────── */
+html.dt-hide-shorts-share ytd-reel-video-renderer #share-button,
+html.dt-hide-shorts-share ytd-reel-video-renderer button-view-model:has(button[aria-label*="Share" i]),
+html.dt-hide-shorts-share ytd-reel-video-renderer yt-button-shape[aria-label*="share" i],
+html.dt-hide-shorts-share .shorts-player-action-panel-button-view-model[data-type="share"] {
+  display: none !important;
+}
+
+/* ── Hide Remix Button & Count ───────────────────────────────────── */
+html.dt-hide-shorts-remix-button ytd-reel-video-renderer #remix-button,
+html.dt-hide-shorts-remix-button ytd-reel-video-renderer button-view-model:has(button[aria-label*="Remix" i]),
+html.dt-hide-shorts-remix-button ytd-reel-video-renderer yt-button-shape[aria-label*="remix" i],
+html.dt-hide-shorts-remix-button .shorts-player-action-panel-button-view-model[data-type="remix"] {
+  display: none !important;
+}
+
+html.dt-hide-shorts-remix-count ytd-reel-video-renderer #remix-button .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-remix-count ytd-reel-video-renderer button-view-model:has(button[aria-label*="Remix" i]) .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-remix-count .shorts-player-action-panel-button-view-model[data-type="remix"] .ytSpecButtonShapeWithLabelLabel {
+  display: none !important;
+}
+
+/* ── Hide Related Shelf ──────────────────────────────────────────── */
+/* Hides the sidebar related-shorts panel on wider viewports */
+html.dt-hide-shorts-sidebar ytd-page-manager[page-subtype="shorts"] #related-columns,
+html.dt-hide-shorts-sidebar ytd-page-manager[page-subtype="shorts"] ytd-watch-next-secondary-results-renderer,
+html.dt-hide-shorts-sidebar #shorts-container ytd-reel-shelf-renderer {
+  display: none !important;
+}

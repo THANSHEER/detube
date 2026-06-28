@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-minimal-play-icon lucide-tv-minimal-play"><path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"/><path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF2828"/>
+      <stop offset="100%" stop-color="#B80000"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="100" height="100" rx="20" fill="url(#bg)"/>
+
+  <!-- Control slider 1 (top) -->
+  <rect x="18" y="26" width="64" height="4" rx="2" fill="rgba(255,255,255,0.22)"/>
+  <rect x="18" y="26" width="45" height="4" rx="2" fill="white"/>
+  <circle cx="63" cy="28" r="7.5" fill="white"/>
+
+  <!-- Control slider 2 (middle) -->
+  <rect x="18" y="48" width="64" height="4" rx="2" fill="rgba(255,255,255,0.22)"/>
+  <rect x="18" y="48" width="18" height="4" rx="2" fill="white"/>
+  <circle cx="36" cy="50" r="7.5" fill="white"/>
+
+  <!-- Control slider 3 (bottom) -->
+  <rect x="18" y="70" width="64" height="4" rx="2" fill="rgba(255,255,255,0.22)"/>
+  <rect x="18" y="70" width="34" height="4" rx="2" fill="white"/>
+  <circle cx="52" cy="72" r="7.5" fill="white"/>
+</svg>

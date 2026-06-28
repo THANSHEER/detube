@@ -1,12 +1,16 @@
 {
   "name": "detube",
-  "version": "2.0.1",
+  "version": "3.1.0",
   "description": "Distraction-free YouTube experience.",
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build:css": "node scripts/build-css.js",
-    "build": "npm run build:css && npm run build:chrome && npm run build:firefox && npm run build:edge && npm run build:safari && npm run build:opera && npm run zip:builds",
+    "generate-icons": "node scripts/generate-icons.js",
+    "build": "npm run build:css && npm run generate-icons && npm run build:chrome && npm run build:firefox && npm run build:edge && npm run build:safari && npm run build:opera && npm run zip:builds",
     "build:chrome": "tsc && TARGET_BROWSER=chrome vite build",
     "build:firefox": "tsc && TARGET_BROWSER=firefox vite build",
     "build:edge": "tsc && TARGET_BROWSER=edge vite build",
@@ -26,20 +30,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "lucide-react": "^0.263.1"
+    "lucide-react": "^0.460.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.243",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.3",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.27",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/chrome": "^0.0.300",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.3.5"
   }
 }

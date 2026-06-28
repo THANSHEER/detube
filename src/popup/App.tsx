@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { DeTubeStorage, Settings, DEFAULTS } from '../lib/storage';
+import { DeTubeStorage, DeTubeTheme, Settings, DEFAULTS, type ThemeMode } from '../lib/storage';
 import {
   SETTING_REGISTRY,
   SECTION_TITLES,
@@ -33,8 +33,7 @@ import {
   Share2,
   FileText,
   Play,
-  Menu,
-  PlusSquare,
+  SquarePlus,
   ShoppingBag,
   Music,
   Film,
@@ -47,20 +46,25 @@ import {
   Podcast,
   Joystick,
   Youtube,
-  Tv2,
+  TvMinimal,
   Video,
+  SlidersHorizontal,
+  PanelLeft,
+  Scissors,
+  Power,
+  Target,
   type LucideIcon,
 } from 'lucide-react';
 
-// Components
 import { Header } from '../components/Header';
-import { TabNavigation } from '../components/TabNavigation';
+import { NavRail, type NavTab } from '../components/NavRail';
 import { SettingCard } from '../components/SettingCard';
 import { SectionDivider } from '../components/SectionDivider';
-import { Footer } from '../components/Footer';
+import { SettingsPanel } from '../components/SettingsPanel';
+import { FocusPanel } from '../components/FocusPanel';
 
 // ---------------------------------------------------------------------------
-// Icon resolver — maps icon name strings from config to Lucide components
+// Icon resolver
 // ---------------------------------------------------------------------------
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -88,8 +92,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Share2,
   FileText,
   Play,
-  Menu,
-  PlusSquare,
+  PlusSquare: SquarePlus,
   ShoppingBag,
   Music,
   Film,
@@ -102,7 +105,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Podcast,
   Joystick,
   Youtube,
-  Tv2,
+  Tv2: TvMinimal,
   Video,
 };
 
@@ -111,15 +114,17 @@ function resolveIcon(name: string): LucideIcon {
 }
 
 // ---------------------------------------------------------------------------
-// Tab definitions
+// Tab definitions — 6 pages
 // ---------------------------------------------------------------------------
 
-const TABS: { id: SettingCategory; label: string; Icon: LucideIcon }[] = [
-  { id: 'header', label: 'Header', Icon: SettingsIcon },
-  { id: 'sidebar', label: 'Sidebar', Icon: Menu },
-  { id: 'homepage', label: 'Home', Icon: Home },
-  { id: 'videopage', label: 'Video', Icon: PlayCircle },
-  { id: 'channelpage', label: 'Channel', Icon: User },
+const TABS: NavTab[] = [
+  { id: 'header',      label: 'Header',  Icon: SlidersHorizontal },
+  { id: 'sidebar',     label: 'Sidebar', Icon: PanelLeft         },
+  { id: 'homepage',    label: 'Home',    Icon: Home               },
+  { id: 'videopage',   label: 'Video',   Icon: PlayCircle         },
+  { id: 'channelpage', label: 'Channel', Icon: User               },
+  { id: 'shortspage',  label: 'Shorts',  Icon: Scissors           },
+  { id: 'focus',       label: 'Focus',   Icon: Target             },
 ];
 
 // ---------------------------------------------------------------------------
@@ -128,25 +133,39 @@ const TABS: { id: SettingCategory; label: string; Icon: LucideIcon }[] = [
 
 const App: React.FC = () => {
   const [settings, setSettings] = useState<Settings>(DEFAULTS);
-  const [activeTab, setActiveTab] = useState<SettingCategory>('header');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<SettingCategory | 'focus' | 'settings'>('header');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [theme, setTheme] = useState<ThemeMode>('system');
+  const [browser, setBrowser] = useState<string>('chrome');
 
-  // -----------------------------------------------------------------------
-  // Init: load settings + detect login state & active page
-  // -----------------------------------------------------------------------
+  // ── Apply theme to <html> whenever it changes ──────────────
+  useEffect(() => {
+    if (theme === 'system') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
 
+  // ── Init ───────────────────────────────────────────────────
   useEffect(() => {
     DeTubeStorage.getSettings().then(setSettings);
+    DeTubeTheme.get().then(setTheme);
+
+    // Detect the build-time browser from data-browser attribute
+    const detectedBrowser = document.documentElement.getAttribute('data-browser') || 'chrome';
+    setBrowser(detectedBrowser);
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
       if (!currentTab?.id) return;
 
       const url = currentTab.url || '';
-
-      // Auto-switch popup tab based on current YouTube page
       if (url.includes('youtube.com')) {
-        if (url.includes('/watch?v=')) {
+        // Auto-switch popup tab based on current YouTube page
+        if (url.includes('/shorts/')) {
+          setActiveTab('shortspage');
+        } else if (url.includes('/watch?v=')) {
           setActiveTab('videopage');
         } else if (
           url.includes('/@') ||
@@ -158,19 +177,12 @@ const App: React.FC = () => {
         } else {
           try {
             const path = new URL(url).pathname;
-            if (path === '/' || path === '') {
-              setActiveTab('homepage');
-            }
-          } catch {
-            // Ignore URL parsing errors
-          }
+            if (path === '/' || path === '') setActiveTab('homepage');
+          } catch { /* ignore */ }
         }
 
-        // Only send checkLogin to YouTube tabs (where content script exists)
         chrome.tabs.sendMessage(currentTab.id, { action: 'checkLogin' }, (response) => {
-          // Silently ignore connection errors — expected on non-injected tabs
           if (chrome.runtime.lastError) return;
-
           if (response && typeof response.isLoggedIn === 'boolean') {
             setIsLoggedIn(response.isLoggedIn);
           }
@@ -179,9 +191,17 @@ const App: React.FC = () => {
     });
   }, []);
 
-  // -----------------------------------------------------------------------
-  // Toggle handler
-  // -----------------------------------------------------------------------
+  // ── Handlers ───────────────────────────────────────────────
+  const handleSetEnabled = async (val: boolean) => {
+    const updated = { ...settings, enabled: val } as Settings;
+    setSettings(updated);
+    await DeTubeStorage.saveSettings({ enabled: val } as Partial<Settings>);
+  };
+
+  const handleThemeChange = async (newTheme: ThemeMode) => {
+    setTheme(newTheme);
+    await DeTubeTheme.save(newTheme);
+  };
 
   const handleToggle = async (key: string) => {
     const currentValue = (settings as Record<string, boolean>)[key];
@@ -191,104 +211,137 @@ const App: React.FC = () => {
     await DeTubeStorage.saveSettings({ [key]: newValue } as Partial<Settings>);
   };
 
-  // -----------------------------------------------------------------------
-  // Memoized: settings for current tab
-  // -----------------------------------------------------------------------
-
+  // ── Memoized settings for current tab ──────────────────────
   const currentSettings = useMemo(() => {
+    if (activeTab === 'settings') return [];
     return SETTING_REGISTRY.filter((s) => s.category === activeTab);
   }, [activeTab]);
 
   const currentSections = useMemo(() => {
-    return getSectionsForCategory(activeTab);
+    if (activeTab === 'settings') return [];
+    return getSectionsForCategory(activeTab as SettingCategory);
   }, [activeTab]);
 
-  // -----------------------------------------------------------------------
-  // Render helpers
-  // -----------------------------------------------------------------------
-
-  /**
-   * Check if a setting's parent is currently enabled (meaning section is hidden,
-   * so children should not be shown in the popup).
-   */
+  // ── Render helpers ─────────────────────────────────────────
   const isParentEnabled = (def: SettingDefinition): boolean => {
     if (!def.parentKey) return false;
     return !!(settings as Record<string, boolean>)[def.parentKey];
   };
 
-  /**
-   * Check if a setting should be visible based on login state.
-   */
   const isVisibleForLogin = (def: SettingDefinition): boolean => {
     if (!def.requiresLogin) return true;
     return isLoggedIn;
   };
 
-  /**
-   * Render a section with its settings.
-   */
   const renderSection = (section: SettingSection) => {
     const sectionSettings = currentSettings.filter((s) => s.section === section);
     if (sectionSettings.length === 0) return null;
 
-    // Separate top-level (no parent) from children
     const topLevel = sectionSettings.filter((s) => !s.parentKey);
     const children = sectionSettings.filter((s) => !!s.parentKey);
+    const visibleChildren = children.filter(isVisibleForLogin);
 
     return (
-      <React.Fragment key={section}>
+      <div key={section} className="mb-3 last:mb-0">
         <SectionDivider title={SECTION_TITLES[section]} />
 
-        {topLevel.map((def) => (
-          <SettingCard
-            key={def.key}
-            label={def.label}
-            description={def.description}
-            Icon={resolveIcon(def.icon)}
-            checked={!!(settings as Record<string, boolean>)[def.key]}
-            onToggle={() => handleToggle(def.key)}
-          />
-        ))}
+        {/* Grouped section container */}
+        <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius)] overflow-hidden divide-y divide-[var(--dt-border)]">
+          {topLevel.map((def) => (
+            <SettingCard
+              key={def.key}
+              label={def.label}
+              Icon={resolveIcon(def.icon)}
+              checked={!!(settings as Record<string, boolean>)[def.key]}
+              onToggle={() => handleToggle(def.key)}
+            />
+          ))}
 
-        {children.length > 0 && !isParentEnabled(children[0]) && (
-          <div className="pl-3 space-y-1 border-l-2 border-[var(--dt-accent-border)] ml-1 animate-slide-up">
-            {children
-              .filter(isVisibleForLogin)
-              .map((def) => (
+          {/* Children options inside the same unified card container */}
+          {visibleChildren.length > 0 && !isParentEnabled(visibleChildren[0]) && (
+            <div className="divide-y divide-[var(--dt-border)] bg-[var(--dt-surface-overlay)] animate-fade-in">
+              {visibleChildren.map((def) => (
                 <SettingCard
                   key={def.key}
                   label={def.label}
-                  description={def.description}
                   Icon={resolveIcon(def.icon)}
                   checked={!!(settings as Record<string, boolean>)[def.key]}
                   onToggle={() => handleToggle(def.key)}
+                  isChild
                 />
               ))}
-          </div>
-        )}
-      </React.Fragment>
+            </div>
+          )}
+        </div>
+      </div>
     );
   };
 
-  // -----------------------------------------------------------------------
-  // Render
-  // -----------------------------------------------------------------------
-
+  // ── Render ─────────────────────────────────────────────────
   return (
-    <div className="dt-popup">
-      {/* Fixed: header + tabs */}
+    <div className="dt-popup animate-popup-open">
+
+      {/* Fixed slim header strip */}
       <div className="dt-header-area">
-        <Header enabled={settings.enabled} onToggle={() => handleToggle('enabled')} />
-        <TabNavigation tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
+        <Header
+          enabled={settings.enabled}
+          onToggle={() => handleToggle('enabled')}
+        />
       </div>
 
-      {/* Scrollable: settings list */}
-      <main key={activeTab} className="dt-body animate-slide-up space-y-1">
-        {currentSections.map(renderSection)}
-      </main>
+      {/* Middle: nav rail (left) + content (right) */}
+      <div className="dt-main-area">
+        {!settings.enabled ? (
+          <div 
+            className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in select-none gap-3 cursor-pointer group active:scale-95 transition-transform duration-300 [transition-timing-function:var(--dt-spring)]"
+            onClick={() => handleToggle('enabled')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleToggle('enabled'); }
+            }}
+          >
+            <div className="w-12 h-12 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)] group-hover:text-[var(--dt-accent)] group-hover:border-[var(--dt-accent-border)] transition-colors duration-300 [transition-timing-function:var(--dt-spring)] shadow-sm">
+              <Power size={22} strokeWidth={1.7} className="animate-pulse-soft group-hover:animate-none" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-[13px] font-semibold text-[var(--dt-text-primary)] tracking-tight transition-colors duration-300">
+                Extension is Disabled
+              </h2>
+              <p className="text-[11px] font-medium text-[var(--dt-text-muted)] max-w-[160px] leading-relaxed group-hover:text-[var(--dt-text-secondary)] transition-colors duration-300">
+                Press anywhere to enable
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <NavRail
+              tabs={TABS}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
 
-      {/* Fixed: footer */}
-      <Footer />
+            {/* Content area: settings panel, focus panel, or settings list */}
+            {activeTab === 'settings' ? (
+              <SettingsPanel
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                browser={browser}
+              />
+            ) : activeTab === 'focus' ? (
+              <div className="dt-focus-panel animate-slide-up">
+                <FocusPanel onSetEnabled={handleSetEnabled} />
+              </div>
+            ) : (
+              <main key={activeTab} className="dt-body animate-slide-up space-y-3">
+                {currentSections.map(renderSection)}
+              </main>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Fixed footer */}
     </div>
   );
 };

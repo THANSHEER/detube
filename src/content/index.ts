@@ -160,19 +160,7 @@ class DeTubeEngine {
       attributeFilter: ['class'],
     });
 
-    // 2. Watch for DOM changes (YouTube dynamically loads content)
-    const bodyTarget = document.body || document.documentElement;
-    const bodyObserver = new MutationObserver(() => {
-      if (!this.settings.enabled) return;
-      this.scheduleApply();
-    });
-
-    bodyObserver.observe(bodyTarget, {
-      childList: true,
-      subtree: true,
-    });
-
-    // 3. Listen for YouTube SPA navigation events
+    // 2. Listen for YouTube SPA navigation events
     window.addEventListener('yt-navigate-finish', () => {
       if (this.settings.enabled) {
         this.scheduleApply();
@@ -188,24 +176,35 @@ class DeTubeEngine {
 new DeTubeEngine();
 
 // ---------------------------------------------------------------------------
+// Daily usage tracking — reports every 30s when page is visible
+// Reports to background for daily-limit mode enforcement
+// ---------------------------------------------------------------------------
+
+window.setInterval(() => {
+  if (document.hidden) return;
+  chrome.runtime.sendMessage({ action: 'addUsageTime', seconds: 30 }, () => {
+    if (chrome.runtime.lastError) { /* background may be inactive — ignore */ }
+  });
+}, 30000);
+
+// ---------------------------------------------------------------------------
 // Message handler — popup queries login state from the active page
 // ---------------------------------------------------------------------------
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === 'checkLogin') {
     const avatar = document.querySelector(
-      '#avatar-btn, ytd-topbar-menu-button-renderer, .ytp-user-avatar'
+      '#avatar-btn, ytd-topbar-menu-button-renderer, .ytp-user-avatar, ytm-avatar-button, .ytm-profile-icon'
     );
     const signinPromo = document.querySelector(
-      'ytd-guide-signin-promo-renderer, #signin-promo'
+      'ytd-guide-signin-promo-renderer, #signin-promo, .ytm-signin-promo-renderer'
     );
     const signinButton = document.querySelector(
-      'a[aria-label*="Sign in" i], ytd-button-renderer:has(a[href*="login"])'
+      'a[aria-label*="Sign in" i], ytd-button-renderer:has(a[href*="login"]), .ytm-header-bar-signin-button'
     );
 
     const isLoggedIn = !!avatar && !signinPromo && !signinButton;
 
     sendResponse({ isLoggedIn, url: window.location.href });
   }
-  return true;
 });

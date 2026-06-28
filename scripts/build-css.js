@@ -22,6 +22,7 @@ const cssFiles = [
   'homepage.css',
   'video-page.css',
   'channel.css',
+  'shorts.css',
   'filters.css'
 ]
 

@@ -13,17 +13,20 @@ html.dt-center-player #secondary.ytd-watch-flexy {
 }
 
 /* Hide Join Button */
-html.dt-hide-join-button #sponsor-button {
+html.dt-hide-join-button #sponsor-button,
+html.dt-hide-join-button ytm-button-renderer:has(path[d*="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,18c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6 S15.31,18,12,18z"]) {
   display: none !important;
 }
 
 /* Hide Subscribe Button */
-html.dt-hide-subscribe #subscribe-button {
+html.dt-hide-subscribe #subscribe-button,
+html.dt-hide-subscribe .ytm-subscribe-button {
   display: none !important;
 }
 
 /* Hide Download Button */
-html.dt-hide-download-button-video ytd-download-button-renderer {
+html.dt-hide-download-button-video ytd-download-button-renderer,
+html.dt-hide-download-button-video ytm-button-renderer:has(path[d*="M17 18v1H6v-1h11zm-.5-6.6l-.7-.7-3.8 3.7V4h-1v10.4l-3.8-3.8-.7.7 5 5 5-5.1z"]) {
   display: none !important;
 }
 
@@ -36,25 +39,30 @@ html.dt-hide-share-button ytd-watch-metadata #top-level-buttons-computed button[
 html.dt-hide-share-button ytd-watch-metadata #top-level-buttons-computed ytd-button-renderer:has(button[aria-label="Share"]),
 html.dt-hide-share-button yt-button-view-model:has(button[aria-label="Share"]),
 html.dt-hide-share-button #top-level-buttons-computed button[aria-label*="share" i],
-html.dt-hide-share-button #top-level-buttons-computed yt-button-view-model {
+html.dt-hide-share-button #top-level-buttons-computed yt-button-view-model,
+html.dt-hide-share-button ytm-button-renderer:has(path[d*="M15,5.63L20.66,12L15,18.37V14.5C10.02,14.5,6.47,16.14,4,19.82C5,14.8,7.91,9.86,15,8.83V5.63Z"]) {
   display: none !important;
 }
 
 
 /* Hide Description */
 html.dt-hide-description #description,
-html.dt-hide-description #description-inline-expander {
+html.dt-hide-description #description-inline-expander,
+html.dt-hide-description .ytm-description-menu-item,
+html.dt-hide-description .ytm-description-section-renderer {
   display: none !important;
 }
 
 /* Hide Comments */
-html.dt-hide-comments #comments {
+html.dt-hide-comments #comments,
+html.dt-hide-comments ytm-comment-section-renderer {
   display: none !important;
 }
 
 /* Hide Related Videos - Updated selector */
 html.dt-hide-related-videos #secondary #related,
-html.dt-hide-related-videos ytd-watch-next-results {
+html.dt-hide-related-videos ytd-watch-next-results,
+html.dt-hide-related-videos ytm-item-section-renderer {
   display: none !important;
 }
 
@@ -65,6 +73,7 @@ html.dt-hide-end-screen-suggestions .ytp-ce-element {
 }
 
 /* Hide Likes */
-html.dt-hide-likes ytd-menu-renderer.ytd-watch-metadata #top-level-buttons-computed {
+html.dt-hide-likes ytd-menu-renderer.ytd-watch-metadata #top-level-buttons-computed,
+html.dt-hide-likes ytm-video-action-bar-renderer {
   display: none !important;
 }
