@@ -1,11 +1,6 @@
 name: Publish to Web Stores
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
   workflow_dispatch:
     inputs:
       publish_to_firefox:
