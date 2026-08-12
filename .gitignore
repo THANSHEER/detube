@@ -2,6 +2,10 @@
 node_modules/
 jspm_packages/
 
+.claude/
+.cursor/
+.playwright-mcp/
+
 # Build directories
 dist/
 dist-chrome/
