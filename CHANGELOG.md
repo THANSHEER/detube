@@ -7,14 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.2.0] - 2026-08-12
+## [3.2.1] - 2026-08-12
 
 ### Added
-- Enhanced UI/UX improvements across extension interface
-- Improved content styling and visual feedback
+- Comprehensive changelog documentation
+- Improved release management and versioning system
+
+### Fixed
+- Version synchronization across all browser extensions (Chrome, Edge, Firefox, Opera, Safari)
+- Enhanced stability and consistency
 
 ### Changed
-- Various UI refinements and optimizations
+- Updated extension manifest versions across all platforms
+- Improved release notes and documentation standards
 
 ## [3.1.0] - 2026-08-10
 
@@ -68,8 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Core functionality for YouTube distraction-free experience
 - Basic content filtering capabilities
 
-[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.0...HEAD
-[3.2.0]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.0
+[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.1...HEAD
+[3.2.1]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.1
 [3.1.0]: https://github.com/THANSHEER/detube/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/THANSHEER/detube/compare/v2.0.1...v3.0.0
 [2.0.1]: https://github.com/THANSHEER/detube/compare/v2.0.0...v2.0.1
