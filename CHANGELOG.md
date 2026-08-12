@@ -23,6 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No automatic data collection during uninstall
 - Confirmed no personal data transmission
 
+## [3.2.0] - 2026-08-12
+
+### Added
+- Enhanced UI/UX improvements across extension interface
+- Improved content styling and visual feedback
+
+### Changed
+- Various UI refinements and optimizations
+
 ## [3.2.1] - 2026-08-12
 
 ### Added
@@ -91,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.2...HEAD
 [3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2
-[3.2.1]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.1
+[3.2.1]: https://github.com/THANSHEER/detube/compare/v3.2.0...v3.2.1
+[3.2.0]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/THANSHEER/detube/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/THANSHEER/detube/compare/v2.0.1...v3.0.0
 [2.0.1]: https://github.com/THANSHEER/detube/compare/v2.0.0...v2.0.1
