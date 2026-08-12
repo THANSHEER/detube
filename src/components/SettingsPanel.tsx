@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sun, Moon, Monitor, Github, ExternalLink } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Sun, Moon, Monitor, Github, ExternalLink, Heart } from 'lucide-react';
 import { type ThemeMode } from '../lib/storage';
 
 interface SettingsPanelProps {
@@ -28,6 +28,26 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   browser,
 }) => {
   const browserName = BROWSER_DISPLAY_NAMES[browser] || browser;
+
+  useEffect(() => {
+    // Load Ko-fi widget script
+    const script = document.createElement('script');
+    script.src = 'https://storage.ko-fi.com/cdn/widget/Widget_2.js';
+    script.type = 'text/javascript';
+    script.async = true;
+    script.onload = () => {
+      if (typeof window !== 'undefined' && (window as any).kofiwidget2) {
+        (window as any).kofiwidget2.init('Support me on Ko-fi', '#000000', 'P0R02009G7');
+        (window as any).kofiwidget2.draw();
+      }
+    };
+    document.body.appendChild(script);
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
 
   return (
     <div className="dt-settings-panel animate-slide-up">
@@ -94,6 +114,18 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               GitHub <Github size={9} />
             </button>
           </div>
+        </div>
+      </section>
+
+      {/* ── Support ── */}
+      <section>
+        <p className="dt-settings-section-title">Support</p>
+        <div className="flex items-center justify-between p-3 rounded-[8px] bg-[var(--dt-surface-raised)] border border-[var(--dt-border)]">
+          <div className="flex items-center gap-2">
+            <Heart size={14} className="text-red-500" />
+            <span className="text-[12px] text-[var(--dt-text-secondary)]">Enjoy DeTube?</span>
+          </div>
+          <div id="kofi-widget-container"></div>
         </div>
       </section>
 
