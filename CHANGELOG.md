@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.2] - 2026-08-12
+
+### Added
+- Comprehensive privacy policy documentation for feedback collection
+- Transparency regarding uninstall feedback page
+- Documentation for user-initiated bug reporting via GitHub
+
+### Changed
+- Updated privacy policy with section on feedback and bug reporting
+- Enhanced privacy disclosures for better user understanding
+
+### Security
+- All feedback and bug reporting remains voluntary and user-initiated
+- No automatic data collection during uninstall
+- Confirmed no personal data transmission
+
 ## [3.2.1] - 2026-08-12
 
 ### Added
@@ -73,7 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Core functionality for YouTube distraction-free experience
 - Basic content filtering capabilities
 
-[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.1...HEAD
+[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.1
 [3.1.0]: https://github.com/THANSHEER/detube/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/THANSHEER/detube/compare/v2.0.1...v3.0.0
