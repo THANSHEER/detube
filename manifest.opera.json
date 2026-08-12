@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DeTube",
-  "version": "3.2.2",
-  "description": "Distraction-free YouTube experience.",
+  "version": "0.0.0",
+  "description": "",
   "permissions": ["storage", "scripting", "tabs", "alarms"],
   "host_permissions": ["*://*.youtube.com/*"],
   "action": {

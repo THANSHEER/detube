@@ -16,8 +16,13 @@ categories:
       - 'ci'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
-  ## What's Changed
+  ## What's New in DeTube v$RESOLVED_VERSION
 
   $CHANGES
+
+  ### 📖 Need Help?
+  - View full details in [CHANGELOG.md](https://github.com/THANSHEER/detube/blob/main/CHANGELOG.md)
+  - Found a bug? [Report it here](https://github.com/THANSHEER/detube/issues)
+  - Want to contribute? See [CONTRIBUTING.md](https://github.com/THANSHEER/detube/blob/main/CONTRIBUTING.md)
 
   **Full Changelog**: https://github.com/THANSHEER/detube/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION

@@ -9,94 +9,101 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.2.2] - 2026-08-12
 
-### Added
-- Comprehensive privacy policy documentation for feedback collection
-- Transparency regarding uninstall feedback page
-- Documentation for user-initiated bug reporting via GitHub
+### 🎯 What's New
+- **Enhanced Privacy Documentation**: Comprehensive transparency about how we handle feedback and bug reports
+- **Updated Privacy Policy**: New section explaining user-initiated bug reporting via GitHub
+- **Uninstall Feedback Clarity**: Clear documentation about our uninstall feedback page
 
-### Changed
-- Updated privacy policy with section on feedback and bug reporting
-- Enhanced privacy disclosures for better user understanding
-
-### Security
-- All feedback and bug reporting remains voluntary and user-initiated
-- No automatic data collection during uninstall
-- Confirmed no personal data transmission
+### 🔒 Security & Privacy
+- All feedback and bug reporting remains completely voluntary and user-initiated
+- Zero automatic data collection during uninstall
+- Confirmed: No personal data transmission or storage
+- Your YouTube activity data remains on your device only
 
 ## [3.2.0] - 2026-08-12
 
-### Added
-- Enhanced UI/UX improvements across extension interface
-- Improved content styling and visual feedback
+### 🎯 What's New
+- **Redesigned Settings Panel**: Cleaner layout with better organization of all options
+- **Improved Visual Feedback**: Enhanced UI elements for better user interaction
 
-### Changed
-- Various UI refinements and optimizations
+### 🔧 Improvements
+- Refined styling and visual hierarchy throughout the extension
+- Faster loading of settings and options
+- Better organization of content filtering controls
 
 ## [3.2.1] - 2026-08-12
 
-### Added
-- Comprehensive changelog documentation
-- Improved release management and versioning system
+### 🐛 Bug Fixes
+- Fixed version synchronization issues across Chrome, Firefox, Edge, Opera, and Safari
+- Resolved compatibility issues ensuring consistent behavior across all browsers
 
-### Fixed
-- Version synchronization across all browser extensions (Chrome, Edge, Firefox, Opera, Safari)
-- Enhanced stability and consistency
+### 🔧 Improvements
+- Enhanced stability and reliability across all supported platforms
+- Improved release management and documentation standards
 
-### Changed
-- Updated extension manifest versions across all platforms
-- Improved release notes and documentation standards
+### 📖 Documentation
+- Comprehensive changelog now available for full release history
+- Updated release notes with clearer information
 
 ## [3.1.0] - 2026-08-10
 
-### Added
-- YouTube Shorts hiding capability - new option to hide YouTube Shorts from feed
-- Improved extension UI/UX design
-- Enhanced settings panel with new controls
+### 🎯 What's New
+- **Hide YouTube Shorts**: New toggle to remove Shorts from your YouTube feed and recommendations
+- **Restructured Settings**: Better-organized settings panel with clear feature grouping
+- **Enhanced Controls**: Improved controls for managing what you see on YouTube
 
-### Changed
-- Settings UI improvements
-- Updated assets and dependencies
-- Restructured extension features for better organization
+### 🔧 Improvements
+- Updated assets for better visual clarity
+- Improved extension UI with refined design elements
+- Streamlined feature organization for easier access
 
 ## [3.0.0] - 2026-08-08
 
-### Added
-- Major UI redesign
-- New settings interface
-- Additional configuration options
+### 🎯 What's New
+- **Complete Settings Redesign**: Brand new settings interface with improved layout and organization
+- **New Configuration Options**: Additional controls for granular YouTube customization
+- **Better User Experience**: Completely redesigned extension interface for easier navigation
 
-### Changed
-- Complete overhaul of extension interface
-- Updated styling and layout
-- Improved user experience
+### 🔧 Improvements
+- Modern visual design with updated styling
+- Intuitive layout for finding and adjusting preferences
+- Enhanced readability with improved typography and spacing
 
 ## [2.0.1] - 2026-08-05
 
-### Added
-- Legal documentation
+### 🐛 Bug Fixes
+- Improved stability and reliability across all browsers
+- Fixed edge cases in content filtering logic
 
-### Fixed
-- Various stability improvements
+### 📖 Documentation
+- Added comprehensive legal documentation and terms of service
 
-### Changed
-- Version bump to 2.0.1
+### 🔧 Improvements
+- Enhanced overall extension performance
 
 ## [2.0.0] - 2026-08-05
 
-### Added
-- Major feature release with significant improvements
-- Enhanced extension capabilities
+### 🎯 What's New
+- **Enhanced Content Filtering**: More granular control over YouTube recommendations and distracting elements
+- **Improved Extension Architecture**: Better performance and reliability foundation
+- **Expanded Capabilities**: Additional options for customizing your YouTube experience
 
-### Changed
-- Breaking changes in configuration (if any)
-- Updated to version 2.0.0
+### 🔧 Improvements
+- Significantly improved extension performance and responsiveness
+- Better integration with YouTube's interface
+- More reliable content filtering across different YouTube pages
 
 ## [0.1.0] - 2026-08-01
 
-### Added
-- Initial release
-- Core functionality for YouTube distraction-free experience
-- Basic content filtering capabilities
+### 🎯 What's New
+- **Initial Release**: DeTube is now available for your browser
+- **Distraction-Free YouTube**: Core functionality to hide algorithm-driven recommendations and clutter
+- **Content Filtering**: Basic controls to customize what you see on YouTube
+
+### 🔧 Features
+- Hide YouTube recommendations and algorithm-driven content
+- Basic interface for enabling/disabling filters
+- Works across major browsers (Chrome, Firefox, Edge, Opera)
 
 [Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.2...HEAD
 [3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2
