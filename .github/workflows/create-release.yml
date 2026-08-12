@@ -1,0 +1,96 @@
+name: Create Release on Version Bump
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'manifest.*.json'
+      - 'CHANGELOG.md'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Get current version
+        id: version
+        run: |
+          VERSION=$(grep '"version"' manifest.chrome.json | head -1 | sed 's/.*"version": "\([^"]*\)".*/\1/')
+
+          # Validate version format (semantic versioning)
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: $VERSION (expected: x.y.z)"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+          echo "✅ Current version: $VERSION"
+
+      - name: Check if GitHub Release exists
+        id: check_release
+        run: |
+          TAG="v${{ steps.version.outputs.version }}"
+
+          # Check if GitHub Release exists (not just local tag)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "✅ Release $TAG already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "📦 Release $TAG does not exist, will create it"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Extract release notes from changelog
+        if: steps.check_release.outputs.exists == 'false'
+        id: release_notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Extract changelog section for this version
+          NOTES=$(awk "/## \[${VERSION}\]/,/## \[/{
+            if (/## \[${VERSION}\]/) {start=1; next}
+            if (/## \[/ && start) exit
+            if (start) print
+          }" CHANGELOG.md | sed '/^$/d')
+
+          # Validate that changelog section is not empty
+          if [ -z "$NOTES" ]; then
+            echo "❌ No changelog entry found for version $VERSION"
+            exit 1
+          fi
+
+          # Use multiline delimiter syntax for GITHUB_OUTPUT
+          EOF=$(od -An -tx1 -N8 /dev/urandom | tr -d ' ')
+          echo "notes<<$EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+          echo "✅ Release notes extracted successfully"
+
+      - name: Create GitHub Release
+        if: steps.check_release.outputs.exists == 'false'
+        run: |
+          gh release create \
+            "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }} - DeTube Extension" \
+            --notes "${{ steps.release_notes.outputs.notes }}" \
+            --latest
+          echo "✅ Release ${{ steps.version.outputs.tag }} created successfully"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Release already exists
+        if: steps.check_release.outputs.exists == 'true'
+        run: |
+          echo "⏭️ Release ${{ steps.version.outputs.tag }} already exists, skipping creation"
