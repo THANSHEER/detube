@@ -2,38 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## Release Process
-
-### Update CHANGELOG.md
-
-```markdown
-## [X.Y.Z] - YYYY-MM-DD
-
-### Features
-- New feature description
-
-### Improvements
-- Improvement description
-
-### Security
-- Security vulnerability fixed (CVE-XXXX)
-
-### Fixes
-- Bug fix (#issue-number)
-```
-
-### Version Numbers
-
-- Features: MINOR (1.0.0 → 1.1.0)
-- Security/Fixes: PATCH (1.0.0 → 1.0.1)
-- Breaking Changes: MAJOR (1.0.0 → 2.0.0)
-
----
-
-## [Unreleased]
+## [3.3.0] - 2026-08-16
 
 ### Features
 - **Ko-fi Support Button**: Optional Ko-fi button added to the settings panel so users can support DeTube's development
@@ -131,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Content Filtering**: Basic controls to customize what you see on YouTube
 - Basic interface for enabling/disabling filters
 
-[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.2...HEAD
+[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/THANSHEER/detube/compare/v3.2.2...v3.3.0
 [3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/THANSHEER/detube/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.0

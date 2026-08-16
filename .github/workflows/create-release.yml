@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'manifest.*.json'
+      - 'metadata.json'
       - 'CHANGELOG.md'
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
       - name: Get current version
         id: version
         run: |
-          VERSION=$(grep '"version"' manifest.chrome.json | head -1 | sed 's/.*"version": "\([^"]*\)".*/\1/')
+          VERSION=$(node -p "require('./metadata.json').version")
 
           # Validate version format (semantic versioning)
           if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
