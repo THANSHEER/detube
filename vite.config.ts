@@ -21,15 +21,26 @@ export default defineConfig({
       apply: 'build',
       closeBundle() {
         const outDir = resolve(__dirname, `dist-${targetBrowser}`)
-        
-        // Copy manifest
+
+        // Copy and inject metadata into manifest
         const manifestFile = `manifest.${targetBrowser}.json`
         if (fs.existsSync(resolve(__dirname, manifestFile))) {
-          fs.copyFileSync(
-            resolve(__dirname, manifestFile),
-            resolve(outDir, 'manifest.json')
+          // Read metadata
+          const metadata = JSON.parse(fs.readFileSync(resolve(__dirname, 'metadata.json'), 'utf-8'))
+
+          // Read manifest
+          const manifest = JSON.parse(fs.readFileSync(resolve(__dirname, manifestFile), 'utf-8'))
+
+          // Inject version and description from metadata
+          manifest.version = metadata.version
+          manifest.description = metadata.description
+
+          // Write to output
+          fs.writeFileSync(
+            resolve(outDir, 'manifest.json'),
+            JSON.stringify(manifest, null, 2)
           )
-          console.log(`✓ Copied ${manifestFile} to ${outDir}/manifest.json`)
+          console.log(`✓ Copied ${manifestFile} to ${outDir}/manifest.json (injected metadata)`)
         }
 
         // Copy content CSS (only detube.css)

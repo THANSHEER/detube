@@ -1,6 +1,6 @@
 {
   "name": "detube",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "description": "Distraction-free YouTube experience.",
   "type": "module",
   "engines": {

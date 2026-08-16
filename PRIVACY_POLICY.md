@@ -1,6 +1,6 @@
 # Privacy Policy for DeTube
 
-**Last Updated:** August 2026
+**Last Updated:** August 12, 2026
 
 DeTube is an open-source browser extension developed by [GeekStash.dev](https://geekstash.dev) designed to provide a distraction-free YouTube experience. This Privacy Policy outlines how we handle your information and protect your privacy.
 
@@ -21,7 +21,17 @@ DeTube operates entirely on your local device. The extension requires certain br
 
 **We do not track, collect, or transmit your browsing history, YouTube usage, or any other activity data to our servers or any external services.**
 
-## 4. User Feedback & Bug Reporting
+## 4. External Links & Third-Party Services
+
+DeTube includes an optional **"Buy Me Coffee"** donation button that links to [Ko-fi](https://ko-fi.com) for voluntary support.
+
+- **No data collection by DeTube:** Clicking the button is completely optional and does not send any of your personal data to Ko-fi through the extension.
+- **Ko-fi's Privacy Policy applies:** When you visit Ko-fi's website, their [privacy policy](https://ko-fi.com/privacy) governs any data you provide directly to them (such as payment or contact information).
+- **Optional feature:** Donating is entirely voluntary and not required to use DeTube.
+
+The extension does not track, log, or collect information about whether you click the donation link.
+
+## 5. User Feedback & Bug Reporting
 
 ### Uninstall Feedback
 When you uninstall DeTube, we redirect you to a feedback page (https://geekstash.dev/detube/uninstall) where you can optionally provide feedback. This page may collect:
@@ -44,10 +54,10 @@ Users can optionally:
 - We do NOT send diagnostic information to our servers
 - All feedback is user-initiated and voluntary
 
-## 5. Changes to This Policy
+## 6. Changes to This Policy
 
 We may update this Privacy Policy from time to time if we introduce new features (such as an optional newsletter). Any changes will be clearly reflected in this document.
 
-## 6. Contact Us
+## 7. Contact Us
 
 If you have any questions, concerns, or requests regarding this Privacy Policy or the extension, please reach out to us via email at **[contact@geekstash.dev](mailto:contact@geekstash.dev)**, visit [GeekStash.dev](https://geekstash.dev), or open an issue on our [GitHub Repository](https://github.com/THANSHEER/detube).

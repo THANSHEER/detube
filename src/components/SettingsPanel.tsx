@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Monitor, Github, ExternalLink } from 'lucide-react';
+import { Sun, Moon, Monitor, Github, ExternalLink, Heart } from 'lucide-react';
 import { type ThemeMode } from '../lib/storage';
 
 interface SettingsPanelProps {
@@ -94,6 +94,23 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               GitHub <Github size={9} />
             </button>
           </div>
+        </div>
+      </section>
+
+      {/* ── Support ── */}
+      <section>
+        <p className="dt-settings-section-title">Support</p>
+        <div className="flex items-center justify-between p-3 rounded-[8px] bg-[var(--dt-surface-raised)] border border-[var(--dt-border)]">
+          <div className="flex items-center gap-2">
+            <Heart size={14} className="text-red-500" />
+            <span className="text-[12px] text-[var(--dt-text-secondary)]">Enjoy DeTube?</span>
+          </div>
+          <button
+            className="flex items-center gap-1 px-3 py-1.5 rounded-[6px] bg-[var(--dt-accent)] text-white hover:opacity-90 transition-opacity duration-150 cursor-pointer border-none text-[11px] font-medium"
+            onClick={() => chrome.tabs.create({ url: 'https://ko-fi.com/P0R02009G7' })}
+          >
+            Buy Me Coffee <ExternalLink size={10} />
+          </button>
         </div>
       </section>
 

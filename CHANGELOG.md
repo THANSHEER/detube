@@ -2,103 +2,106 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [3.3.0] - 2026-08-16
 
-## [Unreleased]
+### Features
+- **Ko-fi Support Button**: Optional Ko-fi button added to the settings panel so users can support DeTube's development
+
+### Fixes
+- Added the Ko-fi CDN to the extension's Content Security Policy so the Ko-fi widget loads correctly
+- Simplified sidebar-hiding selectors, dropping redundant title-based matching for more reliable results
 
 ## [3.2.2] - 2026-08-12
 
-### Added
-- Comprehensive privacy policy documentation for feedback collection
-- Transparency regarding uninstall feedback page
-- Documentation for user-initiated bug reporting via GitHub
-
-### Changed
-- Updated privacy policy with section on feedback and bug reporting
-- Enhanced privacy disclosures for better user understanding
+### Features
+- **Enhanced Privacy Documentation**: Comprehensive transparency about how feedback and bug reports are handled
+- **Updated Privacy Policy**: New section explaining user-initiated bug reporting via GitHub
+- **Uninstall Feedback Clarity**: Clear documentation about the uninstall feedback page
 
 ### Security
-- All feedback and bug reporting remains voluntary and user-initiated
-- No automatic data collection during uninstall
-- Confirmed no personal data transmission
-
-## [3.2.0] - 2026-08-12
-
-### Added
-- Enhanced UI/UX improvements across extension interface
-- Improved content styling and visual feedback
-
-### Changed
-- Various UI refinements and optimizations
+- All feedback and bug reporting remains completely voluntary and user-initiated
+- Zero automatic data collection during uninstall
+- Confirmed: no personal data transmission or storage
+- YouTube activity data remains on-device only
 
 ## [3.2.1] - 2026-08-12
 
-### Added
-- Comprehensive changelog documentation
-- Improved release management and versioning system
+### Improvements
+- Enhanced stability and reliability across all supported platforms
+- Improved release management and documentation standards
+- Added a comprehensive CHANGELOG.md covering the full release history
 
-### Fixed
-- Version synchronization across all browser extensions (Chrome, Edge, Firefox, Opera, Safari)
-- Enhanced stability and consistency
+### Fixes
+- Fixed version synchronization issues across Chrome, Firefox, Edge, Opera, and Safari manifests
+- Resolved compatibility issues ensuring consistent behavior across all browsers
 
-### Changed
-- Updated extension manifest versions across all platforms
-- Improved release notes and documentation standards
+## [3.2.0] - 2026-06-28
 
-## [3.1.0] - 2026-08-10
+### Features
+- **Redesigned Settings Panel**: Cleaner layout with better organization of all options
+- **Improved Visual Feedback**: Enhanced UI elements for better user interaction
 
-### Added
-- YouTube Shorts hiding capability - new option to hide YouTube Shorts from feed
-- Improved extension UI/UX design
-- Enhanced settings panel with new controls
+### Improvements
+- Refined styling and visual hierarchy throughout the extension
+- Faster loading of settings and options
+- Better organization of content filtering controls
 
-### Changed
-- Settings UI improvements
-- Updated assets and dependencies
-- Restructured extension features for better organization
+## [3.1.0] - 2026-06-28
 
-## [3.0.0] - 2026-08-08
+### Features
+- **Hide YouTube Shorts**: New toggle to remove Shorts from the YouTube feed and recommendations
+- **Restructured Settings**: Better-organized settings panel with clear feature grouping
+- **Enhanced Controls**: Improved controls for managing what you see on YouTube
 
-### Added
-- Major UI redesign
-- New settings interface
-- Additional configuration options
+### Improvements
+- Updated assets for better visual clarity
+- Improved extension UI with refined design elements
+- Streamlined feature organization for easier access
 
-### Changed
-- Complete overhaul of extension interface
-- Updated styling and layout
-- Improved user experience
+## [3.0.0] - 2026-05-08
 
-## [2.0.1] - 2026-08-05
+### Features
+- **Complete Settings Redesign**: Brand-new settings interface with improved layout and organization
+- **New Configuration Options**: Additional controls for granular YouTube customization
+- **Better User Experience**: Completely redesigned extension interface for easier navigation
 
-### Added
-- Legal documentation
+### Improvements
+- Modern visual design with updated styling
+- Intuitive layout for finding and adjusting preferences
+- Enhanced readability with improved typography and spacing
 
-### Fixed
-- Various stability improvements
+## [2.0.1] - 2026-05-08
 
-### Changed
-- Version bump to 2.0.1
+### Improvements
+- Enhanced overall extension performance
+- Added comprehensive legal documentation and terms of service
 
-## [2.0.0] - 2026-08-05
+### Fixes
+- Improved stability and reliability across all browsers
+- Fixed edge cases in content filtering logic
 
-### Added
-- Major feature release with significant improvements
-- Enhanced extension capabilities
+## [2.0.0] - 2026-05-08
 
-### Changed
-- Breaking changes in configuration (if any)
-- Updated to version 2.0.0
+### Features
+- **Enhanced Content Filtering**: More granular control over YouTube recommendations and distracting elements
+- **Improved Extension Architecture**: Better performance and reliability foundation
+- **Expanded Capabilities**: Additional options for customizing the YouTube experience
 
-## [0.1.0] - 2026-08-01
+### Improvements
+- Significantly improved extension performance and responsiveness
+- Better integration with YouTube's interface
+- More reliable content filtering across different YouTube pages
 
-### Added
-- Initial release
-- Core functionality for YouTube distraction-free experience
-- Basic content filtering capabilities
+## [0.1.0] - 2026-05-08
 
-[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.2.2...HEAD
+### Features
+- **Initial Release**: DeTube is now available for Chrome, Firefox, Edge, and Opera
+- **Distraction-Free YouTube**: Core functionality to hide algorithm-driven recommendations and clutter
+- **Content Filtering**: Basic controls to customize what you see on YouTube
+- Basic interface for enabling/disabling filters
+
+[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/THANSHEER/detube/compare/v3.2.2...v3.3.0
 [3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/THANSHEER/detube/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/THANSHEER/detube/compare/v3.1.0...v3.2.0

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DeTube",
-  "version": "3.2.2",
-  "description": "Distraction-free YouTube experience.",
+  "version": "0.0.0",
+  "description": "",
   "permissions": ["storage", "scripting", "tabs", "alarms"],
   "host_permissions": ["*://*.youtube.com/*"],
   "action": {
@@ -25,6 +25,8 @@
   "background": {
     "service_worker": "background.js",
     "type": "module"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
   }
-
 }
