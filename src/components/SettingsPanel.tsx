@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Sun, Moon, Monitor, Github, ExternalLink, Heart } from 'lucide-react';
 import { type ThemeMode } from '../lib/storage';
 
@@ -28,26 +28,6 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   browser,
 }) => {
   const browserName = BROWSER_DISPLAY_NAMES[browser] || browser;
-
-  useEffect(() => {
-    // Load Ko-fi widget script
-    const script = document.createElement('script');
-    script.src = 'https://storage.ko-fi.com/cdn/widget/Widget_2.js';
-    script.type = 'text/javascript';
-    script.async = true;
-    script.onload = () => {
-      if (typeof window !== 'undefined' && (window as any).kofiwidget2) {
-        (window as any).kofiwidget2.init('Support me on Ko-fi', '#000000', 'P0R02009G7');
-        (window as any).kofiwidget2.draw();
-      }
-    };
-    document.body.appendChild(script);
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-  }, []);
 
   return (
     <div className="dt-settings-panel animate-slide-up">
@@ -125,7 +105,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <Heart size={14} className="text-red-500" />
             <span className="text-[12px] text-[var(--dt-text-secondary)]">Enjoy DeTube?</span>
           </div>
-          <div id="kofi-widget-container"></div>
+          <button
+            className="flex items-center gap-1 px-3 py-1.5 rounded-[6px] bg-[var(--dt-accent)] text-white hover:opacity-90 transition-opacity duration-150 cursor-pointer border-none text-[11px] font-medium"
+            onClick={() => chrome.tabs.create({ url: 'https://ko-fi.com/P0R02009G7' })}
+          >
+            Buy Me Coffee <ExternalLink size={10} />
+          </button>
         </div>
       </section>
 
