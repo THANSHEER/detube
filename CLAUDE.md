@@ -28,7 +28,7 @@ This document guides Claude Code on how to work effectively on DeTube - a privac
 ### Commit Messages
 - Use conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `ci:`
 - PR labels: `feature`, `enhancement`, `fix`, `bug`, `chore`, `documentation`, `ci`
-- These labels drive the release-drafter and changelog generation
+- These labels are for categorization; release titles and notes are sourced from CHANGELOG.md, not auto-generated
 
 ## Public Release Notes Standards
 
@@ -78,8 +78,8 @@ src/
 
 ## Key Configuration Files
 
-- **CHANGELOG.md** - User-facing changelog (Keep a Changelog format)
-- **.github/release-drafter-config.yml** - Configures automatic release notes generation
+- **CHANGELOG.md** - User-facing changelog (Keep a Changelog format); source of truth for GitHub Release titles/notes
+- **.github/workflows/create-release.yml** - Creates the GitHub Release on version bump, pulling title/notes from CHANGELOG.md
 - **package.json** - Version source of truth
 - **manifest.json** (per browser) - Extension metadata and permissions
 
