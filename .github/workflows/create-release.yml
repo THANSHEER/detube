@@ -59,11 +59,11 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
 
           # Extract changelog section for this version
-          NOTES=$(awk "/## \[${VERSION}\]/,/## \[/{
-            if (/## \[${VERSION}\]/) {start=1; next}
-            if (/## \[/ && start) exit
-            if (start) print
-          }" CHANGELOG.md | sed '/^$/d')
+          NOTES=$(awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" {flag=1; next}
+            flag && (/^## \[/ || /^\[/) {exit}
+            flag {print}
+          ' CHANGELOG.md | sed -e '/./,$!d')
 
           # Validate that changelog section is not empty
           if [ -z "$NOTES" ]; then
