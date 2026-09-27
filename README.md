@@ -1,30 +1,23 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/THANSHEER/media-hub/main/detube/logo/logo.svg" alt="DeTube Logo" width="150" />
+  <img src="public/logo/logo.svg" alt="DeTube Logo" width="150" />
 </p>
 
 <h1 align="center">DeTube</h1>
 
 <p align="center">
   <strong>A premium, distraction-free YouTube experience.</strong><br/>
-  Reclaim your focus by hiding algorithm-driven recommendations, social metrics, and clutter across the entire platform.<br/><br/>
-  <em>If DeTube helps you regain your productivity, consider dropping a ⭐️ to help others discover it!</em>
+  Reclaim your focus by hiding algorithm-driven recommendations, social metrics, and clutter across the entire platform.
 </p>
 
 <p align="center">
   <a href="https://github.com/THANSHEER/detube/stargazers">
-    <img src="https://img.shields.io/github/stars/THANSHEER/detube?style=social" alt="GitHub stars" />
+    <img src="https://img.shields.io/badge/%E2%AD%90%20Star%20on-GitHub-FFDD00?style=for-the-badge&logo=github&logoColor=black&labelColor=181717" alt="Star on GitHub" />
   </a>
-  <a href="https://github.com/THANSHEER/detube">
-    <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version" />
+  <a href="https://github.com/THANSHEER/detube/stargazers">
+    <img src="https://img.shields.io/github/stars/THANSHEER/detube?style=for-the-badge&color=ff0000&labelColor=181717" alt="GitHub stars" />
   </a>
-  <a href="https://reactjs.org/">
-    <img src="https://img.shields.io/badge/built%20with-React-61DAFB.svg?logo=react" alt="Built with React" />
-  </a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS">
-    <img src="https://img.shields.io/badge/styled%20with-Vanilla%20CSS-1572B6.svg?logo=css3" alt="Styled with CSS" />
-  </a>
-  <a href="https://vitejs.dev/">
-    <img src="https://img.shields.io/badge/built%20with-Vite-646CFF.svg?logo=vite" alt="Built with Vite" />
+  <a href="https://ko-fi.com/P0R02009G7">
+    <img src="https://img.shields.io/badge/%E2%98%95%20Support-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white&labelColor=181717" alt="Support on Ko-fi" />
   </a>
 </p>
 
@@ -38,13 +31,35 @@
   <a href="https://microsoftedge.microsoft.com/addons/detail/detube/kpglkajecamcbjiokjbhghfgbicffmgh">
     <img src="https://img.shields.io/badge/Edge-Download-0078D7?logo=microsoftedge&logoColor=white" alt="Edge Download" />
   </a>
-  <a href="#opera-link">
+  <a href="#-browser-support">
     <img src="https://img.shields.io/badge/Opera-Download-FF1B2D?logo=opera&logoColor=white" alt="Opera Download" />
   </a>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/THANSHEER/media-hub/main/detube/animated-webp/detube-hideanything.webp" alt="DeTube Hide Anything Demo" width="800" />
+  <a href="https://github.com/THANSHEER/detube">
+    <img src="https://img.shields.io/badge/version-3.4.0-blue.svg" alt="Version" />
+  </a>
+  <a href="https://react.dev/">
+    <img src="https://img.shields.io/badge/built%20with-React-61DAFB.svg?logo=react" alt="Built with React" />
+  </a>
+  <a href="https://tailwindcss.com/">
+    <img src="https://img.shields.io/badge/styled%20with-Tailwind%20%26%20CSS-1572B6.svg?logo=tailwindcss" alt="Styled with Tailwind and CSS" />
+  </a>
+  <a href="https://vite.dev/">
+    <img src="https://img.shields.io/badge/built%20with-Vite-646CFF.svg?logo=vite" alt="Built with Vite" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License" />
+  </a>
+</p>
+
+<p align="center">
+  🌟 <strong>Love DeTube?</strong> Please consider giving us a <a href="https://github.com/THANSHEER/detube/stargazers"><strong>Star on GitHub</strong></a> or <a href="https://ko-fi.com/P0R02009G7"><strong>supporting on Ko-fi</strong></a> — it takes just 2 seconds and helps more people discover distraction-free YouTube!
+</p>
+
+<p align="center">
+  <img src="public/demo/clutter-to-peace-in-seconds.gif" alt="DeTube - Clutter to Peace in Seconds" width="800" />
 </p>
 
 ---
@@ -62,19 +77,32 @@ DeTube provides granular control over YouTube's interface, allowing you to curat
 | **🎯 4 Focus Modes** | Always On, Focus Timer, Schedule, and Daily Limit. |
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/THANSHEER/media-hub/main/detube/animated-webp/detube-4-focusmode.webp" alt="DeTube Focus Modes" width="800" />
+  <img src="public/demo/focus-modes-and-shorts.gif" alt="DeTube - Focus Modes & Shorts Protection" width="800" />
 </p>
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Quick Start & Building from Source
 
-> 💡 **Want to build from source?** 
-> 
-> Check out our comprehensive [**CONTRIBUTING.md**](CONTRIBUTING.md) guide! It includes:
-> - Setting up your local environment (Node.js >= 22.x required)
-> - Building the extension for Chrome, Firefox, Edge, Safari, and Opera
-> - Specialized Safari and Firefox installation instructions
+```bash
+# 1. Clone & install
+git clone https://github.com/THANSHEER/detube.git
+cd detube && npm install
+
+# 2. Build CSS selectors
+node scripts/build-css.js
+
+# 3. Build for your target browser
+TARGET_BROWSER=chrome node node_modules/.bin/vite build    # dist-chrome/
+TARGET_BROWSER=firefox node node_modules/.bin/vite build   # dist-firefox/
+TARGET_BROWSER=edge node node_modules/.bin/vite build      # dist-edge/
+TARGET_BROWSER=opera node node_modules/.bin/vite build     # dist-opera/
+TARGET_BROWSER=safari node node_modules/.bin/vite build    # dist-safari/
+```
+
+> 📖 **Looking for step-by-step browser loading or Xcode setup for Safari?**
+>
+> Check out our comprehensive [**CONTRIBUTING.md**](CONTRIBUTING.md) guide for browser-by-browser loading instructions, Apple Safari converter setup, and development guidelines.
 
 ---
 
@@ -82,13 +110,13 @@ DeTube provides granular control over YouTube's interface, allowing you to curat
 
 DeTube is built with **Manifest V3** and supports all major modern browsers:
 
-| Browser | Status |
-| :--- | :--- |
-| **Chrome / Arc / Brave** | ✅ Supported |
-| **Firefox** | ✅ Supported *(AMO Sanitized)* |
-| **Microsoft Edge** | ✅ Supported |
-| **Opera** | ✅ Supported |
-| **Safari** (MV3) | ⏳ *Coming soon* |
+| Browser | Status | Output Folder |
+| :--- | :--- | :--- |
+| **Chrome / Arc / Brave** | ✅ Supported | `dist-chrome/` |
+| **Firefox** | ✅ Supported *(AMO Sanitized)* | `dist-firefox/` |
+| **Microsoft Edge** | ✅ Supported | `dist-edge/` |
+| **Opera** | ✅ Supported | `dist-opera/` |
+| **Safari** (macOS MV3) | ✅ Supported *(via Xcode converter)* | `dist-safari/` |
 
 ---
 
@@ -96,9 +124,9 @@ DeTube is built with **Manifest V3** and supports all major modern browsers:
 
 | Category | Technology |
 | :--- | :--- |
-| **Frontend** | [React 18](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/) |
-| **Build Tool** | [Vite](https://vitejs.dev/) |
-| **Styling** | Vanilla CSS (Modular selectors) |
+| **Frontend** | [React 19](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/) |
+| **Build Tool** | [Vite 6](https://vitejs.dev/) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) + CSS Custom Properties |
 | **Icons** | [Lucide React](https://lucide.dev/) |
 | **Storage** | Chrome Storage API (`local`) |
 
@@ -106,7 +134,27 @@ DeTube is built with **Manifest V3** and supports all major modern browsers:
 
 ## 🤝 Contributing
 
-We welcome contributions! Please read our [**CONTRIBUTING.md**](CONTRIBUTING.md) and [Development Guide](./documentation/DEVELOPMENT.md) for technical details, setup instructions, and our Pull Request workflow.
+We welcome contributions! Whether adding a new setting toggle, refining CSS selectors, or reporting bugs:
+- Read our [**CONTRIBUTING.md**](CONTRIBUTING.md) for full setup instructions, architecture breakdown, and our 3-step guide to adding any setting.
+- Ensure all automated checks pass before submitting a Pull Request:
+  ```bash
+  node scripts/validate-css.js && node scripts/validate-settings.js && node scripts/test-css-rules.js
+  ```
+
+---
+
+## ⭐ Support the Project
+
+If DeTube has improved your focus and productivity, here are quick ways you can support the project:
+
+- ⭐️ **Star this repository:** Give us a star on [GitHub](https://github.com/THANSHEER/detube) — it takes just 2 clicks and helps others discover distraction-free YouTube.
+- 📢 **Spread the word:** Share DeTube with friends, colleagues, or on [Twitter/X](https://twitter.com), [Reddit](https://reddit.com), and [LinkedIn](https://linkedin.com).
+- ☕ **Buy me a coffee:** If you'd like to fuel ongoing development and new features:
+  <br/>
+  <a href="https://ko-fi.com/P0R02009G7">
+    <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=3" alt="Buy Me A Coffee at ko-fi.com" height="36" />
+  </a>
+- 🐛 **Report bugs & suggest features:** Open a [GitHub Issue](https://github.com/THANSHEER/detube/issues) or join the discussions!
 
 ---
 

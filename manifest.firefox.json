@@ -26,7 +26,9 @@
     "scripts": ["background.js"],
     "type": "module"
   },
-  "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "detube@geekstash.dev",
@@ -34,6 +36,9 @@
       "data_collection_permissions": {
         "required": ["none"]
       }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
     }
   }
 }

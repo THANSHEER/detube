@@ -1,6 +1,6 @@
 {
   "name": "detube",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Distraction-free YouTube experience.",
   "type": "module",
   "engines": {
@@ -27,21 +27,23 @@
     "test:settings": "node scripts/validate-settings.js",
     "test:rules": "node scripts/test-css-rules.js",
     "test:verify-build": "node scripts/verify-build.js",
+    "test:e2e": "playwright test",
     "preview": "vite preview"
   },
   "dependencies": {
     "lucide-react": "^0.460.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@resvg/resvg-js": "^2.6.2",
     "@types/chrome": "^0.0.300",
-    "@types/node": "^22.0.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.5",
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "^10.6.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",

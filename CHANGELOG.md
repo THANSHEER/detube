@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.0] - 2026-09-26
+
+### Features
+- **Quick Settings Search**: You can now search across all 70+ distraction-free settings instantly. Open the search bar anytime with the search button in the top bar or by pressing `/` (or `Cmd/Ctrl + K`) on your keyboard.
+- **Active Filter Indicators**: The side navigation tabs and section headers now display counter badges showing exactly how many items you currently have hidden in each area.
+
+### Performance & Improvements
+- **Faster and Lighter**: Reduced extension bundle size and eliminated unnecessary background logging, making DeTube lighter on memory and faster to open.
+- **Smoother Animations**: Refined UI animations and page transitions for an instantaneous, native-feeling experience.
+- **Accurate Version Display**: The About section now automatically detects and displays the exact version installed.
+
+### Fixes
+- **Shorts Player Options**: Fixed an issue where hiding one button (like the Like or Remix button) would hide unrelated controls. Sub-settings now work independently and sit directly beneath their parent toggle.
+- **Restored Missing Icons**: Fixed icons for Report History, Sidebar Footer, and Shorts Remix so they no longer show a generic gear icon.
+- **Search Reliability**: Fixed search behavior when the extension is disabled and properly hid sign-in-only settings when logged out.
+- **Background Stability**: Prevented background script errors when updating the extension with YouTube tabs already open.
+
 ## [3.3.0] - 2026-08-16
 
 ### Features
@@ -100,7 +117,8 @@ All notable changes to this project will be documented in this file.
 - **Content Filtering**: Basic controls to customize what you see on YouTube
 - Basic interface for enabling/disabling filters
 
-[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/THANSHEER/detube/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/THANSHEER/detube/compare/v3.2.2...v3.3.0
 [3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/THANSHEER/detube/compare/v3.2.0...v3.2.1

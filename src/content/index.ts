@@ -182,9 +182,13 @@ new DeTubeEngine();
 
 window.setInterval(() => {
   if (document.hidden) return;
-  chrome.runtime.sendMessage({ action: 'addUsageTime', seconds: 30 }, () => {
-    if (chrome.runtime.lastError) { /* background may be inactive — ignore */ }
-  });
+  try {
+    chrome.runtime.sendMessage({ action: 'addUsageTime', seconds: 30 }, () => {
+      if (chrome.runtime.lastError) { /* background may be inactive — ignore */ }
+    });
+  } catch {
+    // Extension context might be invalidated if updated/reloaded
+  }
 }, 30000);
 
 // ---------------------------------------------------------------------------

@@ -57,6 +57,13 @@ export default defineConfig({
           console.log(`✓ Copied content CSS to ${outContentDir}`)
         }
 
+        // Remove demo directory if copied by Vite (demos are for repo documentation, not extension packages)
+        const outDemoDir = resolve(outDir, 'demo')
+        if (fs.existsSync(outDemoDir)) {
+          fs.rmSync(outDemoDir, { recursive: true, force: true })
+          console.log(`✓ Cleaned demo/ from ${outDir}`)
+        }
+
         // Inline shared chunks into content.js and background.js
         // Content scripts and service workers CANNOT use ES module imports,
         // so we must concatenate any shared chunks into those files.
@@ -168,5 +175,8 @@ export default defineConfig({
     },
     modulePreload: false,
     emptyOutDir: true,
+  },
+  esbuild: {
+    pure: ['console.log', 'console.debug'],
   },
 })
