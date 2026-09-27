@@ -8,7 +8,7 @@
 
 **DeTube** is an open-source browser extension that provides distraction-free YouTube by letting users hide individual UI elements. It supports Chrome (MV3), Firefox (MV3), Edge, Safari (MV3), Arc, Brave, and Opera.
 
-- **Version:** 3.0.0
+- **Version:** 3.4.0
 - **Repo:** [github.com/THANSHEER/detube](https://github.com/THANSHEER/detube)
 - **By:** [GeekStash.dev](https://geekstash.dev)
 - **Popup size:** 370×490px fixed
@@ -17,7 +17,7 @@
 
 | Layer | Library / Tool |
 | ----- | -------------- |
-| UI | React 18.3, lucide-react 0.460 |
+| UI | React 19, lucide-react 0.460 |
 | Build | Vite 6, TypeScript 5.7 |
 | Styles | Tailwind 3.4 + CSS custom properties (`--dt-*`) |
 | Targets | chrome, firefox, edge, safari, opera (5 builds) |
@@ -53,7 +53,7 @@ No other file changes needed.
 detube/
 ├── src/
 │   ├── lib/
-│   │   ├── config.ts          ← SINGLE SOURCE OF TRUTH (50+ settings)
+│   │   ├── config.ts          ← SINGLE SOURCE OF TRUTH (70+ settings)
 │   │   └── storage.ts         ← Storage API: DeTubeStorage, DeTubeTheme,
 │   │                             DeTubeFocus (timer/schedule/daily-limit),
 │   │                             DeTubeStats — ALL shared logic lives here
@@ -82,7 +82,7 @@ detube/
 │   ├── validate-css.js        ← Checks CSS syntax and selectors
 │   ├── test-css-rules.js      ← Pattern-tests key CSS selectors
 │   ├── verify-build.js        ← Checks dist files are all present
-│   └── zip-builds.js          ← Zips dist-* folders
+│   └── zip-builds.js          ← Packages detube-${version}.zip and computes SHA-256 checksum
 ├── public/
 │   ├── icon.svg               ← Master icon (screen + play + slider mark)
 │   └── icons/
@@ -255,4 +255,4 @@ for size in 16 32 48 128; do
 done
 ```
 
-_Last updated: 2026-05-23 — v3.0.0_
+_Last updated: 2026-09-27 — v3.4.0_

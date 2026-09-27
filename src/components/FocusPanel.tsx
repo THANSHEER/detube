@@ -43,9 +43,11 @@ function isScheduleActive(config: FocusConfig): boolean {
   if (!config.scheduleEnabled) return false;
   const now = new Date();
   const day = now.getDay();
-  if (!config.scheduleDays.includes(day)) return false;
+  if (!config.scheduleDays || !config.scheduleDays.includes(day)) return false;
+  if (!config.scheduleStartTime || !config.scheduleEndTime) return false;
   const [sh, sm] = config.scheduleStartTime.split(':').map(Number);
   const [eh, em] = config.scheduleEndTime.split(':').map(Number);
+  if (isNaN(sh) || isNaN(sm) || isNaN(eh) || isNaN(em)) return false;
   const nowMins = now.getHours() * 60 + now.getMinutes();
   
   const startMins = sh * 60 + sm;
@@ -226,7 +228,7 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
 
       {/* ── Always On ────────────────────────────────────────────── */}
       {config.blockingMode === 'always' && (
-        <section className="animate-fade-in">
+        <section className="animate-tab-enter">
           <div className="dt-panel-card">
             {/* Icon + title row */}
             <div className="dt-always-info">
@@ -255,7 +257,7 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
 
       {/* ── Focus Timer ──────────────────────────────────────────── */}
       {config.blockingMode === 'timer' && (
-        <section className="animate-fade-in">
+        <section className="animate-tab-enter">
           {isRunning ? (
             /* Running state — progress bar + countdown + stop */
             <div className="dt-timer-running-card">
@@ -316,7 +318,7 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
 
       {/* ── Schedule ─────────────────────────────────────────────── */}
       {config.blockingMode === 'schedule' && (
-        <section className="animate-fade-in">
+        <section className="animate-tab-enter">
           <div className="dt-panel-card">
             {/* Day picker */}
             <div className="dt-sched-days">
@@ -369,7 +371,7 @@ export const FocusPanel: React.FC<FocusPanelProps> = ({ onSetEnabled }) => {
 
       {/* ── Daily Limit ───────────────────────────────────────────── */}
       {config.blockingMode === 'daily-limit' && (
-        <section className="animate-fade-in">
+        <section className="animate-tab-enter">
           <div className="dt-panel-card">
             {/* Limit setter row */}
             <div className="dt-limit-row">

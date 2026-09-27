@@ -24,21 +24,7 @@ export default {
         'text-muted': 'var(--dt-text-muted)',
       },
       fontFamily: {
-        ui: ['Outfit', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-      },
-      animation: {
-        'slide-up': 'slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) both',
-        'fade-in': 'fadeIn 0.2s ease-out both',
-      },
-      keyframes: {
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
+        ui: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       borderRadius: {
         native: 'var(--dt-radius)',

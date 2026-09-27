@@ -8,7 +8,7 @@ This document guides Claude Code on how to work effectively on DeTube - a privac
 
 - **What it does**: Granular control over YouTube's interface
 - **Key features**: Shorts hiding, comment hiding, related videos hiding, focus modes, grayscale mode
-- **Tech stack**: React 18 + TypeScript, Vite, Vanilla CSS, Manifest V3
+- **Tech stack**: React 19 + TypeScript, Vite, Vanilla CSS, Manifest V3
 - **Users**: Active users across Chrome Web Store, Firefox AMO, Microsoft Edge Store
 - **Platforms**: Chrome, Firefox, Edge, Opera, Safari (coming soon)
 

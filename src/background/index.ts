@@ -75,9 +75,11 @@ function isScheduleNowActive(config: FocusConfig): boolean {
   if (!config.scheduleEnabled) return false;
   const now = new Date();
   const day = now.getDay();
-  if (!config.scheduleDays.includes(day)) return false;
+  if (!config.scheduleDays || !config.scheduleDays.includes(day)) return false;
+  if (!config.scheduleStartTime || !config.scheduleEndTime) return false;
   const [sh, sm] = config.scheduleStartTime.split(':').map(Number);
   const [eh, em] = config.scheduleEndTime.split(':').map(Number);
+  if (isNaN(sh) || isNaN(sm) || isNaN(eh) || isNaN(em)) return false;
   const nowMins = now.getHours() * 60 + now.getMinutes();
   
   const startMins = sh * 60 + sm;

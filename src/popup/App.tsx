@@ -53,6 +53,9 @@ import {
   Scissors,
   Power,
   Target,
+  Flag,
+  AlignVerticalSpaceAround,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -62,6 +65,19 @@ import { SettingCard } from '../components/SettingCard';
 import { SectionDivider } from '../components/SectionDivider';
 import { SettingsPanel } from '../components/SettingsPanel';
 import { FocusPanel } from '../components/FocusPanel';
+
+// ---------------------------------------------------------------------------
+// Category display labels
+// ---------------------------------------------------------------------------
+
+const CATEGORY_LABELS: Record<string, string> = {
+  header: 'Header',
+  sidebar: 'Sidebar',
+  homepage: 'Home',
+  videopage: 'Video',
+  channelpage: 'Channel',
+  shortspage: 'Shorts',
+};
 
 // ---------------------------------------------------------------------------
 // Icon resolver
@@ -107,6 +123,9 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Youtube,
   Tv2: TvMinimal,
   Video,
+  Flag,
+  AlignVerticalSpaceAround,
+  Scissors,
 };
 
 function resolveIcon(name: string): LucideIcon {
@@ -137,6 +156,8 @@ const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [theme, setTheme] = useState<ThemeMode>('system');
   const [browser, setBrowser] = useState<string>('chrome');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   // ── Apply theme to <html> whenever it changes ──────────────
   useEffect(() => {
@@ -191,8 +212,34 @@ const App: React.FC = () => {
     });
   }, []);
 
+  // ── Global Keyboard Shortcuts ──────────────────────────────
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!settings.enabled) return;
+      // Toggle search with "/" or "Cmd/Ctrl+K" when not focused on an input
+      if (
+        (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) &&
+        document.activeElement?.tagName !== 'INPUT'
+      ) {
+        e.preventDefault();
+        setIsSearching((prev) => !prev);
+      } else if (e.key === 'Escape' && isSearching) {
+        e.preventDefault();
+        setIsSearching(false);
+        setSearchQuery('');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearching, settings.enabled]);
+
   // ── Handlers ───────────────────────────────────────────────
   const handleSetEnabled = async (val: boolean) => {
+    if (!val) {
+      setIsSearching(false);
+      setSearchQuery('');
+    }
     const updated = { ...settings, enabled: val } as Settings;
     setSettings(updated);
     await DeTubeStorage.saveSettings({ enabled: val } as Partial<Settings>);
@@ -204,12 +251,27 @@ const App: React.FC = () => {
   };
 
   const handleToggle = async (key: string) => {
+    if (key === 'enabled' && settings.enabled) {
+      setIsSearching(false);
+      setSearchQuery('');
+    }
     const currentValue = (settings as Record<string, boolean>)[key];
     const newValue = !currentValue;
     const updated = { ...settings, [key]: newValue } as Settings;
     setSettings(updated);
     await DeTubeStorage.saveSettings({ [key]: newValue } as Partial<Settings>);
   };
+
+  // ── Active rule counts per tab category ────────────────────
+  const activeCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const setting of SETTING_REGISTRY) {
+      if ((settings as Record<string, boolean>)[setting.key]) {
+        counts[setting.category] = (counts[setting.category] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [settings]);
 
   // ── Memoized settings for current tab ──────────────────────
   const currentSettings = useMemo(() => {
@@ -233,7 +295,21 @@ const App: React.FC = () => {
     return isLoggedIn;
   };
 
-  const renderSection = (section: SettingSection) => {
+  // ── Global Search Filter ───────────────────────────────────
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase().trim();
+    return SETTING_REGISTRY.filter((s) => {
+      if (!isVisibleForLogin(s)) return false;
+      const labelMatch = s.label.toLowerCase().includes(query);
+      const categoryName = (CATEGORY_LABELS[s.category] || s.category).toLowerCase();
+      const categoryMatch = categoryName.includes(query) || s.category.toLowerCase().includes(query);
+      const sectionMatch = (SECTION_TITLES[s.section] || '').toLowerCase().includes(query);
+      return labelMatch || categoryMatch || sectionMatch;
+    });
+  }, [searchQuery, isLoggedIn]);
+
+  const renderSection = (section: SettingSection, idx: number) => {
     const sectionSettings = currentSettings.filter((s) => s.section === section);
     if (sectionSettings.length === 0) return null;
 
@@ -241,37 +317,53 @@ const App: React.FC = () => {
     const children = sectionSettings.filter((s) => !!s.parentKey);
     const visibleChildren = children.filter(isVisibleForLogin);
 
+    // Calculate active count for this section
+    const activeCount = sectionSettings.filter((s) => !!(settings as Record<string, boolean>)[s.key]).length;
+    const totalCount = sectionSettings.length;
+
     return (
-      <div key={section} className="mb-3 last:mb-0">
-        <SectionDivider title={SECTION_TITLES[section]} />
+      <div
+        key={section}
+        className="mb-3 last:mb-0 animate-tab-enter"
+        style={{ animationDelay: `${idx * 25}ms` }}
+      >
+        <SectionDivider
+          title={SECTION_TITLES[section]}
+          activeCount={activeCount}
+          totalCount={totalCount}
+        />
 
         {/* Grouped section container */}
-        <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius)] overflow-hidden divide-y divide-[var(--dt-border)]">
-          {topLevel.map((def) => (
-            <SettingCard
-              key={def.key}
-              label={def.label}
-              Icon={resolveIcon(def.icon)}
-              checked={!!(settings as Record<string, boolean>)[def.key]}
-              onToggle={() => handleToggle(def.key)}
-            />
-          ))}
-
-          {/* Children options inside the same unified card container */}
-          {visibleChildren.length > 0 && !isParentEnabled(visibleChildren[0]) && (
-            <div className="divide-y divide-[var(--dt-border)] bg-[var(--dt-surface-overlay)] animate-fade-in">
-              {visibleChildren.map((def) => (
+        <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius)] overflow-hidden divide-y divide-[var(--dt-border)] shadow-sm">
+          {topLevel.map((def) => {
+            const itemChildren = visibleChildren.filter(
+              (c) => c.parentKey === def.key && !isParentEnabled(c)
+            );
+            return (
+              <React.Fragment key={def.key}>
                 <SettingCard
-                  key={def.key}
                   label={def.label}
                   Icon={resolveIcon(def.icon)}
                   checked={!!(settings as Record<string, boolean>)[def.key]}
                   onToggle={() => handleToggle(def.key)}
-                  isChild
                 />
-              ))}
-            </div>
-          )}
+                {itemChildren.length > 0 && (
+                  <div className="divide-y divide-[var(--dt-border)] bg-[var(--dt-surface-overlay)] animate-fade-in">
+                    {itemChildren.map((childDef) => (
+                      <SettingCard
+                        key={childDef.key}
+                        label={childDef.label}
+                        Icon={resolveIcon(childDef.icon)}
+                        checked={!!(settings as Record<string, boolean>)[childDef.key]}
+                        onToggle={() => handleToggle(childDef.key)}
+                        isChild
+                      />
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
     );
@@ -286,8 +378,60 @@ const App: React.FC = () => {
         <Header
           enabled={settings.enabled}
           onToggle={() => handleToggle('enabled')}
+          isSearching={isSearching}
+          onToggleSearch={() => {
+            setIsSearching((prev) => {
+              if (prev) setSearchQuery('');
+              return !prev;
+            });
+          }}
         />
       </div>
+
+      {/* Search Input Bar (when search is toggled open) */}
+      {settings.enabled && isSearching && (
+        <div className="dt-search-container">
+          <div className="dt-search-input-wrap">
+            <Search size={13} className="text-[var(--dt-text-muted)] shrink-0" strokeWidth={2} />
+            <input
+              type="text"
+              placeholder="Search 70+ settings... (e.g. comments, shorts)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  setIsSearching(false);
+                  setSearchQuery('');
+                }
+              }}
+              className="dt-search-input"
+              autoFocus
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="p-0.5 rounded text-[var(--dt-text-muted)] hover:text-[var(--dt-text-primary)] cursor-pointer border-none bg-transparent"
+                title="Clear search"
+              >
+                <X size={12} />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearching(false);
+                setSearchQuery('');
+              }}
+              className="dt-search-kbd cursor-pointer hover:bg-[var(--dt-surface-raised)] transition-colors border-none"
+              title="Close search (ESC)"
+            >
+              ESC
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Middle: nav rail (left) + content (right) */}
       <div className="dt-main-area">
@@ -301,7 +445,7 @@ const App: React.FC = () => {
               if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleToggle('enabled'); }
             }}
           >
-            <div className="w-12 h-12 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)] group-hover:text-[var(--dt-accent)] group-hover:border-[var(--dt-accent-border)] transition-colors duration-300 [transition-timing-function:var(--dt-spring)] shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] flex items-center justify-center text-[var(--dt-text-muted)] group-hover:text-[var(--dt-accent)] group-hover:border-[var(--dt-accent-border)] group-hover:bg-[var(--dt-accent-soft)] transition-all duration-300 [transition-timing-function:var(--dt-spring)] shadow-sm">
               <Power size={22} strokeWidth={1.7} className="animate-pulse-soft group-hover:animate-none" />
             </div>
             <div className="flex flex-col gap-1">
@@ -313,12 +457,57 @@ const App: React.FC = () => {
               </p>
             </div>
           </div>
+        ) : isSearching && searchQuery.trim() ? (
+          /* Search results view */
+          <main className="dt-body animate-tab-enter space-y-3">
+            <div className="flex items-center justify-between px-1 mb-1">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--dt-text-secondary)]">
+                Search Results
+              </span>
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--dt-surface-overlay)] text-[var(--dt-text-muted)]">
+                {searchResults.length} {searchResults.length === 1 ? 'result' : 'results'}
+              </span>
+            </div>
+
+            {searchResults.length === 0 ? (
+              <div className="p-8 text-center bg-[var(--dt-surface-raised)] rounded-[var(--dt-radius)] border border-[var(--dt-border)] flex flex-col items-center gap-2">
+                <Search size={20} className="text-[var(--dt-text-muted)] opacity-50" />
+                <p className="text-[12px] font-medium text-[var(--dt-text-secondary)]">
+                  No settings matching &ldquo;{searchQuery}&rdquo;
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="text-[11px] text-[var(--dt-accent)] font-semibold border-none bg-transparent cursor-pointer hover:underline"
+                >
+                  Clear search
+                </button>
+              </div>
+            ) : (
+              <div className="bg-[var(--dt-surface-raised)] border border-[var(--dt-border)] rounded-[var(--dt-radius)] overflow-hidden divide-y divide-[var(--dt-border)] shadow-sm">
+                {searchResults.map((def) => (
+                  <SettingCard
+                    key={def.key}
+                    label={def.label}
+                    Icon={resolveIcon(def.icon)}
+                    checked={!!(settings as Record<string, boolean>)[def.key]}
+                    onToggle={() => handleToggle(def.key)}
+                    categoryName={CATEGORY_LABELS[def.category] || def.category}
+                  />
+                ))}
+              </div>
+            )}
+          </main>
         ) : (
           <>
             <NavRail
               tabs={TABS}
               activeTab={activeTab}
-              onTabChange={setActiveTab}
+              onTabChange={(tab) => {
+                if (isSearching) setIsSearching(false);
+                setActiveTab(tab);
+              }}
+              activeCounts={activeCounts}
             />
 
             {/* Content area: settings panel, focus panel, or settings list */}
@@ -329,19 +518,18 @@ const App: React.FC = () => {
                 browser={browser}
               />
             ) : activeTab === 'focus' ? (
-              <div className="dt-focus-panel animate-slide-up">
+              <div className="dt-focus-panel animate-tab-enter">
                 <FocusPanel onSetEnabled={handleSetEnabled} />
               </div>
             ) : (
-              <main key={activeTab} className="dt-body animate-slide-up space-y-3">
-                {currentSections.map(renderSection)}
+              <main key={activeTab} className="dt-body animate-tab-enter space-y-3">
+                {currentSections.map((sec, idx) => renderSection(sec, idx))}
               </main>
             )}
           </>
         )}
       </div>
 
-      {/* Fixed footer */}
     </div>
   );
 };
