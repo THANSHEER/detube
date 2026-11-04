@@ -128,15 +128,19 @@ jobs:
         if: steps.check_release.outputs.exists == 'false'
         run: |
           gh release create \
-            "${{ steps.version.outputs.tag }}" \
-            --title "${{ steps.release_notes.outputs.title }}" \
-            --notes "${{ steps.release_notes.outputs.notes }}" \
+            "$RELEASE_TAG" \
+            --title "$RELEASE_TITLE" \
+            --notes "$RELEASE_NOTES" \
             --latest \
-            "detube-${{ steps.version.outputs.version }}.zip" \
-            "detube-${{ steps.version.outputs.version }}.zip.sha256"
-          echo "✅ Release ${{ steps.version.outputs.tag }} with title '${{ steps.release_notes.outputs.title }}' created successfully"
+            "detube-${RELEASE_VERSION}.zip" \
+            "detube-${RELEASE_VERSION}.zip.sha256"
+          echo "✅ Release $RELEASE_TAG with title '$RELEASE_TITLE' created successfully"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_TITLE: ${{ steps.release_notes.outputs.title }}
+          RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
 
       - name: Update assets for existing release
         if: steps.check_release.outputs.exists == 'true'
