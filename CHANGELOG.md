@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.0] - 2026-11-04
+
+### Features & Mobile Availability
+- **Mobile Browser Availability**: DeTube is now optimized and available across mobile browsers including Firefox for Android (minimum version 115.0+), Microsoft Edge Android, Safari iOS, Orion, and Kiwi Browser.
+- **Mobile Options UI**: Added `options_ui` manifest support across all browser builds (Chrome, Firefox, Edge, Safari, Opera), allowing the full settings interface to be accessed directly from mobile extension managers.
+- **YouTube Mobile (`m.youtube.com`) Selectors**: Added dedicated mobile selector coverage across headers, video player pages, and Shorts feeds, with content script observation for mobile navigation events (`popstate`).
+- **Reset to Defaults**: Added a one-click "Reset to Defaults" option with confirmation in the Settings panel for quick configuration resets.
+
+### UI & Animation Polish
+- **Smooth Startup & 0ms Hydration**: Synchronously hydratated theme and user toggles from local storage before initial paint, eliminating toggle flash (FOUC) and visual jumps.
+- **Hardware-Accelerated Entrance**: Added smooth, GPU-accelerated popup opening animation (`dtPopupOpen`), tab enter transitions (`dtTabEnter`), and fluid spring physics on toggle switches.
+- **Responsive & Safe Area Layout**: Upgraded popup viewport to `100dvh` with `viewport-fit=cover` and CSS safe-area insets (`env(safe-area-inset-*)`), delivering a native mobile app feel.
+- **Touch Optimization**: Implemented `touch-action: manipulation`, suppressed touch highlights, and added hidden horizontal scrollbars on navigation rails for smooth touch swiping.
+- **Dynamic Theme Color**: Configured browser toolbar `theme-color` meta tags matching system dark/light modes.
+
+### Maintenance & Dead CSS Cleanup
+- **Dead CSS Elimination**: Consolidated duplicated `html.dt-hide-subscribe` and `html.dt-hide-join-button` rules across `channel.css` and `video-page.css`, streamlining selector evaluation.
+- **Toolchain Modernization**: Upgraded dependencies to latest stable versions:
+  - React 19.3.1
+  - Vite 8.3.5
+  - TypeScript 7.0.2
+  - Tailwind CSS 3.4.19 LTS
+  - Lucide-React 1.68.0
+  - Playwright 1.64.1 & updated `@types` packages
+- **Dedicated Brand Icons**: Implemented lightweight, custom SVG icons for GitHub and YouTube to ensure future-proof stability.
+
 ## [3.4.0] - 2026-09-26
 
 ### Features
@@ -117,7 +143,8 @@ All notable changes to this project will be documented in this file.
 - **Content Filtering**: Basic controls to customize what you see on YouTube
 - Basic interface for enabling/disabling filters
 
-[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.4.0...HEAD
+[Unreleased]: https://github.com/THANSHEER/detube/compare/v3.5.0...HEAD
+[3.5.0]: https://github.com/THANSHEER/detube/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/THANSHEER/detube/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/THANSHEER/detube/compare/v3.2.2...v3.3.0
 [3.2.2]: https://github.com/THANSHEER/detube/compare/v3.2.1...v3.2.2

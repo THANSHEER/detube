@@ -176,7 +176,7 @@ export default defineConfig({
     modulePreload: false,
     emptyOutDir: true,
   },
-  esbuild: {
+  oxc: {
     pure: ['console.log', 'console.debug'],
   },
 })

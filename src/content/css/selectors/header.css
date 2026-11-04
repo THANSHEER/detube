@@ -8,7 +8,8 @@ html.dt-hide-search .search-form-container,
 html.dt-hide-search [role="combobox"][aria-label*="Search"],
 html.dt-hide-search ytd-searchbox,
 html.dt-hide-search ytm-searchbox,
-html.dt-hide-search .ytm-search-form {
+html.dt-hide-search .ytm-search-form,
+html.dt-hide-search header.ytm-mobile-topbar-renderer button[aria-label*="Search" i] {
   display: none !important;
 }
 

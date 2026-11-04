@@ -53,7 +53,7 @@ export const NavRail: React.FC<NavRailProps> = ({
             title={`${tab.label}${count > 0 ? ` (${count} active)` : ''}`}
             onClick={() => onTabChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, tab.id)}
-            className={`dt-nav-rail-btn${isActive ? ' active' : ''}`}
+            className={`dt-nav-rail-btn touch-manipulation${isActive ? ' active' : ''}`}
           >
             <div className="relative flex items-center justify-center">
               <tab.Icon size={16} strokeWidth={isActive ? 2.4 : 1.7} className="transition-transform duration-200" />
@@ -81,7 +81,7 @@ export const NavRail: React.FC<NavRailProps> = ({
         title="Settings"
         onClick={() => onTabChange('settings')}
         onKeyDown={(e) => handleKeyDown(e, 'settings')}
-        className={`dt-nav-rail-btn settings-btn${activeTab === 'settings' ? ' active' : ''}`}
+        className={`dt-nav-rail-btn settings-btn touch-manipulation${activeTab === 'settings' ? ' active' : ''}`}
       >
         <Settings size={16} strokeWidth={activeTab === 'settings' ? 2.4 : 1.7} className="transition-transform duration-200" />
         <span className="dt-nav-rail-label">Settings</span>

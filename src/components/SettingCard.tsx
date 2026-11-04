@@ -33,7 +33,7 @@ export const SettingCard: React.FC<SettingCardProps> = ({
       }}
       className={[
         'flex items-center gap-3 px-[13px] py-[10.5px] w-full relative',
-        'cursor-pointer select-none group',
+        'cursor-pointer select-none group touch-manipulation',
         'transition-all duration-200 ease-out',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--dt-accent)] focus-visible:bg-[var(--dt-surface-overlay)]',
         'active:scale-[0.985]',
@@ -90,7 +90,7 @@ export const SettingCard: React.FC<SettingCardProps> = ({
         <div
           className={[
             'relative w-[36px] h-[20px] rounded-full',
-            'transition-colors duration-250 [transition-timing-function:var(--dt-spring)]',
+            'transition-colors duration-200 [transition-timing-function:var(--dt-smooth)]',
             checked
               ? 'bg-[var(--dt-toggle-on)]'
               : 'bg-[var(--dt-toggle-off)]',
@@ -101,7 +101,8 @@ export const SettingCard: React.FC<SettingCardProps> = ({
               'absolute top-[2px] left-[2px] w-[16px] h-[16px] rounded-full',
               'bg-[var(--dt-toggle-thumb)]',
               'shadow-[0_1px_3px_rgba(0,0,0,0.3)]',
-              'transition-all duration-250 [transition-timing-function:var(--dt-spring-bounce)]',
+              'transition-all duration-200 [transition-timing-function:var(--dt-spring-bounce)]',
+              'will-change-transform',
               'group-active:w-[19px]',
               checked ? 'translate-x-[16px] group-active:translate-x-[13px]' : 'translate-x-0',
             ].join(' ')}
