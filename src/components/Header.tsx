@@ -1,5 +1,6 @@
 import React from 'react';
-import { Github, Power, Search, X } from 'lucide-react';
+import { Power, Search, X } from 'lucide-react';
+import { Github } from './Icons';
 
 interface HeaderProps {
   enabled: boolean;
@@ -86,7 +87,13 @@ export const Header: React.FC<HeaderProps> = ({
             'transition-all duration-200 active:scale-90',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)]',
           ].join(' ')}
-          onClick={() => chrome.tabs.create({ url: 'https://github.com/THANSHEER/detube' })}
+          onClick={() => {
+            if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
+              chrome.tabs.create({ url: 'https://github.com/THANSHEER/detube' });
+            } else {
+              window.open('https://github.com/THANSHEER/detube', '_blank');
+            }
+          }}
         >
           <Github size={13} strokeWidth={1.8} />
         </button>
@@ -103,14 +110,14 @@ export const Header: React.FC<HeaderProps> = ({
           aria-label={enabled ? 'DeTube enabled' : 'DeTube disabled'}
           className={[
             'w-7 h-7 rounded-[var(--dt-radius-sm)] flex items-center justify-center',
-            'transition-all duration-250 active:scale-90 [transition-timing-function:var(--dt-spring)]',
+            'transition-all duration-200 active:scale-90 [transition-timing-function:var(--dt-spring)]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)]',
             enabled
               ? 'text-white [background:var(--dt-gradient)] [box-shadow:var(--dt-shadow-accent)]'
               : 'bg-[var(--dt-surface-raised)] text-[var(--dt-text-muted)] hover:text-[var(--dt-text-secondary)] border border-[var(--dt-border)] hover:border-[var(--dt-border-strong)]',
           ].join(' ')}
         >
-          <Power size={13} strokeWidth={enabled ? 2.5 : 2} className="transition-transform duration-300" />
+          <Power size={13} strokeWidth={enabled ? 2.5 : 2} className={`transition-transform duration-300 ${enabled ? 'rotate-0' : '-rotate-90'}`} />
         </button>
       </div>
     </header>

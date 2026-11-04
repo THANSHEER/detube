@@ -1,11 +1,13 @@
 import React from 'react';
-import { Sun, Moon, Monitor, Github, ExternalLink, Heart, Star } from 'lucide-react';
+import { Sun, Moon, Monitor, ExternalLink, Heart, Star } from 'lucide-react';
+import { Github } from './Icons';
 import { type ThemeMode } from '../lib/storage';
 
 interface SettingsPanelProps {
   theme: ThemeMode;
   onThemeChange: (t: ThemeMode) => void;
   browser: string;
+  onResetDefaults?: () => void;
 }
 
 const THEME_OPTIONS: { mode: ThemeMode; Icon: typeof Sun; label: string }[] = [
@@ -26,8 +28,18 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   theme,
   onThemeChange,
   browser,
+  onResetDefaults,
 }) => {
   const browserName = BROWSER_DISPLAY_NAMES[browser] || browser;
+  const [confirmReset, setConfirmReset] = React.useState(false);
+
+  const openLink = (url: string) => {
+    if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
+      chrome.tabs.create({ url });
+    } else {
+      window.open(url, '_blank');
+    }
+  };
 
   return (
     <div className="dt-settings-panel animate-tab-enter">
@@ -75,14 +87,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="dt-about-row">
             <span className="dt-about-label">DeTube</span>
             <span className="dt-about-value">
-              v{typeof chrome !== 'undefined' && chrome.runtime?.getManifest ? chrome.runtime.getManifest().version : '3.4.0'}
+              v{typeof chrome !== 'undefined' && chrome.runtime?.getManifest ? chrome.runtime.getManifest().version : '3.5.0'}
             </span>
           </div>
           <div className="dt-about-row">
             <span className="dt-about-label">By GeekStash.dev</span>
             <button
               className="dt-about-value flex items-center gap-1 hover:text-[var(--dt-accent)] transition-colors duration-150 cursor-pointer border-none bg-transparent p-0 active:scale-95"
-              onClick={() => chrome.tabs.create({ url: 'https://geekstash.dev' })}
+              onClick={() => openLink('https://geekstash.dev')}
             >
               Visit <ExternalLink size={9} />
             </button>
@@ -91,13 +103,45 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <span className="dt-about-label">Source Code</span>
             <button
               className="dt-about-value flex items-center gap-1 hover:text-[var(--dt-accent)] transition-colors duration-150 cursor-pointer border-none bg-transparent p-0 active:scale-95"
-              onClick={() => chrome.tabs.create({ url: 'https://github.com/THANSHEER/detube' })}
+              onClick={() => openLink('https://github.com/THANSHEER/detube')}
             >
               GitHub <Github size={9} />
             </button>
           </div>
         </div>
       </section>
+
+      {/* ── Preferences / Reset ── */}
+      {onResetDefaults && (
+        <section>
+          <p className="dt-settings-section-title">Preferences</p>
+          <div className="flex items-center justify-between p-2.5 rounded-[8px] bg-[var(--dt-surface-raised)] border border-[var(--dt-border)]">
+            <div className="flex flex-col gap-0.5 min-w-0 pr-2">
+              <span className="text-[12px] font-semibold text-[var(--dt-text-primary)]">Reset to Defaults</span>
+              <span className="text-[10px] text-[var(--dt-text-muted)]">Restore all 72 distraction-free toggles</span>
+            </div>
+            <button
+              onClick={() => {
+                if (confirmReset) {
+                  onResetDefaults();
+                  setConfirmReset(false);
+                } else {
+                  setConfirmReset(true);
+                  setTimeout(() => setConfirmReset(false), 3000);
+                }
+              }}
+              className={[
+                'px-2.5 py-1.5 rounded-[6px] text-[11px] font-semibold cursor-pointer transition-all duration-150 shrink-0 border outline-none active:scale-95',
+                confirmReset
+                  ? 'bg-red-500 text-white border-red-600 animate-pulse'
+                  : 'bg-[var(--dt-surface-overlay)] text-[var(--dt-text-secondary)] hover:text-red-400 hover:border-red-400/30 border-[var(--dt-border)]',
+              ].join(' ')}
+            >
+              {confirmReset ? 'Confirm Reset?' : 'Reset'}
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* ── Support ── */}
       <section>
@@ -111,7 +155,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
             <button
               className="flex items-center gap-1 px-3 py-1.5 rounded-[6px] bg-[var(--dt-surface-overlay)] hover:bg-[var(--dt-surface-hover)] text-[var(--dt-text-primary)] border border-[var(--dt-border)] active:scale-95 transition-all duration-150 cursor-pointer text-[11px] font-medium shrink-0"
-              onClick={() => chrome.tabs.create({ url: 'https://github.com/THANSHEER/detube' })}
+              onClick={() => openLink('https://github.com/THANSHEER/detube')}
             >
               Star Repo <ExternalLink size={10} />
             </button>
@@ -125,7 +169,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
             <button
               className="flex items-center gap-1 px-3 py-1.5 rounded-[6px] bg-[var(--dt-accent)] text-white hover:opacity-90 active:scale-95 transition-all duration-150 cursor-pointer border-none text-[11px] font-medium shadow-sm shrink-0"
-              onClick={() => chrome.tabs.create({ url: 'https://ko-fi.com/P0R02009G7' })}
+              onClick={() => openLink('https://ko-fi.com/P0R02009G7')}
             >
               Buy Me Coffee <ExternalLink size={10} />
             </button>

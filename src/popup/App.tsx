@@ -45,7 +45,6 @@ import {
   Shirt,
   Podcast,
   Joystick,
-  Youtube,
   TvMinimal,
   Video,
   SlidersHorizontal,
@@ -58,6 +57,8 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
+
+import { Youtube } from '../components/Icons';
 
 import { Header } from '../components/Header';
 import { NavRail, type NavTab } from '../components/NavRail';
@@ -120,7 +121,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Shirt,
   Podcast,
   Joystick,
-  Youtube,
+  Youtube: Youtube as unknown as LucideIcon,
   Tv2: TvMinimal,
   Video,
   Flag,
@@ -151,10 +152,31 @@ const TABS: NavTab[] = [
 // ---------------------------------------------------------------------------
 
 const App: React.FC = () => {
-  const [settings, setSettings] = useState<Settings>(DEFAULTS);
-  const [activeTab, setActiveTab] = useState<SettingCategory | 'focus' | 'settings'>('header');
+  const [settings, setSettings] = useState<Settings>(() => {
+    try {
+      const cached = localStorage.getItem('detube_settings');
+      if (cached) return { ...DEFAULTS, ...JSON.parse(cached) };
+    } catch { /* ignore */ }
+    return DEFAULTS;
+  });
+
+  const [activeTab, setActiveTab] = useState<SettingCategory | 'focus' | 'settings'>(() => {
+    try {
+      const cached = localStorage.getItem('detube_active_tab');
+      if (cached) return cached as SettingCategory | 'focus' | 'settings';
+    } catch { /* ignore */ }
+    return 'header';
+  });
+
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [theme, setTheme] = useState<ThemeMode>('system');
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    try {
+      const cached = localStorage.getItem('detube_theme');
+      if (cached) return cached as ThemeMode;
+    } catch { /* ignore */ }
+    return 'system';
+  });
+
   const [browser, setBrowser] = useState<string>('chrome');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -170,35 +192,53 @@ const App: React.FC = () => {
 
   // ── Init ───────────────────────────────────────────────────
   useEffect(() => {
-    DeTubeStorage.getSettings().then(setSettings);
-    DeTubeTheme.get().then(setTheme);
+    DeTubeStorage.getSettings().then((loadedSettings) => {
+      setSettings(loadedSettings);
+      try {
+        localStorage.setItem('detube_settings', JSON.stringify(loadedSettings));
+      } catch { /* ignore */ }
+    });
+
+    DeTubeTheme.get().then((loadedTheme) => {
+      setTheme(loadedTheme);
+      try {
+        localStorage.setItem('detube_theme', loadedTheme);
+      } catch { /* ignore */ }
+    });
 
     // Detect the build-time browser from data-browser attribute
     const detectedBrowser = document.documentElement.getAttribute('data-browser') || 'chrome';
     setBrowser(detectedBrowser);
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const currentTab = tabs[0];
+    // Query active tab to auto-switch to relevant category (desktop + mobile compatible)
+    const handleActiveTab = (currentTab?: chrome.tabs.Tab) => {
       if (!currentTab?.id) return;
-
       const url = currentTab.url || '';
       if (url.includes('youtube.com')) {
         // Auto-switch popup tab based on current YouTube page
+        let targetTab: SettingCategory | null = null;
         if (url.includes('/shorts/')) {
-          setActiveTab('shortspage');
-        } else if (url.includes('/watch?v=')) {
-          setActiveTab('videopage');
+          targetTab = 'shortspage';
+        } else if (url.includes('/watch')) {
+          targetTab = 'videopage';
         } else if (
           url.includes('/@') ||
           url.includes('/channel/') ||
           url.includes('/c/') ||
           url.includes('/user/')
         ) {
-          setActiveTab('channelpage');
+          targetTab = 'channelpage';
         } else {
           try {
             const path = new URL(url).pathname;
-            if (path === '/' || path === '') setActiveTab('homepage');
+            if (path === '/' || path === '') targetTab = 'homepage';
+          } catch { /* ignore */ }
+        }
+
+        if (targetTab) {
+          setActiveTab(targetTab);
+          try {
+            localStorage.setItem('detube_active_tab', targetTab);
           } catch { /* ignore */ }
         }
 
@@ -209,7 +249,21 @@ const App: React.FC = () => {
           }
         });
       }
-    });
+    };
+
+    if (typeof chrome !== 'undefined' && chrome.tabs?.query) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs && tabs.length > 0) {
+          handleActiveTab(tabs[0]);
+        } else {
+          // Mobile browser fallback: currentWindow might not be set
+          chrome.tabs.query({ active: true }, (fallbackTabs) => {
+            const tab = fallbackTabs?.find((t) => t.active) || fallbackTabs?.[0];
+            handleActiveTab(tab);
+          });
+        }
+      });
+    }
   }, []);
 
   // ── Global Keyboard Shortcuts ──────────────────────────────
@@ -242,12 +296,26 @@ const App: React.FC = () => {
     }
     const updated = { ...settings, enabled: val } as Settings;
     setSettings(updated);
+    try {
+      localStorage.setItem('detube_settings', JSON.stringify(updated));
+    } catch { /* ignore */ }
     await DeTubeStorage.saveSettings({ enabled: val } as Partial<Settings>);
   };
 
   const handleThemeChange = async (newTheme: ThemeMode) => {
     setTheme(newTheme);
+    try {
+      localStorage.setItem('detube_theme', newTheme);
+    } catch { /* ignore */ }
     await DeTubeTheme.save(newTheme);
+  };
+
+  const handleTabChange = (tab: SettingCategory | 'focus' | 'settings') => {
+    if (isSearching) setIsSearching(false);
+    setActiveTab(tab);
+    try {
+      localStorage.setItem('detube_active_tab', tab);
+    } catch { /* ignore */ }
   };
 
   const handleToggle = async (key: string) => {
@@ -259,7 +327,18 @@ const App: React.FC = () => {
     const newValue = !currentValue;
     const updated = { ...settings, [key]: newValue } as Settings;
     setSettings(updated);
+    try {
+      localStorage.setItem('detube_settings', JSON.stringify(updated));
+    } catch { /* ignore */ }
     await DeTubeStorage.saveSettings({ [key]: newValue } as Partial<Settings>);
+  };
+
+  const handleResetDefaults = async () => {
+    setSettings(DEFAULTS);
+    try {
+      localStorage.setItem('detube_settings', JSON.stringify(DEFAULTS));
+    } catch { /* ignore */ }
+    await DeTubeStorage.saveSettings(DEFAULTS);
   };
 
   // ── Active rule counts per tab category ────────────────────
@@ -503,10 +582,7 @@ const App: React.FC = () => {
             <NavRail
               tabs={TABS}
               activeTab={activeTab}
-              onTabChange={(tab) => {
-                if (isSearching) setIsSearching(false);
-                setActiveTab(tab);
-              }}
+              onTabChange={handleTabChange}
               activeCounts={activeCounts}
             />
 
@@ -516,6 +592,7 @@ const App: React.FC = () => {
                 theme={theme}
                 onThemeChange={handleThemeChange}
                 browser={browser}
+                onResetDefaults={handleResetDefaults}
               />
             ) : activeTab === 'focus' ? (
               <div className="dt-focus-panel animate-tab-enter">

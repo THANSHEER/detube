@@ -160,12 +160,16 @@ class DeTubeEngine {
       attributeFilter: ['class'],
     });
 
-    // 2. Listen for YouTube SPA navigation events
-    window.addEventListener('yt-navigate-finish', () => {
+    // 2. Listen for YouTube SPA navigation events (Desktop & Mobile)
+    const handleNavigation = () => {
       if (this.settings.enabled) {
         this.scheduleApply();
       }
-    });
+    };
+
+    window.addEventListener('yt-navigate-finish', handleNavigation);
+    window.addEventListener('yt-page-data-updated', handleNavigation);
+    window.addEventListener('popstate', handleNavigation);
   }
 }
 

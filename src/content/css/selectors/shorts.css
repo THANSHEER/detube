@@ -9,6 +9,8 @@
 /* Hides the next-shorts autoplay button overlay */
 html.dt-hide-shorts-autoplay ytd-reel-video-renderer .reel-player-overlay-renderer,
 html.dt-hide-shorts-autoplay ytd-reel-video-renderer ytd-reel-player-overlay-renderer,
+html.dt-hide-shorts-autoplay ytm-shorts-player-renderer .reel-player-overlay-renderer,
+html.dt-hide-shorts-autoplay ytm-reel-player-overlay-renderer,
 html.dt-hide-shorts-autoplay #navigation-endpoint.style-scope.ytd-reel-player-overlay-renderer {
   display: none !important;
 }
@@ -24,12 +26,15 @@ html.dt-hide-shorts-auto-scroll .shorts-auto-scroll-button {
 /* ── Hide Like Button & Count ────────────────────────────────────── */
 html.dt-hide-shorts-like-button ytd-reel-video-renderer like-button-view-model,
 html.dt-hide-shorts-like-button ytd-reel-video-renderer #like-button,
+html.dt-hide-shorts-like-button ytm-shorts-player-renderer ytm-like-button-renderer,
+html.dt-hide-shorts-like-button ytm-shorts-player-renderer button[aria-label*="like this" i],
 html.dt-hide-shorts-like-button .shorts-player-action-panel-button-view-model[data-type="like"] {
   display: none !important;
 }
 
 html.dt-hide-shorts-like-count ytd-reel-video-renderer like-button-view-model .ytSpecButtonShapeWithLabelLabel,
 html.dt-hide-shorts-like-count ytd-reel-video-renderer #like-button span.yt-core-attributed-string,
+html.dt-hide-shorts-like-count ytm-shorts-player-renderer .like-button .yt-spec-button-shape-with-label__label,
 html.dt-hide-shorts-like-count .shorts-player-action-panel-button-view-model[data-type="like"] .ytSpecButtonShapeWithLabelLabel {
   display: none !important;
 }
@@ -37,6 +42,8 @@ html.dt-hide-shorts-like-count .shorts-player-action-panel-button-view-model[dat
 /* ── Hide Dislike Button ─────────────────────────────────────────── */
 html.dt-hide-shorts-dislike-button ytd-reel-video-renderer dislike-button-view-model,
 html.dt-hide-shorts-dislike-button ytd-reel-video-renderer #dislike-button,
+html.dt-hide-shorts-dislike-button ytm-shorts-player-renderer ytm-dislike-button-renderer,
+html.dt-hide-shorts-dislike-button ytm-shorts-player-renderer button[aria-label*="dislike this" i],
 html.dt-hide-shorts-dislike-button .shorts-player-action-panel-button-view-model[data-type="dislike"] {
   display: none !important;
 }
@@ -46,12 +53,15 @@ html.dt-hide-shorts-comment-button ytd-reel-video-renderer #comments-button,
 html.dt-hide-shorts-comment-button ytd-reel-video-renderer button-view-model:has(button[aria-label*="comment" i]),
 html.dt-hide-shorts-comment-button ytd-reel-video-renderer yt-button-shape[aria-label*="comment" i],
 html.dt-hide-shorts-comment-button ytd-shorts #comments-button,
+html.dt-hide-shorts-comment-button ytm-shorts-player-renderer ytm-comment-button-renderer,
+html.dt-hide-shorts-comment-button ytm-shorts-player-renderer button[aria-label*="comment" i],
 html.dt-hide-shorts-comment-button .shorts-player-action-panel-button-view-model[data-type="comments"] {
   display: none !important;
 }
 
 html.dt-hide-shorts-comment-count ytd-reel-video-renderer #comments-button .ytSpecButtonShapeWithLabelLabel,
 html.dt-hide-shorts-comment-count ytd-reel-video-renderer button-view-model:has(button[aria-label*="comment" i]) .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-comment-count ytm-shorts-player-renderer .comment-button .yt-spec-button-shape-with-label__label,
 html.dt-hide-shorts-comment-count .shorts-player-action-panel-button-view-model[data-type="comments"] .ytSpecButtonShapeWithLabelLabel {
   display: none !important;
 }
@@ -60,6 +70,8 @@ html.dt-hide-shorts-comment-count .shorts-player-action-panel-button-view-model[
 html.dt-hide-shorts-share ytd-reel-video-renderer #share-button,
 html.dt-hide-shorts-share ytd-reel-video-renderer button-view-model:has(button[aria-label*="Share" i]),
 html.dt-hide-shorts-share ytd-reel-video-renderer yt-button-shape[aria-label*="share" i],
+html.dt-hide-shorts-share ytm-shorts-player-renderer ytm-share-button-renderer,
+html.dt-hide-shorts-share ytm-shorts-player-renderer button[aria-label*="share" i],
 html.dt-hide-shorts-share .shorts-player-action-panel-button-view-model[data-type="share"] {
   display: none !important;
 }
@@ -68,12 +80,15 @@ html.dt-hide-shorts-share .shorts-player-action-panel-button-view-model[data-typ
 html.dt-hide-shorts-remix-button ytd-reel-video-renderer #remix-button,
 html.dt-hide-shorts-remix-button ytd-reel-video-renderer button-view-model:has(button[aria-label*="Remix" i]),
 html.dt-hide-shorts-remix-button ytd-reel-video-renderer yt-button-shape[aria-label*="remix" i],
+html.dt-hide-shorts-remix-button ytm-shorts-player-renderer ytm-remix-button-renderer,
+html.dt-hide-shorts-remix-button ytm-shorts-player-renderer button[aria-label*="remix" i],
 html.dt-hide-shorts-remix-button .shorts-player-action-panel-button-view-model[data-type="remix"] {
   display: none !important;
 }
 
 html.dt-hide-shorts-remix-count ytd-reel-video-renderer #remix-button .ytSpecButtonShapeWithLabelLabel,
 html.dt-hide-shorts-remix-count ytd-reel-video-renderer button-view-model:has(button[aria-label*="Remix" i]) .ytSpecButtonShapeWithLabelLabel,
+html.dt-hide-shorts-remix-count ytm-shorts-player-renderer .remix-button .yt-spec-button-shape-with-label__label,
 html.dt-hide-shorts-remix-count .shorts-player-action-panel-button-view-model[data-type="remix"] .ytSpecButtonShapeWithLabelLabel {
   display: none !important;
 }

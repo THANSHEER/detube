@@ -58,22 +58,6 @@ html.dt-hide-video-count yt-content-metadata-view-model > .ytContentMetadataView
   display: none !important;
 }
 
-/* Hide Subscribe Button */
-html.dt-hide-subscribe .ytSubscribeButtonViewModelContainer,
-html.dt-hide-subscribe #subscribe-button,
-html.dt-hide-subscribe ytd-subscribe-button-renderer,
-html.dt-hide-subscribe yt-subscribe-button-view-model {
-  display: none !important;
-}
-
-/* Hide Join Button */
-html.dt-hide-join-button .ytFlexibleActionsViewModelAction,
-html.dt-hide-join-button #sponsor-button,
-html.dt-hide-join-button ytd-button-renderer:has(button[aria-label*="Join"]),
-html.dt-hide-join-button yt-button-view-model:has(button[aria-label*="Join"]) {
-  display: none !important;
-}
-
 /* Hide Channel Home Tab */
 html.dt-hide-channel-home ytd-tab-renderer:has([title="Home"]),
 html.dt-hide-channel-home ytd-tab-renderer[aria-label="Home"],

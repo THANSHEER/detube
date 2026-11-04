@@ -8,17 +8,17 @@
 
 **DeTube** is an open-source browser extension that provides distraction-free YouTube by letting users hide individual UI elements. It supports Chrome (MV3), Firefox (MV3), Edge, Safari (MV3), Arc, Brave, and Opera.
 
-- **Version:** 3.4.0
+- **Version:** 3.5.0
 - **Repo:** [github.com/THANSHEER/detube](https://github.com/THANSHEER/detube)
 - **By:** [GeekStash.dev](https://geekstash.dev)
-- **Popup size:** 370×490px fixed
+- **Popup size:** 370×490px fixed (responsive for mobile)
 
 ## Tech Stack
 
 | Layer | Library / Tool |
 | ----- | -------------- |
-| UI | React 19, lucide-react 0.460 |
-| Build | Vite 6, TypeScript 5.7 |
+| UI | React 19, lucide-react 1.68 |
+| Build | Vite 8, TypeScript 7.0 |
 | Styles | Tailwind 3.4 + CSS custom properties (`--dt-*`) |
 | Targets | chrome, firefox, edge, safari, opera (5 builds) |
 
@@ -255,4 +255,4 @@ for size in 16 32 48 128; do
 done
 ```
 
-_Last updated: 2026-09-27 — v3.4.0_
+_Last updated: 2026-11-04 — v3.5.0_
